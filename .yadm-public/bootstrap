@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export YADM_DIR="$(dirname "$(readlink -f "$0")")"
+echo "YADM_DIR: ${YADM_DIR}" >&2
+
+execute="${HOME}/.yadm/bootstrap-public"
+
+echo "Executing ${execute}" >&2
+$execute
+
