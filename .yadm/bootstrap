@@ -1,0 +1,31 @@
+#!/bin/bash
+
+######
+## This bootstrap runner will distinguish between private/public bootstrapping.
+## If the private dotfile repo is checked out into ~/.yadm, then the private
+## bootstrap is executed (which would clone the public repo and eventually
+## execute its bootstrap file.
+## If the public repo is cloned into ~/.yadm, the public bootstrap script is
+## executed instead of the private one (which does not exist).
+
+
+# Export $YADM_DIR so that the bootstrap script knows where the dotfiles have
+# been cloned to.
+export YADM_DIR="$(dirname "$(readlink -f "$0")")"
+echo "YADM_DIR: ${YADM_DIR}" >&2
+
+private="${HOME}/.yadm/bootstrap-private"
+public="${HOME}/.yadm/bootstrap-public"
+
+if [[ -x $private ]]; then
+    execute="$private"
+elif [[ -x $public ]]; then
+    execute="$public"
+else
+    echo "ERROR: No executable bootstrap file found." >&2
+    exit 1
+fi
+
+echo "Executing ${execute}" >&2
+$execute
+

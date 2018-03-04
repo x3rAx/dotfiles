@@ -1,0 +1,39 @@
+#!/bin/bash
+
+if [[ -z $YADM_DIR ]]; then
+    echo 'ERROR: Environment variable $YADM_DIR must be set!' >&2
+    exit 1
+fi
+
+# Fake yadm using YADM_DIR environment variable
+yadm="$(which yadm)"
+if [[ -z $yadm ]]; then echo "ERROR: Unable to locate yadm" >&2; exit 2; fi
+yadm() { YADM_DIR= $yadm -Y "${YADM_DIR}" "$@"; }
+
+cd "$HOME"
+
+# Find all files in $HOME starting with "README", mark them as unchanged and
+# delete them.
+for file in $(yadm ls-tree --name-only --full-name HEAD | grep '^README'); do
+    # Do not assume README is unchanged to see it's real status
+    yadm update-index --no-assume-unchanged "$file"
+
+    if [[ -f "$file" ]]; then
+        # If file is unchanged, `yadm status` will not list it
+        if ! yadm status --short -- "$file" | grep -q "$file"; then
+            # File is unchnged
+
+            echo "Removing '$file'" >&2
+            rm "$file"
+        else
+            # File is changed
+
+            echo "File '$file' exists but it is not unchanged... ignoring" >&2
+            continue
+        fi
+    fi
+
+    # Assume unchanged
+    yadm update-index --assume-unchanged "$file"
+done
+
