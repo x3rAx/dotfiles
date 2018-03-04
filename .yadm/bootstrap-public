@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Public: ${YADM_DIR}" >&2
+
+scripts="${HOME}/.yadm/scripts"
+
+$scripts/rm-readme
