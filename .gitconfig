@@ -1,0 +1,21 @@
+[include]
+	path = .gitconfig.local
+[push]
+	default = simple
+[core]
+	excludesfile = /home/x3ro/.gitignore-global
+[gc]
+	autoDetach = false
+[alias]
+	new = "!new() { local m=\"${*:-\"Initial commit.\"}\"; if [[ ! -d .git ]]; then git init && git commit --allow-empty -m \"$m\"; else echo \"ERROR: Git repository already initialized!\" >&2; exit 1; fi; }; new"
+	tree = log --date=iso --graph --pretty=\"format:%C(yellow)%<(7)%h%C(reset)%x09%ad%C(reset)  %C(blue)%<(15)%an%C(reset)  %C(bold yellow)%d%C(reset) %C(green)%s%C(reset)\"
+	tree-all = tree --exclude refs/stash --all
+	co = checkout
+	st = status
+	br = branch
+	cm = commit -m
+	ca = commit --amend
+	amend = commit --amend
+	a = c
+[pull]
+	rebase = true
