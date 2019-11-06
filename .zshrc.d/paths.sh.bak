@@ -1,0 +1,15 @@
+# .bash_paths
+
+# PATH (last entry weights most)
+#PATH=/opt/android-sdk
+PATH=$HOME/.config/composer/vendor/bin:$PATH
+PATH=$HOME/.npm-global/bin:$PATH
+PATH=$HOME/.local/npm-packages/bin:$PATH
+PATH=$HOME/.local/bin/*/:$PATH
+
+# NODE_PATH
+NODE_PATH=$NODE_PATH:/home/x3ro/.npm-global/lib/node_modules
+
+export PATH
+export NODE_PATH
+

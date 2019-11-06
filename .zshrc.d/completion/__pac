@@ -1,0 +1,3 @@
+#compdef pac
+
+compdef pac=pacman
