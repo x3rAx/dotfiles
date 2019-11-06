@@ -1,0 +1,19 @@
+#!/bin/bash
+
+lockTime="$1"
+screenOffTime="$2"
+locker="$3"
+
+dpmsTime="$(($lockTime * 60 + $screenOffTime))"
+
+# Exit auto lock
+xautolock -exit
+
+# Give it a second
+sleep 1
+
+# Setup new auto lock
+xautolock -time "$lockTime" -locker "$locker" -detectsleep &
+
+# Setup display timeout
+xset dpms "$dpmsTime"  "$dpmsTime" "$dpmsTime"

@@ -1,0 +1,44 @@
+#!/bin/bash
+
+
+#command=if [[ $BLOCK_BUTTON == 1 ]]; then pavucontrol --tab 3 & fi; ~/.config/i3/i3block-engine/bin/engine volume
+#command=~/.config/i3/i3block-engine/bin/engine $BLOCK_NAME
+
+
+
+#export BLOCK_INSTANCE=1
+#/usr/lib/i3blocks/volume
+
+###########################################
+# BLOCK_INSTANCE : Beginning or full name of sink device
+
+volume_step=4
+
+main() {
+    if [[ $BLOCK_BUTTON == 1 ]]; then
+        pavucontrol --tab 3 & 
+    fi
+
+    if [[ $BLOCK_INSTANCE == '' ]]; then
+        /usr/lib/i3blocks/volume "${volume_step}%"
+    else
+        # Button 4: Scroll Down
+        # Button 5: Scroll Uprunter
+        if [[ $BLOCK_BUTTON == 4 ]]; then
+            pa-volume set-volume "$BLOCK_INSTANCE" "+${volume_step}%"
+        elif [[ $BLOCK_BUTTON == 5 ]]; then
+            pa-volume set-volume "$BLOCK_INSTANCE" "-${volume_step}%"
+        elif [[ $BLOCK_BUTTON == 3 ]]; then
+            pa-volume set-mute "$BLOCK_INSTANCE" toggle
+        fi
+
+        pa-volume get-volume "$BLOCK_INSTANCE" 2>/dev/null
+        exit 0 # do not let error code bubble up
+    fi
+}
+
+pa-volume() {
+    ~/.config/i3/scripts/pa-volume "$@"
+}
+
+main "$@"

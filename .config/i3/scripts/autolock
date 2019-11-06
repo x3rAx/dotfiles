@@ -1,0 +1,40 @@
+#!/bin/bash
+
+SCRIPT="$(readlink -f "$0")"
+SCRIPT_NAME="$(basename "$SCRIPT")"
+SCRIPT_DIR="$(dirname "$SCRIPT")"
+
+#lockDelay=10
+#lockTime="$(($1 + $lockDelay))"
+#screenOffTime="$2"
+screenOff="$1"
+lockDelay="$2"
+lockScreenOff="$3"
+
+#locker="${SCRIPT_DIR}/i3lock $screenOffTime"
+locker="${SCRIPT_DIR}/i3lock $lockScreenOff"
+
+#if [[ $lockTime == '--lock-now' ]]; then
+if [[ $1 == '--lock-now' ]]; then
+    xautolock -locknow
+else
+    #dpmsTime="$(($lockTime * 60 + $screenOffTime))"
+    dpmsTime="$screenOff"
+    lockTime="$((($screenOff + $lockDelay) / 60))"
+
+    # Exit auto lock
+    xautolock -exit
+
+    # Give it a second
+    sleep 1
+
+    # Kill it, just to be sure
+    killall xautolock
+
+    # Setup new auto lock
+    xautolock -time "$lockTime" -locker "$locker" -detectsleep &
+
+    # Setup display timeout
+    xset dpms "$dpmsTime"  "$dpmsTime" "$dpmsTime"
+fi
+

@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+SYM_WIFI=""
+
+#o="$(~/.config/i3/i3block-engine/bin/engine iface)"
+
+# Get the interface or fall back to the default interface
+iface=$BLOCK_INSTANCE
+if [[ -z $iface ]]; then
+    iface=$(ip route | awk '/^default/ { print $5 ; exit }')
+fi
+
+# Check if the interface exists
+if [[ ! -d /sys/class/net/${iface} ]]; then
+    echo "INTERFACE \"${iface}\" NOT FOUND!"
+    exit 33 # Show red background
+fi
+
+# Get state and ip
+state="$(cat "/sys/class/net/${iface}/operstate")"
+ip="$(ip -o -4 addr list dev "$iface" | awk '{print $4}' | cut -d/ -f1)"
+color=""
+
+if [[ $state == 'down' ]]; then
+    ip="down"
+    color="#FF0000"
+fi
+
+if [[ $BLOCK_BUTTON -ge 1 ]]; then
+    echo "${SYM_WIFI} ${ip}"
+else
+    echo "${SYM_WIFI}"
+fi
+
+echo "${SYM_WIFI}"
+echo "$color"
+
+# Copy to clipboard on right click ---------------------------------------------
+if [[ $BLOCK_BUTTON == 3 ]]; then
+    echo -n "$ip" | xsel --clipboard
+    notify-send "Copied to clipboard."
+fi
+
+# Copy to X selection on middle click ------------------------------------------
+if [[ $BLOCK_BUTTON == 2 ]]; then
+    echo -n "$ip" | xsel --primary
+    notify-send "Copied to primary."
+fi
+

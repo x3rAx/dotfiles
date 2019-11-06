@@ -1,0 +1,29 @@
+#!/bin/bash
+
+timeout="$1"
+
+brightness=-5
+constrast="$brightness"
+
+tmp=''
+
+img="$(realpath "${HOME}/.config/x3ro/background-image.png")"
+
+if [[ $1 == --fuzzy ]]; then
+    tmp="$(mktemp --tmpdir lockscreen-XXXXXXXXXX)"
+    fuzzy-lock-screen "$tmp"
+    #mogrify -brightness-contrast "${brightness}x${contrast}" "$tmp"
+
+    img="$tmp"
+fi
+
+i3lock-dpms $timeout \
+    --nofork \
+    --show-failed-attempts \
+    --color 000000 \
+    --image "${img}"
+
+if [[ -f $tmp ]]; then
+    rm "$tmp"
+fi
+

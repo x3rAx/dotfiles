@@ -1,0 +1,145 @@
+#!/usr/bin/env bash
+
+#"EU: eu -"
+#"DE:  de deadgraveacute"
+#"DE^: de -"
+#"US:  us -"
+
+config=(
+    "EU: eu -"
+    "DE:  de deadgraveacute"
+)
+
+main() {
+    if [[ $BLOCK_BUTTON == 1 ]]; then
+        changeLayout
+    fi
+
+    printLayout
+}
+
+changeLayout() {
+    local idx="$(getLayoutIndex)"
+
+    if [[ $idx == -1 ]]; then
+        # Load first config
+        loadConfig 0
+        return
+    fi
+
+    let idx++
+
+    if [[ $idx -ge ${#config[@]} ]]; then
+        idx=0
+    fi
+
+    loadConfig $idx
+
+    #if [[ $(getKbdVariant) == 'deadgraveacute' ]]; then
+    #    setxkbmap de
+    #else
+    #    setxkbmap de deadgraveacute
+    #fi
+}
+
+loadConfig() {
+    local idx="$1"
+    local c="$(getConfig $idx)"
+    local layout="$(getConfigLayout "$c")"
+    local variant="$(getConfigVariant "$c")"
+
+    if [[ $variant != '' ]]; then
+        setxkbmap "$layout" "$variant"
+    else
+        setxkbmap "$layout"
+    fi
+}
+
+printLayout() {
+    getLayoutName || getFallbackLayoutName
+}
+
+getLayoutName() {
+    local idx="$(getLayoutIndex)"
+
+    if [[ $idx == -1 ]]; then
+        return 1
+    fi
+
+    getConfigName "${config[$idx]}"
+}
+
+getLayoutIndex() {
+    local layout="$(getKbdLayout)"
+    local variant="$(getKbdVariant)"
+    local i=0
+
+    variant="${variant:--}"
+
+    for c in "${config[@]}"; do
+        if [[ $c =~ [^\\]:[[:space:]]+"${layout}"[[:space:]]+"${variant}" ]]; then
+            echo "$i"
+            return
+        fi
+
+        let i++
+    done
+
+    echo "-1"
+    return 1
+}
+
+getFallbackLayoutName() {
+    local layout="$(getKbdLayout)"
+    local variant="$(getKbdVariant)"
+
+    echo -n "${layout^^}"
+
+    if [[ $variant != '' ]]; then
+        echo -n " [${variant}]"
+    fi
+
+    echo ""
+}
+
+getKbdLayout() {
+    setxkbmap -query \
+        | grep -P '^layout:' \
+        | awk '{print $2}'
+}
+
+getKbdVariant() {
+    setxkbmap -query \
+        | grep -P '^variant:' \
+        | awk '{print $2}'
+}
+
+getConfigName() {
+    local config="$1"
+    echo "$config" | sed -e 's/\([^\\]\):.*/\1/'
+}
+
+getConfig() {
+    local idx=$1
+    echo "${config[$idx]}" | sed -e 's/.*[^\\]:\s*//'
+}
+
+getConfigLayout() {
+    local c="$1"
+    echo "$c" | cut -d' ' -f1
+}
+
+getConfigVariant() {
+    local c="$1"
+    local variant="$(echo $c | cut -d' ' -f2)"
+
+    if [[ $variant == '-' ]]; then
+        return 1
+    fi
+
+    echo "$variant"
+}
+
+
+main "$@"
+

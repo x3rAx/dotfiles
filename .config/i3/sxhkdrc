@@ -1,0 +1,252 @@
+# sxhkd i3 shortcuts
+
+# [i3] Kill focused window
+super + shift + q
+    i3-msg kill
+
+#
+# Change focus
+#-------------------------------------------------------------------------------
+
+# [i3] Change focus (left)
+super + {h,Left}
+    i3-msg focus left
+
+# [i3] Change focus (down)
+super + {j,Down}
+    i3-msg focus down
+
+# [i3] Change focus (up)
+super + {k,Up}
+    i3-msg focus up
+
+# [i3] Change focus (right)
+super + {l,Right}
+    i3-msg focus right
+
+#
+# Move focused window
+#-------------------------------------------------------------------------------
+
+# [i3] Move focused window (left)
+super + shift + {h,Left}
+    i3-msg move left
+
+# [i3] Move focused window (down)
+super + shift + {j,Down}
+    i3-msg move down
+
+# [i3] Move focused window (up)
+super + shift + {k,Up}
+    i3-msg move up
+
+# [i3] Move focused window (right)
+super + shift + {l,Right}
+    i3-msg move right
+
+#
+# Resize focused window
+#-------------------------------------------------------------------------------
+
+# [i3] Resize focused window (shrink width)
+#super + ctrl + {_, shift +}{h,Left}
+#    i3-msg resize shrink width {5px or 5ppt, 1px or 1ppt}
+
+# [i3] Resize focused window (shrink width)
+super + ctrl + {h,Left}
+    i3-msg resize shrink width 5px or 5ppt
+
+# [i3] Resize focused window (grow height)
+super + ctrl + {j,Down}
+    i3-msg resize grow height 5px or 5ppt
+
+# [i3] Resize focused window (shrink height)
+super + ctrl + {k,Up}
+    i3-msg resize shrink height 5px or 5ppt
+
+# [i3] Resize focused window (grow width)
+super + ctrl + {l,Right}
+    i3-msg resize grow width 5px or 5ppt
+
+#
+# Switch workspace
+#-------------------------------------------------------------------------------
+
+# [i3] Switch to next/prev workspace
+super + {n,p}
+    i3-msg workspace {next,prev}
+
+# [i3] Switch to workspace N
+super + {1,2,3,4,5,6,7,8,9,0,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12}
+    i3-msg workspace "{1 ,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22}"
+
+# [i3] Move focused window to workspace N
+super + shift + {1,2,3,4,5,6,7,8,9,0,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12}
+    i3-msg move container to workspace "{1 ,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22}"
+
+#
+# New window location
+#-------------------------------------------------------------------------------
+
+# [i3] Split in horizontal/vertical orientation
+super + {g,v}
+    i3-msg split {h,v}
+
+#
+# Move workspace to other outputs
+#-------------------------------------------------------------------------------
+
+# [i3] Move workspace to output (left)
+super + ctrl + shift + {h,Left}
+    i3-msg move workspace to output left
+
+super + ctrl + shift + {j,Down}
+    i3-msg move workspace to output bottom
+
+super + ctrl + shift + {k,Up}
+    i3-msg move workspace to output top
+
+super + ctrl + shift + {l,Right}
+    i3-msg move workspace to output right
+
+#
+# Scratchpad
+#-------------------------------------------------------------------------------
+
+# [i3] Send to scratchpad
+super + Tab
+    i3-msg move scratchpad
+
+# [i3] Show scratchpad
+super + shift + Tab
+    i3-msg scratchpad show
+
+#
+# Gabs
+#-------------------------------------------------------------------------------
+super + \\
+    i3-msg "gaps inner all plus 10; gaps outer all plus 2"
+
+super + shift + \\
+    i3-msg "gaps inner all minus 10; gaps outer all minus 2"
+
+super + ctrl + shift + \\
+    i3-msg "gaps inner all set $gaps_inner; gaps outer all set $gaps_outer"
+
+#
+# Compton
+#-------------------------------------------------------------------------------
+
+# [i3] Compton: Stop
+super + alt + \\
+    killall compton
+
+# [i3] Compton: Start / Restart
+super + ctrl + \\
+    killall compton; compton
+
+# [i3] X: Invert colors
+super + shift + BackSpace
+    xcalib -i -a
+
+#
+# Monitor config
+#-------------------------------------------------------------------------------
+
+# [i3] Monitor: Internal
+super + ctrl + shift + F1
+    bash ~/.config/i3/scripts/monitors/internal.sh \
+    && bash ~/.config/i3/scripts/fix-mouse-monitors.sh 1
+
+# [i3] Monitor: Dual monitor
+super + ctrl + shift + F2
+    bash ~/.config/i3/scripts/monitors/dual-monitor.sh \
+    && bash ~/.config/i3/scripts/fix-mouse-monitors.sh 2
+
+# [i3] Monitor: Mirror
+super + ctrl + shift + F3
+    bash ~/.config/i3/scripts/monitors/mirror.sh \
+    && bash ~/.config/i3/scripts/fix-mouse-monitors.sh 1
+
+# [i3] Monitor: External
+super + ctrl + shift + F4
+    bash ~/.config/i3/scripts/monitors/external.sh \
+    && bash ~/.config/i3/scripts/fix-mouse-monitors.sh 1
+
+#
+# Misc.
+#-------------------------------------------------------------------------------
+
+# [i3] Lock screen // TODO: move to global hotkeys
+super + shift + x
+    ~/.config/i3/scripts/autolock --lock-now
+
+# [i3] Enter fullscreen mode for the focused container
+super + f
+    i3-msg fullscreen toggle
+
+# [i3] Change container layout {stacked, tabbed, toggle split}
+super + {s,w,e}
+    i3-msg layout {stacking,tabbed,toggle split}
+
+# [i3] Toggle tiling / floating
+super + shift + space
+    i3-msg floating toggle
+
+# [i3] Change focus between tiling / floating windows
+super + ctrl + space
+    i3-msg focus mode_toggle
+
+# [i3] Focus the {parent,child} container
+super + {a,z}
+    i3-msg focus {parent,child}
+
+# [i3] Reload the configuration file
+super + shift + c
+    i3-msg reload
+
+# [i3] Restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+super + shift + r
+    i3-msg restart
+
+# [i3] Exit i3 (logs you out of your X session)
+super + shift + e
+    echo -e 'no\nyes' | rofi -dmenu -l 2 -p 'Logout ' | grep -i 'yes' && i3-msg exit
+    #i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'
+
+#
+# Misc.
+#-------------------------------------------------------------------------------
+
+# [i3] Enter fullscreen mode for the focused container
+super + f
+    i3-msg fullscreen toggle
+
+# [i3] Change container layout {stacked, tabbed, toggle split}
+super + {s,w,e}
+    i3-msg layout {stacking,tabbed,toggle split}
+
+# [i3] Toggle tiling / floating
+super + shift + space
+    i3-msg floating toggle
+
+# [i3] Change focus between tiling / floating windows
+super + ctrl + space
+    i3-msg focus mode_toggle
+
+# [i3] Focus the {parent,child} container
+super + {a,z}
+    i3-msg focus {parent,child}
+
+# [i3] Reload the configuration file
+super + shift + c
+    i3-msg reload
+
+# [i3] Restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+super + shift + r
+    i3-msg restart
+
+# [i3] Exit i3 (logs you out of your X session)
+super + shift + e
+    i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'
+

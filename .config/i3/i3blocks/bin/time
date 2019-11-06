@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+case $BLOCK_BUTTON in 
+    1)
+        notify-send "$(date +'%a, %d. %B %Y')"
+        ;;
+    2)
+        d="$(date +'%a, %d. %B %Y')"
+        ;;
+    3)
+        d="$(date +'%Y-%m-%d %H:%M:%S')"
+        ;;
+esac
+
+if [[ -n $d ]]; then
+    echo -n "$d" \
+        | xclip -selection clipboard
+
+    #c="$(xclip -o -selection clipboard)"
+
+    notify-send 'Copied to clipboard:' "$d" &
+fi
+
+date +'%Y-%m-%d %H:%M:%S'
+

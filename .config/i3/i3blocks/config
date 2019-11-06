@@ -1,0 +1,221 @@
+# i3blocks config file
+#
+# Please see man i3blocks for a complete reference!
+# The man page is also hosted at http://vivien.github.io/i3blocks
+#
+# List of valid properties:
+#
+# align
+# color
+# command
+# full_text
+# instance
+# interval
+# label
+# min_width
+# name
+# separator
+# separator_block_width
+# short_text
+# signal
+# urgent
+
+# Global properties
+#
+# The top properties below are applied to every block, but can be overridden.
+# Each block command defaults to the script name to avoid boilerplate.
+#command=~/.config/i3/i3block-engine/bin/engine $BLOCK_NAME
+#command=/usr/lib/i3blocks/$BLOCK_NAME
+command=~/.config/i3/i3blocks/bin/$BLOCK_NAME
+separator_block_width=15
+markup=none
+
+
+
+# NETWORK | INTERFACE | RAM SWAP HOME ROOT | TEMP | LOAD | CPU | VOL | BAT | TIME
+#                       #7ea1a5
+
+
+[window]
+command=xtitle -s
+interval=persist
+separator=false
+separator_block_width=100
+color=#888888
+
+[bandwidth]
+command=/usr/lib/i3blocks/bandwidth
+label=
+instance=wlp7s0
+#instance=wlan0
+interval=2
+signal=11
+color=#83d0c9
+
+[iface]
+command=/usr/lib/i3blocks/iface
+#label=
+instance=wlp7s0
+#instance=wlan0
+color=#00FFFF
+interval=10
+signal=11
+separator=true
+color=#adff00
+#command=echo -n ""; o=$(~/.config/i3/i3block-engine/bin/engine iface); if [[ $BLOCK_BUTTON == 1 ]]; then echo " $o"; else echo "$o | tail -n+2; fi
+#command=echo -n ""; o=$(~/.config/i3/i3block-engine/bin/engine iface); ip="$(echo \"$o\" | head -n1 | tr -d $'\n')"; if [[ $BLOCK_BUTTON -ge 1 ]]; then echo " $o"; else echo ""; echo " $o" | tail -n+3; fi; if [[ $BLOCK_BUTTON == 2 ]]; then echo -n "$ip" | xclip; elif [[ $BLOCK_BUTTON == 3 ]]; then echo -n "$ip" | xsel; fi
+command=~/.config/i3/i3blocks/bin/wifi-state
+#command=echo -n ""; o=$(~/.config/i3/i3block-engine/bin/engine iface); ip="$(echo "$o" | head -n1 | tr -d $'\n' | xclip)"; if [[ $BLOCK_BUTTON -ge 1 ]]; then echo " $o"; else echo -e "\n"; echo " $ip"; fi; if [[ $BLOCK_BUTTON == 2 ]]; then echo "$ip" | xclip; elif [[ $BLOCK_BUTTON == 3 ]]; then echo "$ip" | xsel; fi
+
+
+[memory]
+#label=
+label=
+separator=false
+interval=2
+#color=#dfe3ee
+color=#7ea1a5
+
+[memory]
+command=/usr/lib/i3blocks/memory
+label=
+instance=swap
+separator=false
+interval=5
+color=#7ea1a5
+
+[disk]
+command=/usr/lib/i3blocks/disk
+label=
+interval=30
+instance=/data
+separator=false
+color=#d9534f
+
+[disk]
+command=/usr/lib/i3blocks/disk
+label=
+instance=/
+interval=30
+separator=true
+color=#ffff00
+
+# ?? lm-sensors ??
+[temperature]
+command=/usr/lib/i3blocks/temperature --chip coretemp-isa-0000
+label=
+interval=2
+color=#dcedc1
+separator=true
+
+[load_average]
+command=/usr/lib/i3blocks/load_average
+label=
+color=#7ea1a5
+interval=10
+
+[cpu_usage]
+label=
+interval=1
+min_width=100.00%
+separator=true
+color=#00ff7f
+align=center
+command=if [[ -n $BLOCK_BUTTON ]]; then $TERMINAL_CMD htop & fi; /usr/lib/i3blocks/cpu_usage
+
+[pa-volume]
+#instance=alsa_output
+interval=once
+signal=10
+#command=if [[ $BLOCK_BUTTON == 1 ]]; then pavucontrol --tab 3 & fi; ~/.config/i3/i3block-engine/bin/engine volume
+interval=2
+label=
+
+[pa-volume]
+instance=bluez_sink
+#instance=PCM
+interval=once
+signal=10
+interval=2
+color=#888888
+label=
+
+[battery]
+label=
+interval=10
+
+[keyboard-layout]
+label=
+interval=10
+separator=true
+
+
+[time]
+interval=1
+
+[arch-updates]
+command=i3-arch-update
+interval=3600
+signal=20
+separator=true
+
+[spacer]
+command=echo -e ' '
+interval=once
+
+
+# ------------------------------------------------------------------------------
+
+
+# OpenVPN support
+#
+# Support multiple VPN, with colors.
+#[openvpn]
+#interval=20
+
+# Temperature
+#
+# Support multiple chips, though lm-sensors.
+# The script may be called with -w and -c switches to specify thresholds,
+# see the script for details.
+#[temperature]
+#label=TEMP
+#interval=10
+
+# Key indicators
+#
+# Add the following bindings to i3 config file:
+#
+# bindsym --release Caps_Lock exec pkill -SIGRTMIN+11 i3blocks
+# bindsym --release Num_Lock  exec pkill -SIGRTMIN+11 i3blocks
+#[keyindicator]
+#instance=CAPS
+#interval=once
+#signal=11
+
+#[keyindicator]
+#instance=NUM
+#interval=once
+#signal=11
+
+
+
+
+
+
+# [microphone]
+# label=
+# interval=5
+# command=~/.config/i3/scripts/microphone.sh
+
+# [Weather]
+# command=~/.config/i3/scripts/weather3.sh "san-miguel-de-tucuman"
+# interval=1800
+# color=#c9c9ff
+# #border=#535353
+
+# [audio]
+# label=
+# interval=once
+# command=~/.config/i3/scripts/audio1.sh
+# color=#f19950
