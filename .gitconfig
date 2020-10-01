@@ -6,6 +6,8 @@
 	excludesfile = /home/x3ro/.gitignore-global
 [gc]
 	autoDetach = false
+[pull]
+	rebase = true
 [alias]
 	new = "!new() { local m=\"${*:-\"Initial commit.\"}\"; if [[ ! -d .git ]]; then git init && git commit --allow-empty -m \"$m\"; else echo \"ERROR: Git repository already initialized!\" >&2; exit 1; fi; }; new"
 	tree = log --date=iso --graph --pretty=\"format:%C(yellow)%<(7)%h%C(reset)%x09%ad%C(reset)  %C(blue)%<(15)%an%C(reset)  %C(bold yellow)%d%C(reset) %C(green)%s%C(reset)\"
@@ -16,6 +18,19 @@
 	cm = commit -m
 	ca = commit --amend
 	amend = commit --amend
-	a = c
-[pull]
-	rebase = true
+
+	# === Emoji Log ===
+	# NEW.
+	cnew = "!f() { git commit -e -m \"📦 NEW: $@\"; }; f"
+	# IMPROVE.
+	cimp = "!f() { git commit -e -m \"👌 IMPROVE: $@\"; }; f"
+	# FIX.
+	cfix = "!f() { git commit -e -m \"🐛 FIX: $@\"; }; f"
+	# RELEASE.
+	crlz = "!f() { git commit -e -m \"🚀 RELEASE: $@\"; }; f"
+	# DOC.
+	cdoc = "!f() { git commit -e -m \"📖 DOC: $@\"; }; f"
+	# TEST.
+	ctst = "!f() { git commit -e -m \"🤖 TEST: $@\"; }; f"
+	# BREAKING CHANGE.
+	cbrk = "!f() { git commit -e -m \"‼️ BREAKING: $@\"; }; f"
