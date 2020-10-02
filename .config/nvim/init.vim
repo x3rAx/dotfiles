@@ -42,6 +42,14 @@ let mapleader = ' '
         Plug 'lambdalisue/suda.vim'
         Plug 'rust-lang/rust.vim'
         Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+
+        " START vim-zettel
+        Plug 'vimwiki/vimwiki'
+        Plug 'junegunn/fzf'
+        Plug 'junegunn/fzf.vim'
+        Plug 'michal-h21/vim-zettel'
+        " END vim-zettel
+
     call plug#end()
 
 
