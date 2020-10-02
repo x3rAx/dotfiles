@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/TheLocehiliosan/yadm.git
+	branch = master
+	commit = 7628a1b61d8fc21c899c8f8f0fef8c95725598dd
+	parent = 37aa994419f4df37d4fff193455e3ca919944ba4
+	method = merge
+	cmdver = 0.4.1
