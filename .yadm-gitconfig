@@ -6,5 +6,5 @@
     status-untracked = status -unormal
     untracked = status-untracked
     un = untracked
-    code = !"awk -i inplace '(NR == 1 && !/^\\*$/) { print \"*\" } { print $0 }' .yadm-gitignore && code -w .; awk -i inplace '!(NR == 1 && /^\\*$/) { print $0 }' .yadm-gitignore"
+    code = !"awk -i inplace '(NR == 1 && !/^\\*$/) { print \"*\" } { print $0 }' .yadm-gitignore && code -nw .; awk -i inplace '!(NR == 1 && /^\\*$/) { print $0 }' .yadm-gitignore"
     bash = !yadm enter bash
