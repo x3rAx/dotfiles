@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd ~/Zettelkasten
+
+if (( $# > 0 )); then
+    exec vim +Zindex "+ZettelNew $*"
+fi
+
+exec vim +Zindex

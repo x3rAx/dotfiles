@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+main() {
+    action=$1
+
+    case "$action" in
+        'on')
+            enable_wifi
+            ;;
+        'off')
+            disable_wifi
+            ;;
+        'toggle')
+            toggle_wifi
+            ;;
+        'status'|*)
+            get_status
+    esac
+}
+
+
+enable_wifi() {
+    rfkill unblock wifi
+}
+
+
+disable_wifi() {
+    rfkill block wifi
+}
+
+
+get_status() {
+    rfkill -rn | awk '
+        BEGIN { blocked=1 }
+        /wlan/ { if ($4 == "unblocked") { blocked=0 } }
+        END { if (blocked) { print "blocked" } else { print "unblocked" } }
+    '
+}
+
+
+toggle_wifi() {
+    local status="$(get_status)"
+    if [[ $status == "blocked" ]]; then
+        enable_wifi
+    else
+        disable_wifi
+    fi
+}
+
+
+main "$@"

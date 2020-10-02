@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+SCRIPT="$0"
+SCRIPT_NAME="$(basename "$0")"
+
+USAGE="
+  Usage:
+    ${SCRIPT_NAME} [-h | --help | -s | --system | -d | --default | username | -]
+"
+
+user="$1"
+
+case $user in
+    -h|--help)
+        echo "$USAGE"
+        exit
+        ;;
+
+    -s|--system)
+        echo >&2 "System generations:"
+        nix-env -p /nix/var/nix/profiles/system --list-generations
+        ;;
+    -d|--default)
+        echo >&2 "Default profile generations:"
+        nix-env -p /nix/var/nix/profiles/default --list-generations
+        ;;
+    -)
+        echo >&2 "Active profile generations:"
+        nix-env --list-generations
+        ;;
+
+    "")
+        user="$(whoami)"
+        echo >&2 "Current user generations:"
+        echo '--- Channels ---' ;\
+        nix-env -p "/nix/var/nix/profiles/per-user/${user}/channels" --list-generations ;\
+        echo '--- Profile ---' ;\
+        nix-env -p "/nix/var/nix/profiles/per-user/${user}/profile" --list-generations ;\
+        ;;
+
+    *)
+        echo >&2 "Generations of user '${user}':"
+        su "$user" -c "\
+            echo '--- Channels ---' ;\
+            nix-env -p \"/nix/var/nix/profiles/per-user/${user}/channels\" --list-generations ;\
+            echo '--- Profile ---' ;\
+            nix-env -p \"/nix/var/nix/profiles/per-user/${user}/profile\" --list-generations ;\
+        "
+        ;;
+esac
+
