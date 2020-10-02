@@ -439,3 +439,20 @@ endif
 "highlight MyGroup ctermbg=darkgray
 "match MyGroup /\%(\_^\s*\)\@<=\%(\%1v\|\%5v\|\%9v\)\s/
 
+command! ZetID exec "normal O@ID:\<c-r>=strftime('%Y%m%d%H%M%S')<esc>j"
+inoreabbrev @ID: @ID:<c-r>=strftime('%Y%m%d%H%M%S')<CR>
+
+" vim-zettel config
+    " Settings for Vimwiki
+    let g:vimwiki_list = [{'path':'~/Zettelkasten/','ext':'.md','syntax':'markdown'}]
+    let g:zettel_fzf_command = "rg"
+
+    " Custom commands / aliases
+    cnoreabbr Znew ZettelNew
+    command! Zcheck VimwikiCheckLinks
+    command! Zrename VimwikiRenameFile
+    command! Zopen ZettelOpen
+    command! Zbacklinks VimwikiBacklinks
+    command! Zindex VimwikiIndex
+
+
