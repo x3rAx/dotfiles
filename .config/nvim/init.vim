@@ -50,6 +50,10 @@ let mapleader = ' '
         Plug 'michal-h21/vim-zettel'
         " END vim-zettel
 
+        Plug 'vim-scripts/cmdalias.vim'
+        Plug 'LnL7/vim-nix'
+        " Might require nodejs >= 10.12
+        Plug 'neoclide/coc.nvim', {'branch': 'release'}
     call plug#end()
 
 
