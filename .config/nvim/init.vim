@@ -121,10 +121,10 @@ let mapleader = ' '
 
 " Easy switch between buffers
 	set hidden
-	nnoremap <leader>n :bnext<CR>
-	nnoremap <M-j> :bnext<CR>
 	nnoremap <leader>p :bprev<CR>
-	nnoremap <M-k> :bprev<CR>
+    nnoremap <M-<> :bprev<CR>
+	nnoremap <leader>n :bnext<CR>
+	nnoremap <M->> :bnext<CR>
     nnoremap <leader><Tab> :b#<Enter>
 
 
