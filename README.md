@@ -1,10 +1,10 @@
-# ^x3ro's Dotfiles 🐧
+# 🐧 ^x3ro's Dotfiles
 
 Welcome to my dotfiles repo 😺
 
 
 
-## Setup a New Machine 💻
+## 💻 Setup a New Machine
 
 Use `yadm` to clone this repo:
 
@@ -15,7 +15,7 @@ or
     yadm clone https://gitlab.com/x3ro/dotfiles.git
 
 
-### Easy Setup 🦄
+### 🦄 Easy Setup
 
 For an easy setup with bootstrapping and without `yadm` installed use:
 
