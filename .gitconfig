@@ -19,18 +19,18 @@
 	ca = commit --amend
 	amend = commit --amend
 
-	# === Emoji Log ===
-	# NEW.
-	cnew = "!f() { git commit -e -m \"📦 NEW: $@\"; }; f"
-	# IMPROVE.
-	cimp = "!f() { git commit -e -m \"👌 IMPROVE: $@\"; }; f"
-	# FIX.
-	cfix = "!f() { git commit -e -m \"🐛 FIX: $@\"; }; f"
-	# RELEASE.
-	crlz = "!f() { git commit -e -m \"🚀 RELEASE: $@\"; }; f"
-	# DOC.
-	cdoc = "!f() { git commit -e -m \"📖 DOC: $@\"; }; f"
-	# TEST.
-	ctst = "!f() { git commit -e -m \"🤖 TEST: $@\"; }; f"
-	# BREAKING CHANGE.
-	cbrk = "!f() { git commit -e -m \"‼️ BREAKING: $@\"; }; f"
+    # === Emoji Log ===
+    # NEW.
+    cnew = "!f() { git commit -e -m \"📦 NEW: $@\"; }; f"
+    # IMPROVE.
+    cimp = "!f() { git commit -e -m \"👌 IMPROVE: $@\"; }; f"
+    # FIX.
+    cfix = "!f() { git commit -e -m \"🐛 FIX: $@\"; }; f"
+    # RELEASE.
+    crlz = "!f() { git commit -e -m \"🚀 RELEASE: $@\"; }; f"
+    # DOC.
+    cdoc = "!f() { git commit -e -m \"📖 DOC: $@\"; }; f"
+    # TEST.
+    ctst = "!f() { git commit -e -m \"🤖 TEST: $@\"; }; f"
+    # BREAKING CHANGE.
+    cbrk = "!f() { git commit -e -m \"‼️ BREAKING: $@\"; }; f"
