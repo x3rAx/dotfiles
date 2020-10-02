@@ -1,13 +1,14 @@
 [include]
 	path = .gitconfig.local
+[core]
+	editor = code --wait
+	excludesfile = /home/x3ro/.gitignore-global
 [pull]
 	ff = only
 [merge]
 	ff = false
 [push]
 	default = simple
-[core]
-	excludesfile = /home/x3ro/.gitignore-global
 [gc]
 	autoDetach = false
 [pull]
