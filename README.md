@@ -1,6 +1,6 @@
-# ^x3ro's Dotfiles
+# ^x3ro's Dotfiles 🐧
 
-Welcome to my dotfiles repo.
+Welcome to my dotfiles repo 😺
 
 
 
