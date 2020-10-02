@@ -1,5 +1,9 @@
 [include]
 	path = .gitconfig.local
+[pull]
+	ff = only
+[merge]
+	ff = false
 [push]
 	default = simple
 [core]
