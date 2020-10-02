@@ -13,3 +13,10 @@ Use `yadm` to clone this repo:
 or
 
     yadm clone https://gitlab.com/x3ro/dotfiles.git
+
+
+### Easy Setup
+
+For an easy setup with bootstrapping and without `yadm` installed use:
+
+    curl -L https://gitlab.com/x3ro/dotfiles/-/raw/master/.local/subrepos/yadm/yadm | bash -s clone git@gitlab.com:x3ro/dotfiles.git --bootstrap
