@@ -1,0 +1,9 @@
+[user]
+	email = git@x3ro.dev
+	name = ^x3ro
+
+[alias]
+    yadm-gitconfig = !git config -f ~/.yadm-gitconfig
+    status-untracked = status -unormal
+    untracked = status-untracked
+    un = untracked
