@@ -1,7 +1,7 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 Name: yadm
 Summary: Yet Another Dotfiles Manager
-Version: 2.5.0
+Version: 3.0.2
 Group: Development/Tools
 Release: 1%{?dist}
 URL: https://yadm.io
@@ -29,7 +29,7 @@ encrypted before they are included in the repository.
 
 # this is done to allow paths other than yadm-x.x.x (for example, when building
 # from branches instead of release tags)
-cd *yadm-*
+test -f yadm || cd *yadm-*
 
 %{__mkdir} -p %{buildroot}%{_bindir}
 %{__cp}  yadm %{buildroot}%{_bindir}

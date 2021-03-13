@@ -1,53 +1,39 @@
 """Unit tests: upgrade"""
 import pytest
 
-LEGACY_PATHS = [
-    'config',
-    'encrypt',
-    'files.gpg',
-    'bootstrap',
-    'hooks/pre_command',
-    'hooks/post_command',
-]
 
-# used:
-# YADM_COMPATIBILITY
-# YADM_DIR
-# YADM_LEGACY_DIR
-# GIT_PROGRAM
-@pytest.mark.parametrize('condition', ['compat', 'equal', 'existing_repo'])
+@pytest.mark.parametrize('condition', ['override', 'equal', 'existing_repo'])
 def test_upgrade_errors(tmpdir, runner, yadm, condition):
     """Test upgrade() error conditions"""
 
-    compatibility = 'YADM_COMPATIBILITY=1' if condition == 'compat' else ''
-
     home = tmpdir.mkdir('home')
     yadm_dir = home.join('.config/yadm')
-    legacy_dir = home.join('.yadm')
+    yadm_data = home.join('.local/share/yadm')
+    override = ''
+    if condition == 'override':
+        override = 'override'
     if condition == 'equal':
-        legacy_dir = yadm_dir
+        yadm_data = yadm_dir
     if condition == 'existing_repo':
         yadm_dir.ensure_dir('repo.git')
-        legacy_dir.ensure_dir('repo.git')
+        yadm_data.ensure_dir('repo.git')
 
     script = f"""
         YADM_TEST=1 source {yadm}
-        {compatibility}
         YADM_DIR="{yadm_dir}"
-        YADM_REPO="{yadm_dir}/repo.git"
-        YADM_LEGACY_DIR="{legacy_dir}"
+        YADM_DATA="{yadm_data}"
+        YADM_REPO="{yadm_data}/repo.git"
+        YADM_LEGACY_ARCHIVE="files.gpg"
+        YADM_OVERRIDE_REPO="{override}"
         upgrade
     """
     run = runner(command=['bash'], inp=script)
     assert run.failure
-    assert run.err == ''
-    assert 'Unable to upgrade' in run.out
-    if condition == 'compat':
-        assert 'YADM_COMPATIBILITY' in run.out
-    if condition == 'equal':
-        assert 'has been resolved as' in run.out
-    if condition == 'existing_repo':
-        assert 'already exists' in run.out
+    assert 'Unable to upgrade' in run.err
+    if condition in ['override', 'equal']:
+        assert 'Paths have been overridden' in run.err
+    elif condition == 'existing_repo':
+        assert 'already exists' in run.err
 
 
 @pytest.mark.parametrize(
@@ -59,22 +45,29 @@ def test_upgrade(tmpdir, runner, yadm, condition):
     mock for git. echo will return true, simulating a positive result from "git
     ls-files". Also echo will report the parameters for "git mv".
     """
+    legacy_paths = ('config', 'encrypt', 'bootstrap', 'hooks/pre_cmd')
     home = tmpdir.mkdir('home')
     yadm_dir = home.join('.config/yadm')
-    legacy_dir = home.join('.yadm')
+    yadm_data = home.join('.local/share/yadm')
+    yadm_legacy = home.join('.yadm')
 
     if condition != 'no-paths':
-        legacy_dir.join('repo.git/config').write('test-repo', ensure=True)
-        for lpath in LEGACY_PATHS:
-            legacy_dir.join(lpath).write(lpath, ensure=True)
+        yadm_dir.join('repo.git/config').write('test-repo', ensure=True)
+        yadm_dir.join('files.gpg').write('files.gpg', ensure=True)
+        for path in legacy_paths:
+            yadm_legacy.join(path).write(path, ensure=True)
 
     mock_git = ""
-    if condition in ['tracked', 'submodules']:
+    if condition != 'no-paths':
         mock_git = f'''
             function git() {{
                 echo "$@"
-                if [[ "$*" == *.gitmodules* ]]; then
-                    return { '0' if condition == 'submodules' else '1' }
+                if [[ "$*" = *"submodule status" ]]; then
+                    { 'echo " 1234567 mymodule (1.0)"'
+                        if condition == 'submodules' else ':' }
+                fi
+                if [[ "$*" = *ls-files* ]]; then
+                    return { 1 if condition == 'untracked' else 0 }
                 fi
                 return 0
             }}
@@ -82,9 +75,11 @@ def test_upgrade(tmpdir, runner, yadm, condition):
 
     script = f"""
         YADM_TEST=1 source {yadm}
+        YADM_LEGACY_DIR="{yadm_legacy}"
         YADM_DIR="{yadm_dir}"
-        YADM_REPO="{yadm_dir}/repo.git"
-        YADM_LEGACY_DIR="{legacy_dir}"
+        YADM_DATA="{yadm_data}"
+        YADM_REPO="{yadm_data}/repo.git"
+        YADM_ARCHIVE="{yadm_data}/archive"
         GIT_PROGRAM="git"
         {mock_git}
         function cd {{ echo "$@";}}
@@ -96,25 +91,32 @@ def test_upgrade(tmpdir, runner, yadm, condition):
     if condition == 'no-paths':
         assert 'Upgrade is not necessary' in run.out
     else:
-        for lpath in LEGACY_PATHS + ['repo.git']:
+        for (lpath, npath) in [
+                ('repo.git', 'repo.git'), ('files.gpg', 'archive')]:
             expected = (
-                f'Moving {legacy_dir.join(lpath)} '
-                f'to {yadm_dir.join(lpath)}')
+                f'Moving {yadm_dir.join(lpath)} '
+                f'to {yadm_data.join(npath)}')
+            assert expected in run.out
+        for path in legacy_paths:
+            expected = (
+                f'Moving {yadm_legacy.join(path)} '
+                f'to {yadm_dir.join(path)}')
             assert expected in run.out
         if condition == 'untracked':
-            assert 'test-repo' in yadm_dir.join('repo.git/config').read()
-            for lpath in LEGACY_PATHS:
-                assert lpath in yadm_dir.join(lpath).read()
+            assert 'test-repo' in yadm_data.join('repo.git/config').read()
+            assert 'files.gpg' in yadm_data.join('archive').read()
+            for path in legacy_paths:
+                assert path in yadm_dir.join(path).read()
         elif condition in ['tracked', 'submodules']:
-            for lpath in LEGACY_PATHS:
-                expected = (
-                    f'mv {legacy_dir.join(lpath)} '
-                    f'{yadm_dir.join(lpath)}')
-                assert expected in run.out
+            expected = (
+                f'mv {yadm_dir.join("files.gpg")} '
+                f'{yadm_data.join("archive")}')
+            assert expected in run.out
             assert 'files tracked by yadm have been renamed' in run.out
             if condition == 'submodules':
-                assert 'submodule deinit -f .' in run.out
-                assert 'submodule update --init --recursive' in run.out
+                assert 'submodule deinit -- mymodule' in run.out
+                assert 'submodule update --init --recursive -- mymodule' \
+                    in run.out
             else:
-                assert 'submodule deinit -f .' not in run.out
+                assert 'submodule deinit' not in run.out
                 assert 'submodule update --init --recursive' not in run.out

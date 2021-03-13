@@ -196,6 +196,28 @@ def test_score_values(
     assert run.out == expected
 
 
+@pytest.mark.parametrize('ext', [None, 'e', 'extension'])
+def test_extensions(runner, yadm, ext):
+    """Verify extensions do not effect scores"""
+    local_user = 'testuser'
+    filename = f'filename##u.{local_user}'
+    if ext:
+        filename += f',{ext}.xyz'
+    expected = ''
+    script = f"""
+        YADM_TEST=1 source {yadm}
+        score=0
+        local_user={local_user}
+        score_file "{filename}"
+        echo "$score"
+    """
+    expected = f'{1000 + CONDITION["user"]["modifier"]}\n'
+    run = runner(command=['bash'], inp=script)
+    assert run.success
+    assert run.err == ''
+    assert run.out == expected
+
+
 def test_score_values_templates(runner, yadm):
     """Test score results"""
     local_class = 'testclass'
@@ -260,19 +282,3 @@ def test_template_recording(runner, yadm, cmd_generated):
     assert run.success
     assert run.err == ''
     assert run.out.rstrip() == expected
-
-
-def test_invalid(runner, yadm):
-    """Verify invalid alternates are noted in INVALID_ALT"""
-
-    invalid_file = "file##invalid"
-
-    script = f"""
-        YADM_TEST=1 source {yadm}
-        score_file "{invalid_file}"
-        echo "INVALID:${{INVALID_ALT[@]}}"
-    """
-    run = runner(command=['bash'], inp=script)
-    assert run.success
-    assert run.err == ''
-    assert run.out.rstrip() == f'INVALID:{invalid_file}'

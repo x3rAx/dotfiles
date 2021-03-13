@@ -5,10 +5,6 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    'cygwin',
-    [pytest.param(True, marks=pytest.mark.deprecated), False],
-    ids=['cygwin', 'no-cygwin'])
-@pytest.mark.parametrize(
     'setting, expect_link, pre_existing', [
         (None, True, None),
         (True, False, None),
@@ -25,15 +21,12 @@ import pytest
     ])
 @pytest.mark.usefixtures('ds1_copy')
 def test_alt_copy(
-        runner, yadm_y, paths, tst_sys,
-        setting, expect_link, pre_existing,
-        cygwin):
+        runner, yadm_cmd, paths, tst_sys,
+        setting, expect_link, pre_existing):
     """Test yadm.alt-copy"""
 
-    option = 'yadm.cygwin-copy' if cygwin else 'yadm.alt-copy'
-
     if setting is not None:
-        os.system(' '.join(yadm_y('config', option, str(setting))))
+        os.system(' '.join(yadm_cmd('config', 'yadm.alt-copy', str(setting))))
 
     expected_content = f'test_alt_copy##os.{tst_sys}'
 
@@ -43,7 +36,7 @@ def test_alt_copy(
     elif pre_existing == 'file':
         alt_path.write('wrong content')
 
-    run = runner(yadm_y('alt'))
+    run = runner(yadm_cmd('alt'))
     assert run.success
     assert run.err == ''
     assert 'Linking' in run.out

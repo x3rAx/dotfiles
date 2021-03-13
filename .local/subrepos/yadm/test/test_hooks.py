@@ -21,8 +21,9 @@ import pytest
         'pre-post-success',
         'pre-post-fail',
     ])
+@pytest.mark.parametrize('cmd', ['--version', 'version'])
 def test_hooks(
-        runner, yadm_y, paths,
+        runner, yadm_cmd, paths, cmd,
         pre, pre_code, post, post_code):
     """Test pre/post hook"""
 
@@ -33,7 +34,7 @@ def test_hooks(
         create_hook(paths, 'post_version', post_code)
 
     # run yadm
-    run = runner(yadm_y('version'))
+    run = runner(yadm_cmd(cmd))
     # when a pre hook fails, yadm should exit with the hook's code
     assert run.code == pre_code
     assert run.err == ''
@@ -53,7 +54,7 @@ def test_hooks(
 
 # repo fixture is needed to test the population of YADM_HOOK_WORK
 @pytest.mark.usefixtures('ds1_repo_copy')
-def test_hook_env(runner, yadm_y, paths):
+def test_hook_env(runner, yadm_cmd, paths):
     """Test hook environment"""
 
     # test will be done with a non existent "git" passthru command
@@ -65,7 +66,7 @@ def test_hook_env(runner, yadm_y, paths):
     hook.write('#!/bin/bash\nenv\ndeclare\n')
     hook.chmod(0o755)
 
-    run = runner(yadm_y(cmd, 'extra_args'))
+    run = runner(yadm_cmd(cmd, 'extra_args'))
 
     # expect passthru to fail
     assert run.failure
@@ -78,7 +79,7 @@ def test_hook_env(runner, yadm_y, paths):
     assert f'YADM_HOOK_FULL_COMMAND={cmd} extra_args\n' in run.out
     assert f'YADM_HOOK_REPO={paths.repo}\n' in run.out
     assert f'YADM_HOOK_WORK={paths.work}\n' in run.out
-    assert f'YADM_ENCRYPT_INCLUDE_FILES=\n' in run.out
+    assert 'YADM_ENCRYPT_INCLUDE_FILES=\n' in run.out
 
     # verify the hook environment contains certain exported functions
     for func in [
@@ -103,7 +104,7 @@ def test_hook_env(runner, yadm_y, paths):
     assert 'YADM_ENCRYPT_INCLUDE_FILES=a\nb\nc\n' in run.out
 
 
-def test_escaped(runner, yadm_y, paths):
+def test_escaped(runner, yadm_cmd, paths):
     """Test escaped values in YADM_HOOK_FULL_COMMAND"""
 
     # test will be done with a non existent "git" passthru command
@@ -115,7 +116,7 @@ def test_escaped(runner, yadm_y, paths):
     hook.write('#!/bin/bash\nenv\n')
     hook.chmod(0o755)
 
-    run = runner(yadm_y(cmd, 'a b', 'c\td', 'e\\f'))
+    run = runner(yadm_cmd(cmd, 'a b', 'c\td', 'e\\f'))
 
     # expect passthru to fail
     assert run.failure
@@ -124,6 +125,39 @@ def test_escaped(runner, yadm_y, paths):
     assert (
         f'YADM_HOOK_FULL_COMMAND={cmd} '
         'a\\ b c\\\td e\\\\f\n') in run.out
+
+
+@pytest.mark.parametrize('condition', ['exec', 'no-exec', 'mingw'])
+def test_executable(runner, paths, condition):
+    """Verify hook must be exectuable"""
+    cmd = 'version'
+    hook = paths.hooks.join(f'pre_{cmd}')
+    hook.write('#!/bin/sh\necho HOOK\n')
+    hook.chmod(0o644)
+    if condition == 'exec':
+        hook.chmod(0o755)
+
+    mingw = 'OPERATING_SYSTEM="MINGWx"' if condition == 'mingw' else ''
+    script = f"""
+        YADM_TEST=1 source {paths.pgm}
+        YADM_HOOKS="{paths.hooks}"
+        HOOK_COMMAND="{cmd}"
+        {mingw}
+        invoke_hook "pre"
+    """
+    run = runner(command=['bash'], inp=script)
+
+    if condition != 'mingw':
+        assert run.success
+        assert run.err == ''
+    else:
+        assert run.failure
+        assert 'Permission denied' in run.err
+
+    if condition == 'exec':
+        assert 'HOOK' in run.out
+    elif condition == 'no-exec':
+        assert 'HOOK' not in run.out
 
 
 def create_hook(paths, name, code):

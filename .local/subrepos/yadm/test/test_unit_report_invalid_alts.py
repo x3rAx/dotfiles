@@ -2,38 +2,29 @@
 import pytest
 
 
-@pytest.mark.parametrize(
-    'condition', [
-        'compat',
-        'previous-message',
-        'invalid-alts',
-        'no-invalid-alts',
-    ])
-def test_report_invalid_alts(runner, yadm, condition):
+@pytest.mark.parametrize('valid', [True, False], ids=['valid', 'no_valid'])
+@pytest.mark.parametrize('previous', [True, False], ids=['prev', 'no_prev'])
+def test_report_invalid_alts(runner, yadm, valid, previous):
     """Use report_invalid_alts"""
 
-    compat = ''
-    previous = ''
+    lwi = ''
     alts = 'INVALID_ALT=()'
-    if condition == 'compat':
-        compat = 'YADM_COMPATIBILITY=1'
-    if condition == 'previous-message':
-        previous = 'LEGACY_WARNING_ISSUED=1'
-    if condition == 'invalid-alts':
+    if previous:
+        lwi = 'LEGACY_WARNING_ISSUED=1'
+    if not valid:
         alts = 'INVALID_ALT=("file##invalid")'
 
     script = f"""
         YADM_TEST=1 source {yadm}
-        {compat}
-        {previous}
+        {lwi}
         {alts}
         report_invalid_alts
     """
     run = runner(command=['bash'], inp=script)
     assert run.success
-    assert run.err == ''
-    if condition == 'invalid-alts':
-        assert 'WARNING' in run.out
-        assert 'file##invalid' in run.out
+    assert run.out == ''
+    if not valid and not previous:
+        assert 'WARNING' in run.err
+        assert 'file##invalid' in run.err
     else:
-        assert run.out == ''
+        assert run.err == ''

@@ -14,6 +14,7 @@ areas.
 
 To contribute, you can:
 
+* Star the yadm repo, the star count helps others discover yadm.
 * Report [bugs](#reporting-a-bug)
 * Request [features/enhancements](#suggesting-a-feature-or-enhancement)
 * Contribute changes to [code, tests](#contributing-code), and [documentation](#improving-documentation)
@@ -206,7 +207,7 @@ these principles when making changes.
     ```
 
 4. Verify you can run the test harness. _(This will require dependencies:
-   `make`, `docker`, and `docker-compose`)_.
+   `make` and `docker`)_.
 
     ```text
     $ make test

@@ -25,25 +25,25 @@ def pytest_addoption(parser):
 @pytest.fixture(scope='session')
 def shellcheck_version():
     """Version of shellcheck supported"""
-    return '0.4.6'
+    return '0.7.1'
 
 
 @pytest.fixture(scope='session')
 def pylint_version():
     """Version of pylint supported"""
-    return '2.4.1'
+    return '2.6.0'
 
 
 @pytest.fixture(scope='session')
 def flake8_version():
     """Version of flake8 supported"""
-    return '3.7.8'
+    return '3.8.4'
 
 
 @pytest.fixture(scope='session')
 def yamllint_version():
     """Version of yamllint supported"""
-    return '1.17.0'
+    return '1.25.0'
 
 
 @pytest.fixture(scope='session')
@@ -118,10 +118,14 @@ def supported_configs():
         'yadm.auto-exclude',
         'yadm.auto-perms',
         'yadm.auto-private-dirs',
+        'yadm.cipher',
         'yadm.git-program',
         'yadm.gpg-perms',
         'yadm.gpg-program',
         'yadm.gpg-recipient',
+        'yadm.openssl-ciphername',
+        'yadm.openssl-old',
+        'yadm.openssl-program',
         'yadm.ssh-perms',
         ]
 
@@ -136,6 +140,7 @@ def supported_switches():
         '--yadm-archive',
         '--yadm-bootstrap',
         '--yadm-config',
+        '--yadm-data',
         '--yadm-dir',
         '--yadm-encrypt',
         '--yadm-repo',
@@ -175,6 +180,10 @@ class Runner():
             self.command = ' '.join([str(cmd) for cmd in command])
         else:
             self.command = command
+        if env is None:
+            env = {}
+        merged_env = os.environ.copy()
+        merged_env.update(env)
         self.inp = inp
         self.wrap(expect)
         process = Popen(
@@ -184,7 +193,7 @@ class Runner():
             stderr=PIPE,
             shell=shell,
             cwd=cwd,
-            env=env,
+            env=merged_env,
         )
         input_bytes = self.inp
         if self.inp:
@@ -275,13 +284,17 @@ def yadm():
 @pytest.fixture()
 def paths(tmpdir, yadm):
     """Function scoped test paths"""
+
     dir_root = tmpdir.mkdir('root')
-    dir_work = dir_root.mkdir('work')
-    dir_yadm = dir_root.mkdir('yadm')
-    dir_repo = dir_yadm.mkdir('repo.git')
-    dir_hooks = dir_yadm.mkdir('hooks')
     dir_remote = dir_root.mkdir('remote')
-    file_archive = dir_yadm.join('files.gpg')
+    dir_work = dir_root.mkdir('work')
+    dir_xdg_data = dir_root.mkdir('xdg_data')
+    dir_xdg_home = dir_root.mkdir('xdg_home')
+    dir_data = dir_xdg_data.mkdir('yadm')
+    dir_yadm = dir_xdg_home.mkdir('yadm')
+    dir_hooks = dir_yadm.mkdir('hooks')
+    dir_repo = dir_data.mkdir('repo.git')
+    file_archive = dir_data.join('archive')
     file_bootstrap = dir_yadm.join('bootstrap')
     file_config = dir_yadm.join('config')
     file_encrypt = dir_yadm.join('encrypt')
@@ -289,24 +302,32 @@ def paths(tmpdir, yadm):
         'Paths', [
             'pgm',
             'root',
-            'work',
-            'yadm',
-            'repo',
-            'hooks',
             'remote',
+            'work',
+            'xdg_data',
+            'xdg_home',
+            'data',
+            'yadm',
+            'hooks',
+            'repo',
             'archive',
             'bootstrap',
             'config',
             'encrypt',
             ])
+    os.environ['XDG_CONFIG_HOME'] = str(dir_xdg_home)
+    os.environ['XDG_DATA_HOME'] = str(dir_xdg_data)
     return paths(
         yadm,
         dir_root,
-        dir_work,
-        dir_yadm,
-        dir_repo,
-        dir_hooks,
         dir_remote,
+        dir_work,
+        dir_xdg_data,
+        dir_xdg_home,
+        dir_data,
+        dir_yadm,
+        dir_hooks,
+        dir_repo,
         file_archive,
         file_bootstrap,
         file_config,
@@ -315,11 +336,11 @@ def paths(tmpdir, yadm):
 
 
 @pytest.fixture()
-def yadm_y(paths):
+def yadm_cmd(paths):
     """Generate custom command_list function"""
     def command_list(*args):
         """Produce params for running yadm with -Y"""
-        return [paths.pgm, '-Y', str(paths.yadm)] + list(args)
+        return [paths.pgm] + list(args)
     return command_list
 
 

@@ -26,7 +26,7 @@ def test_set_local_alt_values(
     script = f"""
         YADM_TEST=1 source {yadm} &&
         set_operating_system &&
-        YADM_DIR={paths.yadm} configure_paths &&
+        YADM_DIR={paths.yadm} YADM_DATA={paths.data} configure_paths &&
         set_local_alt_values
         echo "class='$local_class'"
         echo "os='$local_system'"
@@ -52,12 +52,12 @@ def test_set_local_alt_values(
         assert f"os='{tst_sys}'" in run.out
 
     if override == 'hostname':
-        assert f"host='override'" in run.out
+        assert "host='override'" in run.out
     else:
         assert f"host='{tst_host}'" in run.out
 
     if override == 'user':
-        assert f"user='override'" in run.out
+        assert "user='override'" in run.out
     else:
         assert f"user='{tst_user}'" in run.out
 
@@ -67,6 +67,7 @@ def test_distro(runner, yadm):
 
     script = f"""
         YADM_TEST=1 source {yadm}
+        function config() {{ echo "$1"; }}
         function query_distro() {{ echo "testdistro"; }}
         set_local_alt_values
         echo "distro='$local_distro'"

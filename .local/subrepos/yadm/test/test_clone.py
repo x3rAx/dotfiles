@@ -24,7 +24,7 @@ BOOTSTRAP_MSG = 'Bootstrap successful'
         'conflicts',
     ])
 def test_clone(
-        runner, paths, yadm_y, repo_config, ds1,
+        runner, paths, yadm_cmd, repo_config, ds1,
         good_remote, repo_exists, force, conflicts):
     """Test basic clone operation"""
 
@@ -53,22 +53,25 @@ def test_clone(
     if force:
         args += ['-f']
     args += [remote_url]
-    run = runner(command=yadm_y(*args))
+    run = runner(command=yadm_cmd(*args))
 
     if not good_remote:
         # clone should fail
         assert run.failure
-        assert run.err != ''
-        assert 'Unable to fetch origin' in run.out
+        assert run.out != ''
+        assert 'Unable to fetch origin' in run.err
         assert not paths.repo.exists()
     elif repo_exists and not force:
         # can't overwrite data
         assert run.failure
-        assert run.err == ''
-        assert 'Git repo already exists' in run.out
+        assert run.out == ''
+        assert 'Git repo already exists' in run.err
     else:
         # clone should succeed, and repo should be configured properly
         assert successful_clone(run, paths, repo_config)
+
+        # these clones should have master as HEAD
+        verify_head(paths, 'master')
 
         # ensure conflicts are handled properly
         if conflicts:
@@ -88,20 +91,21 @@ def test_clone(
         if conflicts:
             # test to see if the work tree is actually "clean"
             run = runner(
-                command=yadm_y('status', '-uno', '--porcelain'),
+                command=yadm_cmd('status', '-uno', '--porcelain'),
                 cwd=paths.work)
             assert run.success
             assert run.err == ''
             assert run.out == '', 'worktree has unexpected changes'
 
             # test to see if the conflicts are stashed
-            run = runner(command=yadm_y('stash', 'list'), cwd=paths.work)
+            run = runner(command=yadm_cmd('stash', 'list'), cwd=paths.work)
             assert run.success
             assert run.err == ''
             assert 'Conflicts preserved' in run.out, 'conflicts not stashed'
 
             # verify content of the stashed conflicts
-            run = runner(command=yadm_y('stash', 'show', '-p'), cwd=paths.work)
+            run = runner(
+                command=yadm_cmd('stash', 'show', '-p'), cwd=paths.work)
             assert run.success
             assert run.err == ''
             assert '\n+conflict' in run.out, 'conflicts not stashed'
@@ -130,7 +134,7 @@ def test_clone(
         'existing, answer y',
     ])
 def test_clone_bootstrap(
-        runner, paths, yadm_y, repo_config, bs_exists, bs_param, answer):
+        runner, paths, yadm_cmd, repo_config, bs_exists, bs_param, answer):
     """Test bootstrap clone features"""
 
     # establish a bootstrap
@@ -144,7 +148,7 @@ def test_clone_bootstrap(
     expect = []
     if answer:
         expect.append(('Would you like to execute it now', answer))
-    run = runner(command=yadm_y(*args), expect=expect)
+    run = runner(command=yadm_cmd(*args), expect=expect)
 
     if answer:
         assert 'Would you like to execute it now' in run.out
@@ -161,6 +165,7 @@ def test_clone_bootstrap(
         assert BOOTSTRAP_MSG not in run.out
 
     assert successful_clone(run, paths, repo_config, expected_code)
+    verify_head(paths, 'master')
 
     if not bs_exists:
         assert BOOTSTRAP_MSG not in run.out
@@ -197,7 +202,7 @@ def create_bootstrap(paths, exists):
         'missing gnupg, tracked',
     ])
 def test_clone_perms(
-        runner, yadm_y, paths, repo_config,
+        runner, yadm_cmd, paths, repo_config,
         private_type, in_repo, in_work):
     """Test clone permission-related functions"""
 
@@ -224,11 +229,12 @@ def test_clone_perms(
 
     env = {'HOME': paths.work}
     run = runner(
-        yadm_y('clone', '-d', '-w', paths.work, f'file://{paths.remote}'),
+        yadm_cmd('clone', '-d', '-w', paths.work, f'file://{paths.remote}'),
         env=env
     )
 
     assert successful_clone(run, paths, repo_config)
+    verify_head(paths, 'master')
     if in_work:
         # private directories which already exist, should be left as they are,
         # which in this test is "insecure".
@@ -259,8 +265,9 @@ def test_clone_perms(
 
 
 @pytest.mark.usefixtures('remote')
-@pytest.mark.parametrize('branch', ['master', 'valid', 'invalid'])
-def test_alternate_branch(runner, paths, yadm_y, repo_config, branch):
+@pytest.mark.parametrize(
+    'branch', ['master', 'default', 'valid', 'invalid'])
+def test_alternate_branch(runner, paths, yadm_cmd, repo_config, branch):
     """Test cloning a branch other than master"""
 
     # add a "valid" branch to the remote
@@ -268,6 +275,12 @@ def test_alternate_branch(runner, paths, yadm_y, repo_config, branch):
     os.system(
         f'GIT_DIR="{paths.remote}" git commit '
         f'--allow-empty -m "This branch is valid"')
+    if branch != 'default':
+        # When branch == 'default', the "default" branch of the remote repo
+        # will remain "valid" to validate identification the correct default
+        # branch by inspecting the repo. Otherwise it will be set back to
+        # "master"
+        os.system(f'GIT_DIR="{paths.remote}" git checkout master')
 
     # clear out the work path
     paths.work.remove()
@@ -277,15 +290,15 @@ def test_alternate_branch(runner, paths, yadm_y, repo_config, branch):
 
     # run the clone command
     args = ['clone', '-w', paths.work]
-    if branch != 'master':
+    if branch not in ['master', 'default']:
         args += ['-b', branch]
     args += [remote_url]
-    run = runner(command=yadm_y(*args))
+    run = runner(command=yadm_cmd(*args))
 
     if branch == 'invalid':
         assert run.failure
-        assert 'ERROR: Clone failed' in run.out
-        assert f"'origin/{branch}' does not exist in {remote_url}" in run.out
+        assert 'ERROR: Clone failed' in run.err
+        assert f"'origin/{branch}' does not exist in {remote_url}" in run.err
     else:
         assert successful_clone(run, paths, repo_config)
 
@@ -296,11 +309,13 @@ def test_alternate_branch(runner, paths, yadm_y, repo_config, branch):
         assert run.success
         assert run.err == ''
         assert f'origin\t{remote_url}' in run.out
-        run = runner(command=yadm_y('show'))
-        if branch == 'valid':
-            assert 'This branch is valid' in run.out
-        else:
+        run = runner(command=yadm_cmd('show'))
+        if branch == 'master':
             assert 'Initial commit' in run.out
+            verify_head(paths, 'master')
+        else:
+            assert 'This branch is valid' in run.out
+            verify_head(paths, 'valid')
 
 
 def successful_clone(run, paths, repo_config, expected_code=0):
@@ -323,3 +338,16 @@ def remote(paths, ds1_repo_copy):
     # cannot be applied to another fixture.
     paths.remote.remove()
     paths.repo.move(paths.remote)
+
+
+def test_no_repo(runner, yadm_cmd, ):
+    """Test cloning without specifying a repo"""
+    run = runner(command=yadm_cmd('clone'))
+    assert run.failure
+    assert run.out == ''
+    assert 'ERROR: No repository provided' in run.err
+
+
+def verify_head(paths, branch):
+    """Assert the local repo has the correct head branch"""
+    assert paths.repo.join('HEAD').read() == f'ref: refs/heads/{branch}\n'

@@ -1,5 +1,5 @@
 PYTESTS = $(wildcard test/test_*.py)
-IMAGE = yadm/testbed:2020-07-08
+IMAGE = yadm/testbed:2020-12-29
 
 .PHONY: all
 all:
@@ -23,7 +23,7 @@ usage:
 	@echo
 	@echo '  make testhost [version=VERSION]'
 	@echo '    - Create an ephemeral container for doing adhoc yadm testing. The'
-	@echo '      HEAD revision of yadm will be used unless "version" is'
+	@echo '      working copy version of yadm will be used unless "version" is'
 	@echo '      specified. "version" can be set to any commit, branch, tag, etc.'
 	@echo '      The targeted "version" will be retrieved from the repo, and'
 	@echo '      linked into the container as a local volume.'
@@ -33,7 +33,7 @@ usage:
 	@echo '      exiting the shell, a log of the commands used to illustrate the'
 	@echo '      problem will be written to the file "script.txt". This file can'
 	@echo '      be useful to developers to make a repeatable test for the'
-	@echo '      problem.'
+	@echo '      problem. The version parameter works as for "testhost" above.'
 	@echo
 	@echo 'LINTING'
 	@echo
@@ -82,7 +82,7 @@ usage:
 # Make it possible to run make specifying a py.test test file
 .PHONY: $(PYTESTS)
 $(PYTESTS):
-	@$(MAKE) test testargs="-k $@ $(testargs)"
+	@$(MAKE) test testargs="$@ $(testargs)"
 %.py:
 	@$(MAKE) test testargs="-k $@ $(testargs)"
 
@@ -93,64 +93,74 @@ test:
 		cd /yadm && \
 		py.test -v $(testargs); \
 	else \
-		if command -v "docker-compose" &> /dev/null; then \
-			docker-compose run --rm testbed make test testargs="$(testargs)"; \
-		else \
-			echo "Sorry, this make test requires docker-compose to be installed."; \
-			false; \
-		fi \
+		$(MAKE) -s require-docker && \
+		docker run \
+			--rm -t$(shell test -t 0 && echo i) \
+			-v "$(CURDIR):/yadm:ro" \
+			$(IMAGE) \
+			make test testargs="$(testargs)"; \
 	fi
 
+.PHONY: .testyadm
+.testyadm: version ?= local
+.testyadm:
+	@rm -f $@
+	@if [ "$(version)" = "local" ]; then \
+		ln -sf yadm $@; \
+		echo "Using local yadm ($$(git describe --tags --dirty))"; \
+	else \
+		git show $(version):yadm > $@; \
+		echo "Using yadm version $$(git describe --tags $(version))"; \
+	fi
+	@chmod a+x $@
+
 .PHONY: testhost
-testhost: require-docker
-	@version=HEAD
-	@rm -rf /tmp/testhost
-	@git show $(version):yadm > /tmp/testhost
-	@chmod a+x /tmp/testhost
-	@echo Starting testhost version=\"$$version\"
+testhost: require-docker .testyadm
+	@echo "Starting testhost"
 	@docker run \
 		-w /root \
 		--hostname testhost \
 		--rm -it \
-		-v "/tmp/testhost:/bin/yadm:ro" \
+		-v "$(CURDIR)/.testyadm:/bin/yadm:ro" \
 		$(IMAGE) \
 		bash -l
 
 .PHONY: scripthost
-scripthost: require-docker
-	@version=HEAD
-	@rm -rf /tmp/testhost
-	@git show $(version):yadm > /tmp/testhost
-	@chmod a+x /tmp/testhost
-	@echo Starting scripthost version=\"$$version\" \(recording script\)
+scripthost: require-docker .testyadm
+	@echo "Starting scripthost \(recording script\)"
 	@printf '' > script.gz
 	@docker run \
 		-w /root \
 		--hostname scripthost \
 		--rm -it \
-		-v "$$PWD/script.gz:/script.gz:rw" \
-		-v "/tmp/testhost:/bin/yadm:ro" \
+		-v "$(CURDIR)/script.gz:/script.gz:rw" \
+		-v "$(CURDIR)/.testyadm:/bin/yadm:ro" \
 		$(IMAGE) \
 		bash -c "script /tmp/script -q -c 'bash -l'; gzip < /tmp/script > /script.gz"
 	@echo
-	@echo "Script saved to $$PWD/script.gz"
+	@echo "Script saved to $(CURDIR)/script.gz"
 
 
 .PHONY: testenv
 testenv:
 	@echo 'Creating a local virtual environment in "testenv/"'
 	@echo
+	@rm -rf testenv
 	python3 -m venv --clear testenv
 	testenv/bin/pip3 install --upgrade pip setuptools
-	testenv/bin/pip3 install --upgrade \
-		flake8==3.7.8 \
-		pylint==2.4.1 \
-		pytest==5.1.3 \
-		yamllint==1.17.0 \
-	;
+	testenv/bin/pip3 install --upgrade -r test/requirements.txt;
+	@for v in $$(sed -En -e 's:.*/yadm-([0-9.]+)$$:\1:p' test/Dockerfile); do \
+		git show $$v:yadm > testenv/bin/yadm-$$v; \
+		chmod +x testenv/bin/yadm-$$v; \
+	done
 	@echo
 	@echo 'To activate this test environment type:'
 	@echo '  source testenv/bin/activate'
+
+.PHONY: image
+image:
+	@docker build -f test/Dockerfile . -t "$(IMAGE)"
+
 
 .PHONY: man
 man:
@@ -168,8 +178,9 @@ yadm.md: yadm.1
 	@groff -man -Tascii ./yadm.1 | col -bx | sed 's/^[A-Z]/## &/g' | sed '/yadm(1)/d' > yadm.md
 
 .PHONY: contrib
+contrib: SHELL = /bin/bash
 contrib:
-	@echo "CONTRIBUTORS\n" > CONTRIBUTORS
+	@echo -e "CONTRIBUTORS\n" > CONTRIBUTORS
 	@IFS=$$'\n'; for author in $$(git shortlog -ns master gh-pages develop dev-pages | cut -f2); do \
 		git log master gh-pages develop dev-pages \
 			--author="$$author" --format=tformat: --numstat | \
@@ -197,7 +208,7 @@ sync-clock:
 
 .PHONY: require-docker
 require-docker:
-	@if ! command -v "docker" &> /dev/null; then \
+	@if ! command -v "docker" > /dev/null 2>&1; then \
 		echo "Sorry, this make target requires docker to be installed."; \
 		false; \
 	fi

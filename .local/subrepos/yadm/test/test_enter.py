@@ -17,7 +17,7 @@ import pytest
         'shell-noexec',
     ])
 @pytest.mark.usefixtures('ds1_copy')
-def test_enter(runner, yadm_y, paths, shell, success):
+def test_enter(runner, yadm_cmd, paths, shell, success):
     """Enter tests"""
     env = os.environ.copy()
     if shell == 'delete':
@@ -33,15 +33,15 @@ def test_enter(runner, yadm_y, paths, shell, success):
     else:
         env['SHELL'] = shell
 
-    run = runner(command=yadm_y('enter'), env=env)
+    run = runner(command=yadm_cmd('enter'), env=env)
     assert run.success == success
-    assert run.err == ''
     prompt = f'yadm shell ({paths.repo})'
     if success:
         assert run.out.startswith('Entering yadm repo')
         assert run.out.rstrip().endswith('Leaving yadm repo')
-    if not success:
-        assert 'does not refer to an executable' in run.out
+        assert run.err == ''
+    else:
+        assert 'does not refer to an executable' in run.err
     if 'env' in shell:
         assert f'GIT_DIR={paths.repo}' in run.out
         assert f'GIT_WORK_TREE={paths.work}' in run.out
@@ -63,8 +63,12 @@ def test_enter(runner, yadm_y, paths, shell, success):
     'cmd',
     [False, 'cmd', 'cmd-bad-exit'],
     ids=['no-cmd', 'cmd', 'cmd-bad-exit'])
+@pytest.mark.parametrize(
+    'term', ['', 'dumb'],
+    ids=['term-empty', 'term-dumb'])
 @pytest.mark.usefixtures('ds1_copy')
-def test_enter_shell_ops(runner, yadm_y, paths, shell, opts, path, cmd):
+def test_enter_shell_ops(runner, yadm_cmd, paths, shell,
+                         opts, path, cmd, term):
     """Enter tests for specific shell options"""
 
     change_exit = '\nfalse' if cmd == 'cmd-bad-exit' else ''
@@ -83,9 +87,13 @@ def test_enter_shell_ops(runner, yadm_y, paths, shell, opts, path, cmd):
         enter_cmd += test_cmd
 
     env = os.environ.copy()
+    env['TERM'] = term
     env['SHELL'] = custom_shell
 
-    run = runner(command=yadm_y(*enter_cmd), env=env)
+    if shell == 'zsh' and term == 'dumb':
+        opts += ' --no-zle'
+
+    run = runner(command=yadm_cmd(*enter_cmd), env=env)
     if cmd == 'cmd-bad-exit':
         assert run.failure
     else:
