@@ -23,7 +23,7 @@ For an easy setup with bootstrapping and without `yadm` installed use:
 
 
 
-## Update Subrepos
+## 💪 Update Subrepos
 
 `git-subrepo` conflicts with `yadm`. The easiest way to update subrepos is by
 checking out the repo with `git` in a temporary directory and update subrepos
