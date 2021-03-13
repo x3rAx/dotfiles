@@ -1,0 +1,6 @@
+{
+    "detachKeys": "ctrl-x,ctrl-x",
+    "credsStore": "desktop.exe",
+    "experimental": "enabled"
+}
+
