@@ -42,6 +42,7 @@ let mapleader = ' '
         Plug 'lambdalisue/suda.vim'
         Plug 'rust-lang/rust.vim'
         Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+        Plug 'fidian/hexmode'
 
         " START vim-zettel
         Plug 'vimwiki/vimwiki'
@@ -441,6 +442,9 @@ endif
 
 command! ZetID exec "normal O@ID:\<c-r>=strftime('%Y%m%d%H%M%S')<esc>j"
 inoreabbrev @ID: @ID:<c-r>=strftime('%Y%m%d%H%M%S')<CR>
+
+set noeol
+set nofixeol
 
 " vim-zettel config
     " Settings for Vimwiki
