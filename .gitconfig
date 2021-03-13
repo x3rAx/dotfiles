@@ -21,6 +21,8 @@
 	cm = commit -m
 	ca = commit --amend
 	amend = commit --amend
+    sub = subrepo
+    sub-st = sub status
 
     # === Emoji Log ===
     # NEW.
