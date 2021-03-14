@@ -1,0 +1,173 @@
+!! .Xresources
+!!!!!!!!!!!!!!!!
+
+!URxvt*termName: xterm-256color
+!URxvt*termName: rxvt-unicode-256color
+
+
+URxvt.saveLines: 819200
+
+!! Set font and font size
+!URxvt.font: xft:monospace:size=11:antialias=true
+!URxvt.font: xft:Source\ Code\ Pro\ Medium:pixelsize=14:antialias=true:hinting=true,xft:Source\ Code\ Pro\ Medium:pixelsize=15:antialias=true:hinting=true
+!URxvt.font: xft:DejaVu Sans Mono for Powerline:size=10:antialias=true
+URxvt.font: xft:Source Code Pro for Powerline:pixelsize=14:antialias=true:hinting=true,xft:DejaVu Sans:pixelsize=10:antialias=true:hinting=true
+
+!! do not scroll with output
+URxvt*scrollTtyOutput: false
+
+!! scroll in relation to buffer (with mouse scroll or Shift+Page Up)
+URxvt*scrollWithBuffer: true
+
+!! scroll back to the bottom on keypress
+URxvt*scrollTtyKeypress: true
+
+!! Switch buffer for things like vim or less and enable scrolling
+URxvt.secondaryScreen: true
+URxvt.secondaryScroll: false
+!URxvt.secondaryWheel:  true ! DO NOT USE WITH vtscroll ENABLED
+
+!! Put scrollbar to right side
+URxvt.scrollBar_right: true
+!URxvt.scrollBar_floating: 1
+! Set scroll bar thickness (not working :/ )
+!URxvt*thickness: 1
+URxvt*scrollstyle: plain
+
+!! Enable transparentcy (need compton)
+urxvt*depth: 32
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! KEY BINDINGS
+
+URxvt.keysym.Control-V: eval:paste_clipboard
+URxvt.keysym.Control-C: eval:selection_to_clipboard
+URxvt.keysym.C-C:       perl:clipboard:copy
+
+!! Show / Hide cursor
+URxvt.keysym.M-S-Escape: command:\033[?25h
+URxvt.keysym.M-C-Escape: command:\033[?25l
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! EXTENSIONS
+
+!! Plugin directory
+!Urxvt.perl-lib: /usr/lib/urxvt/perl/
+Urxvt.perl-lib: ~/.urxvt/ext/
+
+!! Load extensions (separate with comma and no space: ext_1,ext_2,...)
+!! Disabled: 
+URxvt.perl-ext-common: default,vtwheel,matcher,url-select,keyboard-select,resize-font,focus-events
+
+!! matcher / url-select:
+URxvt.matcher.button:       3
+URxvt.colorUL:              #4682B4
+URxvt.keysym.M-u:           perl:url-select:select_next
+URxvt.url-select.launcher:  xdg-open
+!URxvt.keysym.M-u:           perl:matcher:select
+URxvt.url-launcher:         /usr/bin/xdg-open
+URxvt.url-select.underline: true
+!! keyboard-select:
+URxvt.keysym.M-Escape:      perl:keyboard-select:activate
+URxvt.keyboard-select.clipboard: true
+
+URxvt.keysym.C-minus:       resize-font:smaller
+URxvt.keysym.C-plus:        resize-font:bigger
+URxvt.keysym.C-equal:      resize-font:bigger
+URxvt.keysym.C-0:           resize-font:reset
+URxvt.keysym.C-M-0:         resize-font:show
+
+URxvt.keysym.M-s: perl:searchable-scrollback:start
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! THEME
+!!
+!! Based on:
+!!   Base16 Gooey
+!!   Scheme: Alex Booker <alexbooker@fastmail.im>
+!! Thanks for that!
+
+URxvt*background:           [90]#101218
+!URxvt*foreground:           #d1d4e0
+URxvt*foreground:           #92949d
+!URxvt*cursorColor:          #d1d4e0
+URxvt*cursorColor:          magenta
+
+!URxvt*scrollColor:          [95]#303238
+URxvt*scrollColor:          [90]#303648
+URxvt*highlightColor:       #252936
+URxvt*highlightTextColor:   #C0C5CE
+
+URxvt*color0:    #101218
+URxvt*color1:    #ee829f
+URxvt*color2:    #a5ffe1
+URxvt*color3:    #ffefcc
+URxvt*color4:    #97bbf7
+URxvt*color5:    #c0b7f9
+URxvt*color6:    #97e0ff
+URxvt*color7:    #d1d4e0
+URxvt*color8:    #7780a1
+URxvt*color9:    #ee829f
+URxvt*color10:   #a5ffe1
+URxvt*color11:   #ffefcc
+URxvt*color12:   #97bbf7
+URxvt*color13:   #c0b7f9
+URxvt*color14:   #97e0ff
+URxvt*color15:   #ffffff
+
+URxvt*color16:   #f99170
+URxvt*color17:   #fcc09e
+URxvt*color18:   #1f222d
+URxvt*color19:   #252936
+URxvt*color20:   #C0C5CE
+URxvt*color21:   #C9CCDB
+
+!! ST - Suckless Terminal
+!St*background:           #101218
+!St*foreground:           #92949d
+!St*cursorColor:          magenta
+St*color0:    #101218
+St*color1:    #ee829f
+St*color2:    #a5ffe1
+St*color3:    #ffefcc
+St*color4:    #97bbf7
+St*color5:    #c0b7f9
+St*color6:    #97e0ff
+St*color7:    #d1d4e0
+St*color8:    #7780a1
+St*color9:    #ee829f
+St*color10:   #a5ffe1
+St*color11:   #ffefcc
+St*color12:   #97bbf7
+St*color13:   #c0b7f9
+St*color14:   #97e0ff
+St*color15:   #ffffff
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! ???
+
+!! Disable strange "keycap" mode when pressing Ctrl+Shift
+URxvt.iso14755: false
+URxvt.iso14755_52: false
+
+!!#include <.Xresources.d/nord.Xtheme>
+
+!URxvt.keysym.C-S-a: command:\033[65:5u
+
+
+!! Copy/Paste with Control-Shift-c/v
+!    URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+!    URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+
+
+!! See this list for F key codes:
+!!   http://aperiodic.net/phil/archives/Geekery/term-function-keys.html
+!URxvt.keysym.C-A     : [11;5~
+
+!/URxvt.keysym.C-A     : [34~
+!URxvt.keysym.C-A              : \033[26~a
+!URxvt.keysym.M-a              : \033[28~a
+!URxvt.keysym.M-A              : \033[29~a
+!URxvt.keysym.C-M-a            : \033[31~a
+!URxvt.keysym.C-M-A            : \033[32~a
+
