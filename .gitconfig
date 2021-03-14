@@ -9,7 +9,7 @@
 	path = .gitconfig.local
 [core]
 	#editor = code --wait
-	excludesfile = /home/x3ro/.gitignore-global
+	excludesfile = .gitignore-global
 [pull]
 	ff = only
 [merge]
