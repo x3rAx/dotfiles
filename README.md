@@ -23,6 +23,16 @@ For an easy setup with bootstrapping and without `yadm` installed use:
 
 
 
+### 🔱 Yadm Classes
+
+Set the machine class using `yadm config local.class <class>`
+
+The following classes are available:
+
+- *_unknown_\*_*: (* is wildcard) Files that contain config that has been (but is not currently) in use and for which I have no idea if I will need them someday 🙈
+
+
+
 ## 💪 Update Subrepos
 
 `git-subrepo` conflicts with `yadm`. The easiest way to update subrepos is by
