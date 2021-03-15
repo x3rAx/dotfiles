@@ -8,8 +8,8 @@
     __SHELL_SUFFIX='bash'
 
     IFS=$'\n'
-    # For POSIX incompatible shells, remove this part -------------------------------------vvvvvvvvvvvvvvvv
-    for f in $(find ~/.shellrc.d -type f \! -name '#*' -and \( -name "*.${__SHELL_SUFFIX}" -or -name '*.sh' \) | sort ); do
+    # For POSIX incompatible shells, remove this part ----------------------------------------------------------vvvvvvvvvvvvvvvv
+    for f in $(find ~/.shellrc.d -type f \! -name '#*' -and \! -path '*/#*' -and \( -name "*.${__SHELL_SUFFIX}" -or -name '*.sh' \) | sort ); do
         source "$f"
     done
 
