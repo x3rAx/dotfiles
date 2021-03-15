@@ -54,10 +54,9 @@ $ rm -rf "$tmp"
 $ yadm pull
 ```
 
-## Some useful Tools
+## 🛠️ Useful Tools
 
 - [`bat`](https://github.com/sharkdp/bat) - A cat(1) clone with wings (see [`~/.shellrc.d/cat-bat.sh`](.shellrc.d/cat-bat.sh))
 - [`exa`](https://github.com/ogham/exa) - A modern replacement for ‘ls’ (see [`~/.shellrc.d/ls-exa.sh`](.shellrc.d/ls-exa.sh))
 - [`fd`](https://github.com/sharkdp/fd) - A simple, fast and user-friendly alternative to 'find'
 - [`ripgrep`](https://github.com/burntsushi/ripgrep) - An blazing fast alternative for `find` ("ripgrep recursively searches directories for a regex pattern while respecting your gitignore")
-
