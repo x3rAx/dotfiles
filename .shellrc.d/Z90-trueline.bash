@@ -69,4 +69,4 @@ declare -a TRUELINE_SEGMENTS=(
     "exit_status,black,red,bold"
 )
 
-source ~/.trueline/trueline.sh
+source ~/.local/subrepos/trueline/trueline.sh
