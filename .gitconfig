@@ -10,6 +10,7 @@
 [core]
 	#editor = code --wait
 	excludesfile = .gitignore-global
+    pager = "f() { if [ \"$(command -v delta)\" ]; then delta \"$@\"; else less \"$@\"; fi; }; f"
 [pull]
 	ff = only
 [merge]
@@ -46,3 +47,5 @@
     ctst = "!f() { git commit -e -m \"🤖 TEST: $@\"; }; f"
     # BREAKING CHANGE.
     cbrk = "!f() { git commit -e -m \"‼️ BREAKING: $@\"; }; f"
+[delta]
+	side-by-side = false
