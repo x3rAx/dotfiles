@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/petobens/trueline
+	branch = master
+	commit = 7f4a2d9940835a4709f1bdd473ea32ab81465dbc
+	parent = 845910986e4c48c38e7cd5fd109c8085d27d9436
+	method = merge
+	cmdver = 0.4.3
