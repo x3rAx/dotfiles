@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+main() {
+    c bat batcat
+    c cargo
+    c curl
+    c delta
+    c exa
+    c fd
+    c git
+    c rg
+}
+
+
+
+c() {
+    local C_RED="$(tput setaf 1)"
+    local C_GREEN="$(tput setaf 2)"
+    local C_GRAY="$(tput dim)$(tput setaf 7)"
+    local C_RESET="$(tput sgr0)"
+    readonly C_RED C_GREEN C_GRAY C_RESET
+
+    local prog
+    local found=0
+    local found_prog=""
+    local other_progs=""
+
+    for prog in "$@"; do
+        if [ "$(command -v "$prog")" ]; then
+            found=1
+            found_prog="$prog"
+        else
+            other_progs="${other_progs:+$other_progs, }${prog}"
+        fi
+    done
+
+    if [[ $found == 1 ]]; then
+        echo -n "${C_GREEN}✔️ ${found_prog}${C_RESET}"
+        if [[ -n $other_progs ]]; then
+            echo -n "${C_GRAY}, ${other_progs}${C_RESET}"
+        fi
+        echo ""
+    else
+        echo >&2 "${C_RED}✖️ ${other_progs}${C_RESET}"
+    fi
+}
+
+main "$@"
