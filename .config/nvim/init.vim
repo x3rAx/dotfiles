@@ -73,7 +73,9 @@ let mapleader = ' '
 
 
 " Configure airline
-    let g:airline#extensions#tabline#formatter = 'markdown_title'
+    if $USER != 'root'
+        let g:airline#extensions#tabline#formatter = 'markdown_title'
+    endif
     let g:airline_theme='bubblegum'
     let g:airline_powerline_fonts = 1
     let g:airline#extensions#tabline#enabled = 1
@@ -459,6 +461,9 @@ set nofixeol
     command! Zbacklinks VimwikiBacklinks
     command! Zindex VimwikiIndex
 
+
+" Git Emoji Log (https://github.com/ahmadawais/Emoji-Log)
+    command! GCnew !git commit -m "HORAAY" -e --allow-empty
 
 " Coc Config
     "" Use tab for trigger completion with characters ahead and navigate.
