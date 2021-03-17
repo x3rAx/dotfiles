@@ -1,4 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
-let g:netrw_dirhist_1='/nix/store/r4xhsc3vg2y62jbk0pdvv4s1i5d8d33m-vscode-1.41.0/lib/vscode/resources'
-let g:netrw_dirhist_2='/boot/grub'
