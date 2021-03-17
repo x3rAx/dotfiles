@@ -143,3 +143,67 @@ class fzf_select(Command):
                 self.fm.cd(fzf_file)
             else:
                 self.fm.select_file(fzf_file)
+
+
+# ^x3ro
+class DiffWrapper():
+    __fm = None;
+
+    def __init__(self, fm):
+        self.__fm = fm
+
+    def diff(self, options=""):
+        thisfile = self.__fm.thisfile
+        #selection = self.__fm.thistab.get_selection()
+        selection = self.__fm.thisdir.marked_items
+        if len(selection) == 1:
+            self.__diff(selection[0], thisfile, options)
+            return
+        if len(selection) == 2:
+            self.__diff(selection[0], selection[1], options)
+            return
+        self.__fm.notify("Need one or two selected objects", bad=True)
+
+    def __diff(self, file1, file2, options=""):
+        file1 = self.__shellquote(file1.relative_path)
+        file2 = self.__shellquote(file2.relative_path)
+        cmd = f"echo -en '\e[1m\e[94m'; echo >&2 '=== DIFF: \"'{file1}'\" | \"'{file2}'\" ==='; echo -en '\e[0m';"
+        cmd += f"diff {options} {file1} {file2};"
+        cmd += "echo -en '\e[94m'; echo >&2 '=== DONE ==='; echo -e '\e[0m'; read -n 1 -s;"
+        self.__fm.execute_console("shell " + cmd)
+
+    def __shellquote(self, s):
+        return "'" + str(s).replace("'", "'\\''") + "'"
+
+
+# ^x3ro
+class diff(Command):
+    """:diff
+
+    Diff two selected files
+    """
+
+    def execute(self):
+        DiffWrapper(self.fm).diff("--color -ru")
+
+
+# ^x3ro
+class diff_dirs(Command):
+    """:diff_dirs
+
+    Diff two selected directories recursively
+    """
+
+    def execute(self):
+        DiffWrapper(self.fm).diff("--color -ruq")
+
+
+# ^x3ro
+class diff_dirs_flat(Command):
+    """:diff_dirs
+
+    Diff two selected directories
+    """
+
+    def execute(self):
+        DiffWrapper(self.fm).diff("--color -uq")
