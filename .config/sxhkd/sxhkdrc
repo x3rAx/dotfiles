@@ -49,8 +49,8 @@ ctrl + alt + k
     GTK_THEME=Arc keepass
 
 # KeePass auto type
-ctrl + alt + x
-    GTK_THEME=Arc ~/.local/bin/keepass-auto-type
+#ctrl + alt + x
+#    GTK_THEME=Arc ~/.local/bin/keepass-auto-type
 
 # KeePass auto type search
 ctrl + alt + s
