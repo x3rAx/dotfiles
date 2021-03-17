@@ -1,5 +1,23 @@
 #!/usr/bin/env bash
 
+set -eu -o pipefail
+# keep track of the last executed command
+trap 'last_command=${current_command:-""}; current_command=$BASH_COMMAND' DEBUG
+# echo an error message before exiting
+trap 'trap_exit $?' EXIT
+trap_exit() {
+    local err=$1;
+    if [[ $err > 0 ]]; then
+        if [[ $__task_name != "" ]]; then
+            err "Task \"${__task_name}\" failed with exit code ${err}."
+        else
+            err "Command \"${last_command}\" filed with exit code ${err}."
+        fi
+    fi
+}
+
+export PATH="${HOME}/.local/bin:${PATH}"
+
 fg_black="$(tput setaf 0)"
 fg_red="$(tput setaf 1)"
 fg_green="$(tput setaf 2)"
@@ -9,10 +27,52 @@ fg_magenta="$(tput setaf 5)"
 fg_cyan="$(tput setaf 6)"
 fg_white="$(tput setaf 7)"
 
-info() {
-    echo ""
-    echo "${fg_green}> $@"
+__task_name=""
+task() {
+    local name="$1"
+    if [[ $name == done ]]; then __task_name=""; return; fi
+    __task_name="$name"
+    info "$name"
 }
 
-info "Include global \`~/.yadm-gitconfig\` in yadm's gitconfig"
-yadm gitconfig include.path '~/.yadm-gitconfig'
+info() {
+    echo ""
+    echo "${fg_green}==> $@ <=="
+}
+
+err() {
+    echo ""
+    echo "${fg_red}==> ERROR: $@ <=="
+}
+
+installed() {
+    if ! command -v "$1" >/dev/null; then
+        return 0
+    fi
+}
+
+
+
+if [[ "$(yadm gitconfig include.path)" != "~/.yadm-gitconfig" ]]; then
+    task "Include global \`~/.yadm-gitconfig\` in yadm's gitconfig"
+    yadm gitconfig include.path '~/.yadm-gitconfig'
+    task done
+fi
+
+if ! installed nix; then
+    task "Install nix"
+    curl -L https://nixos.org/nix/install | sh
+    task done
+fi
+
+if ! installed brew; then
+    task "Install Homebrew"
+    sudo -k
+    SUDO_ASKPASS="$(which false)" \
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    task done
+fi
+
+task "Check installed programs"
+x3ro.check
+task done
