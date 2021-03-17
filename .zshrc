@@ -196,7 +196,10 @@ case $(basename "$(cat "/proc/$PPID/comm")") in
 esac
 
 
-
+function configure-zsh() {
+	autoload -Uz zsh-newuser-install
+	zsh-newuser-install -f
+}
 
 
 # Enable .zshrc.d
