@@ -18,14 +18,17 @@ case $user in
 
     -s|--system)
         echo >&2 "System generations:"
+        echo "nix-env -p \"/nix/var/nix/profiles/system\" --list-generations"
         nix-env -p /nix/var/nix/profiles/system --list-generations
         ;;
     -d|--default)
         echo >&2 "Default profile generations:"
+        echo "nix-env -p \"/nix/var/nix/profiles/default\" --list-generations"
         nix-env -p /nix/var/nix/profiles/default --list-generations
         ;;
     -)
         echo >&2 "Active profile generations:"
+        echo "nix-env --list-generations"
         nix-env --list-generations
         ;;
 
@@ -33,17 +36,21 @@ case $user in
         user="$(whoami)"
         echo >&2 "Current user generations:"
         echo '--- Channels ---' ;\
-        nix-env -p "/nix/var/nix/profiles/per-user/${user}/channels" --list-generations ;\
+        echo "nix-env -p \"/nix/var/nix/profiles/per-user/${user}/channels\" --list-generations"
+        nix-env -p "/nix/var/nix/profiles/per-user/${user}/channels" --list-generations
         echo '--- Profile ---' ;\
-        nix-env -p "/nix/var/nix/profiles/per-user/${user}/profile" --list-generations ;\
+        echo "nix-env -p \"/nix/var/nix/profiles/per-user/${user}/profile\" --list-generations"
+        nix-env -p "/nix/var/nix/profiles/per-user/${user}/profile" --list-generations
         ;;
 
     *)
         echo >&2 "Generations of user '${user}':"
         su "$user" -c "\
             echo '--- Channels ---' ;\
+            echo \"nix-env -p \\\"/nix/var/nix/profiles/per-user/${user}/channels\\\" --list-generations\" ;\
             nix-env -p \"/nix/var/nix/profiles/per-user/${user}/channels\" --list-generations ;\
             echo '--- Profile ---' ;\
+            echo \"nix-env -p \\\"/nix/var/nix/profiles/per-user/${user}/profile\\\" --list-generations\" ;\
             nix-env -p \"/nix/var/nix/profiles/per-user/${user}/profile\" --list-generations ;\
         "
         ;;
