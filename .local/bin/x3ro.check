@@ -3,12 +3,14 @@
 main() {
     c bat batcat
     c cargo
+    c copyq
     c curl
     c delta
     c exa
     c fd
     c git
     c rg
+    c sxhkd
 }
 
 
