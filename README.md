@@ -69,6 +69,6 @@ $ yadm pull
 
 ### Font
 
-Install the (JetBrainsMono Nerd Font)[https://www.nerdfonts.com/font-downloads]
+Install the [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads)
 for font ligatures and tons of icons for eg. `exa`.
 
