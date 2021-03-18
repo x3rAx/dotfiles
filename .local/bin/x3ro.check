@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+errors_found=0
+
 main() {
     c bat batcat
     c cargo
@@ -43,8 +45,13 @@ c() {
         fi
         echo ""
     else
-        echo >&2 "${C_RED}✖️ ${other_progs}${C_RESET}"
+        echo >&2 "${C_RED}❌ ${other_progs}${C_RESET}"
+        errors_found=1
     fi
 }
 
 main "$@"
+
+if [[ $errors_found != 0 ]]; then
+    exit 1
+fi
