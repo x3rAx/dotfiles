@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -xo pipefail
+
+curl -fsSL https://starship.rs/install.sh | BIN_DIR="$HOME/.local/bin" bash
