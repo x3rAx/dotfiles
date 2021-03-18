@@ -3,47 +3,53 @@
 errors_found=0
 
 main() {
+    c - copyq
+    c - sxhkd
     c bat batcat
     c cargo
-    c copyq
     c curl
     c delta
     c exa
     c fd
     c git
     c rg
-    c sxhkd
 }
 
 
+readonly C_RED="$(tput setaf 1)"
+readonly C_GREEN="$(tput setaf 2)"
+readonly C_YELLOW="$(tput setaf 3)"
+readonly C_GRAY="$(tput dim)$(tput setaf 7)"
+readonly C_RESET="$(tput sgr0)"
+
 
 c() {
-    local C_RED="$(tput setaf 1)"
-    local C_GREEN="$(tput setaf 2)"
-    local C_GRAY="$(tput dim)$(tput setaf 7)"
-    local C_RESET="$(tput sgr0)"
-    readonly C_RED C_GREEN C_GRAY C_RESET
-
     local prog
-    local found=0
-    local found_prog=""
+    local warn=0
+    local found_progs=""
     local other_progs=""
+
+    if [[ $1 == "-" ]]; then
+        warn=1
+        shift
+    fi
 
     for prog in "$@"; do
         if [ "$(command -v "$prog")" ]; then
-            found=1
-            found_prog="$prog"
+            found_progs="${found_progs:+$found_progs, }${prog}"
         else
             other_progs="${other_progs:+$other_progs, }${prog}"
         fi
     done
 
-    if [[ $found == 1 ]]; then
-        echo -n "${C_GREEN}✔️ ${found_prog}${C_RESET}"
+    if [[ -n $found_progs ]]; then
+        echo -n "${C_GREEN}✔️ ${found_progs}${C_RESET}"
         if [[ -n $other_progs ]]; then
             echo -n "${C_GRAY}, ${other_progs}${C_RESET}"
         fi
         echo ""
+    elif [[ $warn == 1 ]]; then
+        echo >&2 "${C_YELLOW}⚠️ ${other_progs}${C_RESET}"
     else
         echo >&2 "${C_RED}❌ ${other_progs}${C_RESET}"
         errors_found=1
