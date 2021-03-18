@@ -49,3 +49,5 @@
     cbrk = "!f() { git commit -e -m \"‼️ BREAKING: $@\"; }; f"
 [delta]
 	side-by-side = false
+	line-numbers = true
+
