@@ -22,6 +22,6 @@ fi
 PATH="$HOME/.cargo/bin:$PATH"
 export PATH
 
-if [ -e "${HOME}/.linuxbrew/bin/brew" ]; then eval $("${HOME}/.linuxbrew/bin/brew shellenv"); fi
+if [ -e "${HOME}/.linuxbrew/bin/brew" ]; then eval $("${HOME}/.linuxbrew/bin/brew" shellenv); fi
 if [ -e "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]; then . "${HOME}/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 
