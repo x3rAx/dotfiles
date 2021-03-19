@@ -3,17 +3,17 @@
 errors_found=0
 
 main() {
+    c - brew
     c - copyq
+    c - nix
     c - sxhkd
     c bat batcat
-    c brew
     c cargo
     c curl
     c delta
     c exa
     c fd
     c git
-    c nix
     c rg
 }
 
