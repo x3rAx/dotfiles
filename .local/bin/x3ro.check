@@ -6,12 +6,14 @@ main() {
     c - copyq
     c - sxhkd
     c bat batcat
+    c brew
     c cargo
     c curl
     c delta
     c exa
     c fd
     c git
+    c nix
     c rg
 }
 
