@@ -20,6 +20,8 @@
 [gc]
 	autoDetach = false
 [alias]
+    user = "!user=\"^x3ro\" && email=\"git@x3ro.dev\" && echo \"Setting git identity to:\n  ${user} <${email}>\" && git config user.name \"^x3ro\" && git config user.email \"git@x3ro.dev\""
+    initial = "commit --allow-empty -m \"🦄 Initial commit.\""
 	new = "!new() { local m=\"${*:-\"🦄 Initial commit.\"}\"; if [[ ! -d .git ]]; then git init && git commit --allow-empty -m \"$m\"; else echo \"ERROR: Git repository already initialized!\" >&2; exit 1; fi; }; new"
 	tree = log --date=iso --graph --pretty=\"format:%C(yellow)%<(7)%h%C(reset)%x09%ad%C(reset)  %C(blue)%<(15)%an%C(reset)  %C(bold yellow)%d%C(reset) %C(green)%s%C(reset)\"
 	tree-all = tree --exclude refs/stash --all
