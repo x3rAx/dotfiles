@@ -153,6 +153,7 @@ let mapleader = ' '
     set shiftwidth=4 " when indenting with '>', use 4 spacees width
     set expandtab    " on pressing tab, inssert 4 spaces
     set autoindent
+    autocmd FileType yaml set indentkeys-=0#
 
 
 " Jump to last position
