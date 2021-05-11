@@ -55,6 +55,7 @@ let mapleader = ' '
         Plug 'LnL7/vim-nix'
         " Might require nodejs >= 10.12
         Plug 'neoclide/coc.nvim', {'branch': 'release'}
+        Plug 'isobit/vim-caddyfile'
     call plug#end()
 
 
