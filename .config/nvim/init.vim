@@ -56,6 +56,8 @@ let mapleader = ' '
         " Might require nodejs >= 10.12
         Plug 'neoclide/coc.nvim', {'branch': 'release'}
         Plug 'isobit/vim-caddyfile'
+
+        Plug 'tpope/vim-commentary'
     call plug#end()
 
 
@@ -182,6 +184,10 @@ let mapleader = ' '
         \ chdir %:h |
         \ redraw | echo "===> :chdir"expand("%:p:h")"<==="
 
+" Toggle comments
+    autocmd FileType * :let b:commentary_format = &commentstring
+    nmap ^_ gcc
+    vmap ^_ gcgv
 
 " Open new split panes to right and bottom, which feels more natural than Vim’s default
     set splitbelow
