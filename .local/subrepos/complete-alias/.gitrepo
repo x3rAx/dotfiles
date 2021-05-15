@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/cykerway/complete-alias
+	branch = master
+	commit = 7525b8f35796afda17ddba620a0c6edf246902b8
+	parent = 6df2b1987ed54fd2892c5a1456d43daca8d1e655
+	method = merge
+	cmdver = 0.4.3
