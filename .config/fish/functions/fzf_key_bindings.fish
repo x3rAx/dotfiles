@@ -1,0 +1,1 @@
+/home/x3ro/.local/subrepos/fzf/shell/key-bindings.fish
