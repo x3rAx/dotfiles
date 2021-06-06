@@ -58,6 +58,7 @@ let mapleader = ' '
         Plug 'isobit/vim-caddyfile'
 
         Plug 'preservim/nerdcommenter' " same as 'scrooloose/nerdcommenter'
+        Plug 'preservim/nerdtree' " same ase 'scrooloose/nerdtree'
     call plug#end()
 
 
