@@ -374,14 +374,21 @@ let mapleader = ' '
     nnoremap <leader>0 <C-w>0w
 
     " Manage buffers
-    nnoremap <leader>bd :bdelete<CR>
+    nnoremap <leader>bd :Bdelete<CR>
+    nnoremap <leader>bx :Bdelete<CR>
+    nnoremap <leader>bX :Bdelete!<CR>
+    nnoremap <leader>b<leader>x :Bwipeout<CR>
+    nnoremap <leader>b<leader>X :Bwipeout!<CR>
     nnoremap <leader>bn :bnext<CR>
     nnoremap <leader>bp :bprev<CR>
 
     " Manage windows
     nnoremap <leader>wn <C-w>w
     nnoremap <leader>wp <C-w><S-w>
+    nnoremap <leader>wc <C-w>c
     nnoremap <leader>wd <C-w>c
+    nnoremap <leader>wx <C-w>c
+    nnoremap <leader>wX <C-w>c
     nnoremap <leader>wsv :split<CR>
     nnoremap <leader>wsh :vsplit<CR>
     nnoremap <leader>wh <C-w>h
