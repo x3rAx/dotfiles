@@ -57,7 +57,7 @@ let mapleader = ' '
         Plug 'neoclide/coc.nvim', {'branch': 'release'}
         Plug 'isobit/vim-caddyfile'
 
-        Plug 'tpope/vim-commentary'
+        Plug 'preservim/nerdcommenter' " same as 'scrooloose/nerdcommenter'
     call plug#end()
 
 
@@ -185,11 +185,6 @@ let mapleader = ' '
     command! CD
         \ chdir %:h |
         \ redraw | echo "===> :chdir"expand("%:p:h")"<==="
-
-" Toggle comments
-    autocmd FileType * :let b:commentary_format = &commentstring
-    nmap ^_ gcc
-    vmap ^_ gcgv
 
 " Open new split panes to right and bottom, which feels more natural than Vim’s default
     set splitbelow
@@ -411,6 +406,16 @@ let mapleader = ' '
     let g:NERDTreeDirArrowCollapsible = '▼'
     nnoremap <M-n> :NERDTreeFocus<cr>
     nnoremap <M-N> :NERDTree<cr>
+
+
+" NERDCommenter
+    " Enable NERDCommenterToggle to check all selected lines is commented or not 
+    let g:NERDToggleCheckAllLines = 1
+    " Align line-wise comment delimiters flush left instead of following code indentation
+    let g:NERDDefaultAlign = 'left'
+
+    map ^_ <leader>ci
+    vmap ^_ <leader>c<space>gv
 
 
 " Improved line shifting
