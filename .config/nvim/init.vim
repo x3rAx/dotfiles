@@ -118,6 +118,9 @@ let mapleader = ' '
         call airline#add_inactive_statusline_func('WindowNumber')
     endif
 
+" Enable mouse
+    set mouse=a
+
 
 " Editorconfig
     " Disable for fugitive
