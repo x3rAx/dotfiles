@@ -59,6 +59,7 @@ let mapleader = ' '
 
         Plug 'preservim/nerdcommenter' " same as 'scrooloose/nerdcommenter'
         Plug 'preservim/nerdtree' " same ase 'scrooloose/nerdtree'
+        Plug 'moll/vim-bbye'
     call plug#end()
 
 
@@ -325,6 +326,11 @@ let mapleader = ' '
 
 " Clear search highlights when pressing ESC in normal mode
     nnoremap <esc><esc> :noh<cr>:<C-h>
+
+
+" Bbye - Close buffer without closing associated windows
+    " Alias `:bd` to `:Bdelete`
+    autocmd VimEnter * call CmdAlias('bd', 'Bdelete')
 
 
 " SPACE:
