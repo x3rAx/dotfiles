@@ -21,6 +21,7 @@ let mapleader = ' '
 
 " Configure Plugins
     call plug#begin('~/.local/share/nvim/plugged')
+        Plug 'tomasiser/vim-code-dark'
         Plug 'tpope/vim-sensible'
         Plug 'tpope/vim-surround'
         Plug 'arcticicestudio/nord-vim'
@@ -72,14 +73,16 @@ let mapleader = ' '
 
 " Set color scheme
     "colorscheme nord
-    colorscheme challenger_deep
+    "colorscheme challenger_deep
+    colorscheme codedark
 
 
 " Configure airline
     if $USER != 'root'
         let g:airline#extensions#tabline#formatter = 'markdown_title'
     endif
-    let g:airline_theme='bubblegum'
+    "let g:airline_theme='bubblegum'
+    let g:airline_theme='codedark'
     let g:airline_powerline_fonts = 1
     let g:airline#extensions#tabline#enabled = 1
     let g:airline#extensions#tabline#buffer_min_count = 2
@@ -202,10 +205,11 @@ let mapleader = ' '
     " Rulers (80 / 120 chars)
     let &colorcolumn="81,".join(range(121,999),",")
     "highlight ColorColumn ctermbg=237 guibg=#292929
+    highlight ColorColumn ctermbg=233 guibg=#292929
 
     " Theme : nord
-    highlight Visual cterm=bold ctermbg=238 ctermfg=NONE
-    highlight ErrorMsg ctermfg=0
+    "highlight Visual cterm=bold ctermbg=238 ctermfg=NONE
+    "highlight ErrorMsg ctermfg=0
 
 
 " GUI Options
