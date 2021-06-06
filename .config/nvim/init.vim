@@ -532,10 +532,10 @@ let mapleader = ' '
 map <Up> 
 map <Down> 
 
-if ! get(g:, 'x3ro#autoSaveSet', 0)
-    let x3ro#autoSaveSet = 1
-    AutoSaveOn
-endif
+"if ! get(g:, 'x3ro#autoSaveSet', 0)
+"    let x3ro#autoSaveSet = 1
+"    AutoSaveOn
+"endif
 
 " ========================
 
