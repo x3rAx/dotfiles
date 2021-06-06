@@ -60,6 +60,7 @@ let mapleader = ' '
         Plug 'preservim/nerdcommenter' " same as 'scrooloose/nerdcommenter'
         Plug 'preservim/nerdtree' " same ase 'scrooloose/nerdtree'
         Plug 'moll/vim-bbye'
+        Plug 'mbbill/undotree'
     call plug#end()
 
 
@@ -326,6 +327,29 @@ let mapleader = ' '
 
 " Clear search highlights when pressing ESC in normal mode
     nnoremap <esc><esc> :noh<cr>:<C-h>
+
+
+" Undotree
+    if has("persistent_undo")
+       let target_path = expand('~/.undodir')
+
+        " create the directory and any parent directories
+        " if the location does not exist.
+        if !isdirectory(target_path)
+            call mkdir(target_path, "p", 0700)
+        endif
+
+        let &undodir=target_path
+        set undofile
+    endif
+
+    let g:undotree_WindowLayout = 3
+    let g:undotree_SplitWidth = 50
+    let g:undotree_SetFocusWhenToggle = 1
+    "let g:undotree_TreeNodeShape = '○'
+    "let g:undotree_DiffCommand = "git diff --no-index"
+
+    nnoremap <F8> :UndotreeToggle<CR>
 
 
 " Bbye - Close buffer without closing associated windows
