@@ -28,7 +28,6 @@ let mapleader = ' '
         Plug 'vim-airline/vim-airline'
         Plug 'vim-airline/vim-airline-themes'
         Plug 'tpope/vim-eunuch'
-        Plug 'scrooloose/nerdtree'
         "Plug 'xolox/vim-misc'
         "Plug 'xolox/vim-session'
         Plug 'junegunn/fzf.vim'
@@ -367,8 +366,51 @@ let mapleader = ' '
  
 
 " NERDTree
-    nnoremap <A-n> :NERDTreeFocus<cr>
-    nnoremap <C-A-n> :NERDTree<cr>
+    function! StartNERDTree()
+        if argc() > 0
+            if isdirectory(argv()[0])
+                " When started with a directory, bring NERDTree to the side
+                if !exists('s:std_in')
+                    " When started without STDIN piped, close fullscreen NERDTree
+                    bwipeout 
+                endif
+                execute 'NERDTree' argv()[0] | execute 'cd '.argv()[0]
+                if argc() > 1 || exists('s:std_in')
+                    " When started with more paths or with STDIN piped, focus main window
+                    wincmd p
+                endif
+            else
+                " When started with a file, start NERDTree and focus main window
+                NERDTree
+                wincmd p
+            endif
+        else
+            " When started without arguments, just start NERDTree
+            NERDTree
+            if argc() > 1 || exists('s:std_in')
+                " When started with STDIN piped, focus main window
+                wincmd p
+            endif
+        endif
+    endfunction
+
+    autocmd StdinReadPre * let s:std_in=1
+    autocmd VimEnter * call StartNERDTree()
+
+    " If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+    autocmd BufWinEnter * if winnr() == 1 && bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+        \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+
+    " Exit Vim if NERDTree is the only window left.
+    autocmd BufEnter * 
+        \  if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree()
+        \|     quitall
+        \| endif
+
+    let g:NERDTreeDirArrowExpandable = '▶'
+    let g:NERDTreeDirArrowCollapsible = '▼'
+    nnoremap <M-n> :NERDTreeFocus<cr>
+    nnoremap <M-N> :NERDTree<cr>
 
 
 " Improved line shifting
