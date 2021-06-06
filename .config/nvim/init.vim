@@ -87,7 +87,7 @@ let mapleader = ' '
     let g:airline_theme='codedark'
     let g:airline_powerline_fonts = 1
     let g:airline#extensions#tabline#enabled = 1
-    let g:airline#extensions#tabline#buffer_min_count = 2
+    let g:airline#extensions#tabline#buffer_min_count = 0
     "let g:airline#extensions#tabline#buffer_idx_mode = 1
     let g:airline#extensions#tabline#buffer_nr_show = 1
     " Always show buffers and just show tab number
