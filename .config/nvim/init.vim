@@ -458,8 +458,8 @@ let mapleader = ' '
     " Align line-wise comment delimiters flush left instead of following code indentation
     let g:NERDDefaultAlign = 'left'
 
-    map ^_ <leader>ci
-    vmap ^_ <leader>c<space>gv
+    map <C-_> <leader>ci
+    vmap <C-_> <leader>c<space>gv
 
 
 " Improved line shifting
