@@ -1,5 +1,6 @@
 FZF_DEFAULT_COMMAND='fd -H'
 #FZF_DEFAULT_OPTS='--border'
+FZF_DEFAULT_OPTS="--preview 'bat {}' --bind 'ctrl-u:half-page-up,ctrl-d:half-page-down,ctrl-h:page-up,ctrl-l:page-down,ctrl-f:preview-half-page-down,ctrl-b:preview-half-page-up'"
 export FZF_DEFAULT_COMMAND FZF_DEFAULT_OPTS
 
 FZF_CTRL_R_OPTS='--border'
