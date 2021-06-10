@@ -523,9 +523,9 @@ let mapleader = ' '
 
 
 " Save file with Ctrl-S
-    noremap  <silent> <C-S>   :update<CR>
-    vnoremap <silent> <C-S>   <C-C>:update<CR>
-    inoremap <silent> <C-S>   <C-O>:update<CR>
+    noremap  <silent> <C-S>   :update<CR>:echo "Saved"<CR>
+    vnoremap <silent> <C-S>   <C-C>:update<CR>:echo "Saved"<CR>
+    inoremap <silent> <C-S>   <C-O>:update<CR>:echo "Saved"<CR>
 
 
 map <Up> 
