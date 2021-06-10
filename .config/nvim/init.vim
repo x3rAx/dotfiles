@@ -380,6 +380,7 @@ let mapleader = ' '
     nnoremap <leader>b<leader>X :Bwipeout!<CR>
     nnoremap <leader>bn :bnext<CR>
     nnoremap <leader>bp :bprev<CR>
+    nnoremap <leader>bb :buffer #<CR>
 
     " Manage windows
     nnoremap <leader>wn <C-w>w
@@ -394,6 +395,9 @@ let mapleader = ' '
     nnoremap <leader>wj <C-w>j
     nnoremap <leader>wk <C-w>k
     nnoremap <leader>wl <C-w>l
+
+    nnoremap <leader>qq :qa<CR>
+    nnoremap <leader>qQ :qa!<CR>
 
 
 "map <F14>a <C-M-a>
