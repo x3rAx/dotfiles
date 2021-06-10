@@ -468,7 +468,7 @@ let mapleader = ' '
 
 
 " Configure suda.vim
-    let g:suda_smart_edit = 1
+    "let g:suda_smart_edit = 1
 
     function! GetSudaName(name)
         if (a:name =~ "^suda://")
