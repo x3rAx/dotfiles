@@ -60,6 +60,7 @@ let mapleader = ' '
         Plug 'preservim/nerdtree' " same ase 'scrooloose/nerdtree'
         Plug 'moll/vim-bbye'
         Plug 'mbbill/undotree'
+        Plug 'liuchengxu/vim-which-key'
     call plug#end()
 
 
@@ -70,6 +71,19 @@ let mapleader = ' '
     "  \  if !empty(filter(copy(g:plugs), '!isdirectory(v:val.dir)'))
     "  \|   PlugInstall
     "  \| endif
+
+
+" TODO: --- Below is a test of `vim_which_key` -------------------------------
+    nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+    set timeoutlen=500
+    call which_key#register('<Space>', "g:which_key_map")
+    let g:which_key_map =  {}
+    let g:which_key_map.f = { 'name' : '+File' }
+    let g:which_key_map.f.s = 'Save'
+    let g:which_key_map.f.r = ['e', 'Reload']
+    let g:which_key_map.f.o = ['FZF', 'Open']
+    let g:which_key_disable_default_offset = 1
+" TODO: --- Above is a test of `vim_which_key` -------------------------------
 
 
 " Set color scheme
