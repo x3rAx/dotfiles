@@ -3,7 +3,9 @@ if [ -d "$HOME/.bookmarks" ]; then
         local USAGE="
   Usage:
     goto <bookmark>
+    goto -l
     goto -s[r|a][f] <bookmark> [path]
+    goto -d <bookmark>
 "
 
         local bookmarks="$HOME/.bookmarks"
