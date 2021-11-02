@@ -61,6 +61,9 @@ if [[ $_SEL == true ]]; then
         copy_backend="xsel -i --primary"
     elif is_app_installed xclip; then
         copy_backend="xclip -f -selection primary"
+    else
+        tmux display-message 'Neither `xsel` nor `xclip` could be found'
+        exit 1
     fi
     # TODO: Use remote tunnel to copy selection
 fi
