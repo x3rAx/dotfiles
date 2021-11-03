@@ -1,1 +1,4 @@
-.yadm-gitignore
+# This is the `yadm` .gitignore for dotfiles
+
+__pycache__
+/.config/nvim/.netrwhist
