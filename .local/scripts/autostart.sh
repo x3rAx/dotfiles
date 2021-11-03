@@ -11,3 +11,5 @@ start copyq
 start signal-desktop --use-tray-icon # --start-in-tray
 start solaar --battery-icons solaar --window hide
 start telegram-desktop
+start syncthingtray
+start keepassxc
