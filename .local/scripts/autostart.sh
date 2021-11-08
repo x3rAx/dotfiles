@@ -13,6 +13,7 @@ start ferdi
 start keepassxc
 start signal-desktop --use-tray-icon # --start-in-tray
 start solaar --battery-icons solaar --window hide
+start sxhkd
 start syncthingtray
 start telegram-desktop
 start thunderbird
