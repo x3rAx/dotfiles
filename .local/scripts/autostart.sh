@@ -13,3 +13,6 @@ start solaar --battery-icons solaar --window hide
 start telegram-desktop
 start syncthingtray
 start keepassxc
+start birdtray
+start thunderbird
+start ferdi
