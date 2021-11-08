@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Double fork to run async but also get PPID
+(
+    sxhkd-shortcuts \
+        2>&1 \
+        --shortcuts-min-width 48 \
+        --shortcuts-max-width 64 $1 \
+    | rofi "${@:2}" \
+        -dmenu \
+        -i \
+        -no-show-icons \
+        -p sxhkd \
+        -width 1500 \
+        -lines 15 \
+& )
+
+# Add this before the rofi line to sort by description
+#| sort -t '#' -k2 ;

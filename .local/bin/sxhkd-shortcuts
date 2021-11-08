@@ -1,0 +1,240 @@
+#!/usr/bin/env bash
+
+# --- Environment variables ---
+: ${XDG_CONFIG_HOME:=${HOME}/.config}
+
+# --- Constants ---
+__SCRIPT__="$(realpath "$0")"
+__SCRIPT_NAME__="$(basename "$__SCRIPT__")"
+
+# --- Global variables ---
+_VERBOSE=false
+_SHORTCUTS_MAX_WIDTH="0" # `0` = automatic width
+_SHORTCUTS_MIN_WIDTH="0" # `0` = automatic width
+_SXHKD_PID=""
+
+
+usage() {
+    echo "
+  Usage:
+    ${__SCRIPT_NAME__} <sxhkd-pid>
+    ${__SCRIPT_NAME__} [options] <sxhkd-pid>
+
+  OPTIONS:
+    -h, --help                   Print this help
+    -v, --verbose                Verbose output
+    --shortcuts-min-with <num>   Set minimum width of the shortcuts column. Set
+                                 to \`0\` for automatic width (default: ${_SHORTCUTS_MAX_WIDTH})
+    --shortcuts-max-with <num>   Limit the width of the shortcuts column. Set to
+                                 \`0\` for automatic width (default: ${_SHORTCUTS_MAX_WIDTH})
+"
+}
+
+
+parse_args() {
+    while [[ $# > 0 ]]; do
+        case $1 in
+            '-h'|'--help')
+                usage
+                exit
+                ;;
+            '-v'|'--verbose')
+                _VERBOSE=true
+                ;;
+            '--shortcuts-min-width')
+                _SHORTCUTS_MIN_WIDTH="$2"
+                shift
+                if [[ ! $_SHORTCUTS_MIN_WIDTH =~ ^[0-9]+$ ]]; then
+                    echo "ERROR: Invalid value for --shortcuts-min-width. Must be numeric." >&2
+                    exit 1
+                fi
+                check_min_max_width
+                ;;
+            '--shortcuts-max-width')
+                _SHORTCUTS_MAX_WIDTH="$2"
+                shift
+                if [[ ! $_SHORTCUTS_MAX_WIDTH =~ ^[0-9]+$ ]]; then
+                    echo "ERROR: Invalid value for --shortcuts-max-width. Must be numeric." >&2
+                    exit 1
+                fi
+                check_min_max_width
+                ;;
+            '-'*)
+                echo "ERROR: Invalid option: ${1}" >&2
+                exit 1
+                ;;
+            *)
+                if [[ -n $_SXHKD_PID ]]; then
+                    echo "ERROR: Too many arguments: ${1}" >&2
+                    exit 1
+                fi
+
+                _SXHKD_PID="$1"
+                ;;
+        esac
+
+        shift
+    done
+}
+
+main() {
+    parse_args "$@"
+
+    check_sxhkd_pid
+
+    local config_files
+    get_sxhkd_config_files config_files
+    parse_config_files "${config_files[@]}"
+}
+
+verbose() {
+    if [[ $_VERBOSE != true ]]; then
+        return
+    fi
+
+    echo >&2 "${__SCRIPT_NAME__}: $@"
+}
+
+
+check_sxhkd_pid() {
+    if [[ -z $_SXHKD_PID ]]; then
+        echo "ERROR: Missing argument <sxhkd-pid>!" >&2
+        usage >&2
+        exit 1
+    fi
+
+    if [[ ! -d /proc/${_SXHKD_PID} ]]; then
+        echo "ERROR: PID ${_SXHKD_PID} does not exist."
+        exit 1
+    fi
+}
+
+
+
+get_sxhkd_config_files() {
+    local -n out_array="$1"
+
+    local sxhkd_cmdline="$(
+        < "/proc/${_SXHKD_PID}/cmdline" \
+            tr '\0' '\n' \
+            | tail -n+2
+    )"
+    local sxhkd_args
+    array_from_lines sxhkd_args "$sxhkd_cmdline"
+    verbose "XXXXXXXXX ${sxhkd_args}"
+    verbose "XXXXXXXXX ${sxhkd_args[@]}"
+
+    local sxhkd_config="${XDG_CONFIG_HOME}/sxhkd/sxhkdrc"
+    local sxhkd_extra_configs=()
+
+    local i
+    for (( i=0; i < ${#sxhkd_args[@]}; i++ )); do
+        local arg="${sxhkd_args[i]}"
+        verbose "sxhkd cmdline[${i}]: ${arg}"
+
+        case "$arg" in
+            # Handle default config file
+            '-c')
+                arg="${sxhkd_args[i+1]}"
+                let i++
+
+                verbose "Default config file: $arg"
+                sxhkd_config="$arg"
+                ;;
+            # Skip other options
+            '-'*)
+                continue
+                ;;
+            # Handle extra config files
+            *)
+                if [[ ! -f $arg ]]; then
+                    verbose "Ignoring sxhkd argument \"${arg}\" as config file because a file with that name does not exist."
+                    continue
+                fi
+                verbose "Extra config file: $arg"
+                sxhkd_extra_configs+=( "$arg" )
+                ;;
+        esac
+    done
+
+    out_array=( "$sxhkd_config" "${sxhkd_extra_configs[@]}" )
+}
+
+
+parse_config_files() {
+    local files=( "$@" )
+
+    cat "${files[@]}" \
+        | awk \
+            -v MIN_WIDTH="$_SHORTCUTS_MIN_WIDTH" \
+            -v MAX_WIDTH="$_SHORTCUTS_MAX_WIDTH" \
+            '''
+                BEGIN {
+                    desc=""
+                    keys=""
+                }
+
+                /^\s*$|^\s/ {
+                    desc=""
+                    keys=""
+
+                    next
+                }
+
+                /^#:\s/ {
+                    if (desc == "") {
+                        sub(/^#:\s+/, "")
+                        desc=$0
+                    }
+
+                    next
+                }
+
+                /^[^#]+$/ {
+                    keys=$0
+
+                    if (MIN_WIDTH > 0 && length(keys) < MIN_WIDTH) {
+                        keys=sprintf("%-" MIN_WIDTH "s", keys)
+                    }
+                    if (MAX_WIDTH > 0 && length(keys) > MAX_WIDTH) {
+                        keys=substr(keys,1,MAX_WIDTH - 1) "…"
+                    }
+                    print keys "\t" desc
+
+                    desc=""
+                    keys=""
+
+                    next
+                }
+            ''' \
+        | column -t -s $'\t' -o '  | '
+}
+
+#| sort -t '#' -k2 \
+#| rofi -dmenu -i -no-show-icons --width 1000 -p sxhkd
+
+
+array_from_lines() {
+    local -n array_name="$1"   # Use nameref for indirection
+    local lines="$2"
+
+    #if [[ ! $array_name =~ ^[a-zA-Z_-]+$ ]]; then
+    #    echo >&2 "array_from_lines: ERROR: Array name \"${array_name}\" is invalid"
+    #    exit 1
+    #fi
+
+    local ifs_bak="$IFS"
+    IFS=$'\n'
+    array_name=( $lines )
+    IFS="$ifs_bak"
+}
+
+
+check_min_max_width() {
+    if [[ $_SHORTCUTS_MAX_WIDTH > 0 ]] && [[ $_SHORTCUTS_MIN_WIDTH -gt $_SHORTCUTS_MAX_WIDTH ]]; then
+        echo "WARNING: --shortcuts-min-width is larger than --shortcuts-max-width. Ignoring min-width." >&2
+        _SHORTCUTS_MIN_WIDTH=0
+    fi
+}
+
+main "$@"
