@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Start KeePassXC
+keepassxc "$@" 2>/dev/null &
+
+first_start=true
+
+# Wait if it exits itself. If so, another instance of KeePassXC is already
+# running and the call to `keepassxc` already activated the KeePassXC window
+for i in {0..100}; do
+    jobs >/dev/null 2>&1 # HACK: For some reason it is much faster with this line O.o
+    if [[ $(jobs | wc -l) == 0 ]]; then
+        first_start=false
+        break
+    fi
+
+    sleep 0.01
+done
+
+if [[ $first_start == true ]]; then
+    # Ok, the first call to `keepassxc` really launched KeePassXC. Now activate
+    # the KeePassXC window
+    keepassxc 2>/dev/null
+fi
+
+# Finally, make the window active (bring it to foreground)
+xdotool search --onlyvisible --classname 'keepassxc' getwindowpid %@ \
+| uniq \
+| xargs -I'{}' xdotool search --onlyvisible --all --pid '{}' --name 'KeePassXC' \
+| xargs -I'{}' xdotool windowactivate '{}'

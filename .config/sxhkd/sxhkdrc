@@ -4,5 +4,5 @@ super + Escape ; F1
 
 #: Run KeePass
 ctrl + alt + shift + k
-    keepassxc
+    keepassxc-focus
 
