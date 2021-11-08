@@ -1,0 +1,88 @@
+#
+# wm independent hotkeys
+#
+
+#: Terminal emulator (urxvt)
+super + Return
+    xrdb -merge ~/.Xresources \
+        && urxvt
+
+#: Terminal emulator (st)
+super + ctrl + Return
+    xrdb -merge ~/.Xresources \
+        && st
+
+#: Suckless Terminal - Home build (st)
+super + alt + Return
+    "$HOME/.local/opt/suckless/st/st"
+
+
+#: Try to run a terminal emulator (credits to i3-sensible-terminal)
+super + shift + Return
+    try-run "$TERMINAL" x-terminal-emulator urxvt rxvt termit terminator Eterm \
+            aterm uxterm xterm gnome-terminal roxterm xfce4-terminal termite \
+            lxterminal mate-terminal terminology st qterminal lilyterm tilix \
+            terminix konsole kitty guake tilda alacritty hyper
+
+#: Program launcher (rofi)
+super + d
+    rofi -show drun #-show-icons
+
+#: Select window (rofi)
+super + shift + d
+    rofi -show window
+
+#: Run (rofi)
+super + ctrl + d
+    rofi -show run
+
+#: Reload sxhkd configuration files
+super + Escape ; r
+    pkill -USR1 -x sxhkd
+
+#: Show sxhkd shortcuts
+super + Escape ; F1
+    ;sxhkd-shortcuts-rofi $PPID
+
+#: KeePass
+ctrl + alt + k
+    GTK_THEME=Arc keepass
+
+#: KeePass auto type
+#ctrl + alt + x
+#    GTK_THEME=Arc ~/.local/bin/keepass-auto-type
+
+#: KeePass auto type search
+ctrl + alt + s
+    GTK_THEME=Arc keepass -e:AutoTypeSearch
+
+#: KeePass auto type selected
+ctrl + alt + shift + x
+    keepass --auto-type-selected
+
+#: Clipboard (copyq)
+{super,ctrl} + \\
+    copyq toggle
+
+#: Launcher (albert)
+super + space
+    albert toggle
+
+#: Screenshot {Full, Selection} (escrotum)
+{_,ctrl} + Print
+    escrotum {,-s} "$HOME/Pictures/Screenshots/%Y-%m-%d-%H%M%S_\$wx\$h_escrotum.png" \
+    && notify-send "Screenshot saved to: ~/Pictures/Screenshots/"
+
+#: Screenshot Window (scrot)
+shift + Print
+    scrot -ub "$HOME/Pictures/Screenshots/%Y-%m-%d-%H%M%S_\$wx\$h_escrotum.png" \
+    && notify-send "Screenshot saved to: ~/Pictures/Screenshots/"
+
+#
+# Applications
+#-------------------------------------------------------------------------------
+
+#: Open (Terminal, Browser, Code, Nemo, SmartGit, Spotify, PhpStorm, Ranger, Telegram)
+super + x ; {Return,x,c,e,g,m,p,r,t}
+    {$TERMINAL,opera,code,nemo,smartgit,spotify,phpstorm,$TERMINAL -e ranger,telegram}
+
