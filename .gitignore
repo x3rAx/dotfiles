@@ -2,3 +2,7 @@
 
 __pycache__
 /.config/nvim/.netrwhist
+
+/.config/copyq/copyq_tab_*.dat
+/.config/copyq/copyq_filter.ini
+
