@@ -73,3 +73,28 @@ $ yadm pull
 Install the [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads)
 for font ligatures and tons of icons for eg. `exa`.
 
+
+
+## Fixes
+
+### Alacritty Changes Size when Switching Monitors
+
+Issues:
+
+- https://github.com/alacritty/alacritty/issues/3792
+- https://github.com/alacritty/alacritty/issues/1339
+
+Possible fix:
+
+- https://gist.github.com/synaptiko/b59d814ea07186a9a9f210724930f2ca
+
+Hack:
+
+```bash
+WINIT_X11_SCALE_FACTOR=1 alacritty
+```
+
+
+
+
+
