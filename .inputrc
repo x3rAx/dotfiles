@@ -40,9 +40,11 @@ set colored-completion-prefix on
 # Display the common prefix of the list of possible completions (which may be empty) before cycling through the list.
 set menu-complete-display-prefix on
 
-# Filtered history search
-"\e[A": history-search-backward
-"\e[B": history-search-forward
+# Partial history search using arrow keys
+# Ctrl + Arrow Up
+"\e[1;5A": history-search-backward
+# Ctrl + Arrow Down
+"\e[1;5B": history-search-forward
 "": history-search-backward
 "": history-search-forward
 
