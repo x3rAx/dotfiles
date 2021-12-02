@@ -5,15 +5,21 @@
   - Key: Smart Shift
   - KeyPress: Home
 - Rule:
-  - Key: App Switch Gesture
+  - Key: Mouse Gesture Button
   - KeyPress: End
 ...
 ---
 - Feature: THUMB WHEEL
 - Rule:
   - Test: thumb_wheel_up
-  - Execute: [/home/x3ro/.local/scripts/solaar-keys/solaar-key-handler.sh, Right]
+  - Rule:
+    - Process: valheim
+    - Execute: [/home/x3ro/.local/scripts/solaar-keys/solaar-key-handler.sh, '8']
+  - Execute: [/home/x3ro/.local/scripts/solaar-keys/solaar-key-handler.sh, right]
 - Rule:
   - Test: thumb_wheel_down
-  - Execute: [/home/x3ro/.local/scripts/solaar-keys/solaar-key-handler.sh, Left]
+  - Rule:
+    - Process: valheim
+    - Execute: [/home/x3ro/.local/scripts/solaar-keys/solaar-key-handler.sh, '7']
+  - Execute: [/home/x3ro/.local/scripts/solaar-keys/solaar-key-handler.sh, left]
 ...
