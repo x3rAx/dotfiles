@@ -4,7 +4,7 @@ start() {
     "$@" &
 }
 
-start ~/.local/scripts/solaar-keys/solaar-key-daemon.sh
+start ~/.local/scripts/solaar-keys/solaar-key-daemon
 
 start anydesk
 start birdtray
@@ -17,3 +17,5 @@ start sxhkd
 start syncthingtray
 start telegram-desktop
 start thunderbird
+#start appimage-run .local/opt/kopia/KopiaUI-0.9.5.AppImage
+start kopia-ui-crashsafe
