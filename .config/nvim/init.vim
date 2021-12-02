@@ -314,6 +314,9 @@ let mapleader = ' '
     command! -bang -nargs=+ Shebang call Shebang(<bang>0, <f-args>)
     command! -bang -nargs=+ Bang call Shebang(<bang>0, <f-args>)
 
+    command! -bang ChmodX if <bang>0 | Chmod -x | else | Chmod +x | endif
+
+
 " System Clipboard
     " Copy to clipboard
     vnoremap  <leader><leader>y  "+y
