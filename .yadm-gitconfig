@@ -8,3 +8,4 @@
     un = untracked
     code = !"awk -i inplace '(NR == 1 && !/^\\*$/) { print \"*\" } { print $0 }' .yadm-gitignore && code -nw .; awk -i inplace '!(NR == 1 && /^\\*$/) { print $0 }' .yadm-gitignore"
     bash = !yadm enter bash
+    gitui = "!gitui -d \"$GIT_DIR\""
