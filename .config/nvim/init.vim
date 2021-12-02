@@ -61,6 +61,7 @@ let mapleader = ' '
         Plug 'moll/vim-bbye'
         Plug 'mbbill/undotree'
         Plug 'liuchengxu/vim-which-key'
+        Plug 'sbdchd/vim-shebang'
     call plug#end()
 
 
@@ -188,7 +189,7 @@ let mapleader = ' '
 
 " Command to (write and) reload .vimrc
     let x3ro#vimrc = '~/.config/nvim/init.vim'
-    command! RR
+    command! -bar RR
         \  if (bufname('%') != '' && expand('%:p') == expand(x3ro#vimrc))
         \|     write
         \| endif
@@ -297,6 +298,21 @@ let mapleader = ' '
     command! MenuHide
       \ set guioptions-=mT
 
+    function! Shebang(bang, ...)
+        let l:args = copy(a:000)
+        let l:bang = ""
+        if a:bang
+            let l:bang = "!"
+        endif
+        if l:args[0][0] == '!'
+            let l:args[0] = l:args[0][1:]
+            call insert(l:args, "#!/usr/bin/env")
+        endif
+        exec "ShebangInsert" . l:bang join(l:args)
+        filetype detect
+    endfunction
+    command! -bang -nargs=+ Shebang call Shebang(<bang>0, <f-args>)
+    command! -bang -nargs=+ Bang call Shebang(<bang>0, <f-args>)
 
 " System Clipboard
     " Copy to clipboard
