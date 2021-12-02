@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+cat='cat'
+
+if [ "$(command -v bat)" ]; then
+    cat='bat'
+fi
+
+dowhich "$cat" "$@"
+

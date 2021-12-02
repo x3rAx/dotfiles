@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+cmd="$1"
+shift
+
+opts=()
+args=()
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        '-'*)
+            opts+=( "$1" )
+            ;;
+        *)
+            args+=( "$1" )
+            ;;
+    esac
+    shift
+done
+
+$cmd "${opts[@]}" "$(which "${args[@]}")"
+

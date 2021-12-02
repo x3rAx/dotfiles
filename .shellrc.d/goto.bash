@@ -97,6 +97,7 @@ _goto() {
     local origIFS="$IFS"
     #local IFS=$'\n'
     local comp_bookmarks=( $( compgen -W "$(\ls "$HOME/.bookmarks")" -- "$word" ) )
+
     # Escape names
     local item i
     i=0
