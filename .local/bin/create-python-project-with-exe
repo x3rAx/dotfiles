@@ -1,0 +1,199 @@
+#!/usr/bin/env bash
+
+USAGE="
+  Usage:
+    $0 [options] <project-name> [[exe-name]...]
+
+  OPTIONS:
+    -h,--help     Show this help message
+    -f,--force    Force creaton of project (does not overwrite existing files)
+    --force-overwrite
+                  Force creaton of project and overwrite existing files
+    -x,--no-exe   Do not create an executable with name \`<project-name>\`
+    --            Stop parsing options
+"
+
+main() {
+    local args=()
+    local no_exe=false
+    local force=false
+    local force_overwrite=false
+
+    # Parse options and arguments
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            '--force')
+                force=true
+                ;;
+            '--force-overwrite')
+                force=true
+                overwrite=true
+                ;;
+            '-h'|'--help')
+                echo >&2 "$USAGE"
+                exit
+                ;;
+            '-x'|'--no-exe')
+                no_exe=true
+                shift
+                ;;
+            '--')
+                shift
+                break
+                ;;
+            '-'*)
+                echo >&2 "ERROR: Unknown option: \"$1\""
+                echo >&2 ""
+                echo >&2 "$USAGE"
+                exit 1
+                ;;
+            *)
+                args+=( "$1" )
+        esac
+        shift
+    done
+
+    # Only arguments
+    while [[ $# -gt 0 ]]; do
+        args+=( "$1" )
+        shift
+    done
+
+    # Require at leaset 1 argument
+    if [[ ${#args[@]} -lt 1 ]]; then
+        echo >&2 "ERROR: Missing argument \`<project-name>\`."
+        exit 1
+    fi
+
+    # Get project and executable names
+    local project="${args[0]}"
+    local project_dir="$(realpath --canonicalize-missing "$project")"
+    local project_name="$(basename "$project_dir")"
+    local exes=( "${args[@]:1}" )
+
+    # Add project dir name to list of executables
+    if [[ $no_exe == false ]]; then
+        exes=( "$(basename -- "$project")" "${exes[@]}" )
+    fi
+
+    # Check that executable names do not contain "/"
+    local e
+    for e in "${exes[@]}"; do
+        if [[ $e =~ / ]]; then
+            echo >&2 "ERROR: Executable names cannot contain slashes."
+            exit 1
+        fi
+    done
+
+    if [[ -e "$project" ]]; then
+        if [[ $force != true ]]; then
+            echo >&2 "ERROR: The path \"${project}\" already exists."
+            exit 1
+        fi
+        echo >&2 "-> Project directory already exists: \`${project}\`"
+    else
+        echo >&2 "-> Creating project directory: \`${project}\`"
+        mkdir -p -- "$project"
+    fi
+    cd -- "$project"
+    echo >&2 "-> Creating \`bin/\` and \`src/\`"
+    mkdir -p bin src
+
+    if [[ -e '.venv' ]]; then
+        echo >&2 "-> Venv in \`.venv\` already exists"
+    else
+        echo >&2 "-> Creating venv in \`.venv\`"
+        python3 -m venv .venv
+    fi
+
+    if [[ -e '.envrc' ]] && [[ $overwrite != true ]]; then
+        echo >&2 "-> File \`.envrc\` already exists"
+    else
+        echo >&2 "-> Creating \`.envrc\`"
+        sed 's/^.*|//' >.envrc <<EOF
+            |if [ ! -e '.venv' ]; then
+            |    python -m venv .venv
+            |fi
+            |. .venv/bin/activate
+            |unset PS1 # Suppress warning that PS1 cannot be exportedv
+EOF
+    fi
+
+    if [[ -e 'src/main.py' ]] && [[ $overwrite != true ]]; then
+        echo >&2 "-> File \`src/main.py\` already exists"
+    else
+        echo >&2 "-> Creating \`src/main.py\`"
+        sed 's/^.*|//' >src/main.py <<EOF
+            |"""
+            |${project_name}
+            |"""
+            |
+            |import sys
+            |
+            |def main(argv):
+            |    """
+            |    Application entry point
+            |    """
+            |    print(argv)
+            |
+            |
+            |def eprint(*args, **kwargs):
+            |    print(*args, file=sys.stderr, **kwargs)
+            |
+            |
+            |if __name__ == '__main__':
+            |    main(sys.argv)
+            |
+EOF
+    fi
+
+    for e in "${exes[@]}"; do
+        e="bin/${e}"
+        if [[ -e "$e" ]] && [[ $overwrite != true ]]; then
+            echo >&2 "-> Executable already exists: ${e}"
+        else
+            echo >&2 "-> Creating executable: ${e}"
+            sed 's/^.*|//' >"$e" <<EOF
+                |#!/usr/bin/env bash
+                |
+                |SCRIPT="\$0"
+                |SCRIPT_DIR="$(dirname "\$SCRIPT")"
+                |BASE_DIR="$(dirname "\$SCRIPT_DIR")"
+                |
+                |. "\${BASE_DIR}/.venv/bin/activate"
+                |
+                |python "\${BASE_DIR}/src/main.py" "\$@"
+                |
+EOF
+            chmod +x "$e"
+        fi
+    done
+
+    if [[ -e '.git' ]]; then
+        echo >&2 "-> Git repository already initialized"
+    else
+        echo >&2 "-> Initializing git repository"
+        git init
+    fi
+
+    if [[ -e '.gitignore' ]]; then
+        echo >&2 "-> file \`.gitignore\` already eixsts"
+    else
+        sed 's/^.*|//' >".gitignore" <<EOF
+            |.venv/
+EOF
+    fi
+
+
+    echo >&2 "-> Done! To get started, run the following commands:"
+    echo >&2 ""
+    echo >&2 "    cd -- '$project' && . .venv/bin/activate"
+    echo >&2 ""
+    echo >&2 "   or, when using \`direnv\` run:"
+    echo >&2 ""
+    echo >&2 "    cd -- '$project' && direnv allow"
+    echo >&2 ""
+}
+
+main "$@"
+

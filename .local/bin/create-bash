@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [[ -e "$1" ]]; then
+    echo >&2 "ERROR: The path \`$1\` already exists."
+    exit 1
+fi
+
+sed 's/^.*|//' >"$1" <<EOF
+    |#!/usr/bin/env bash
+    |
+    |
+EOF
+
+chmod +x "$1"
+vim "$1"
