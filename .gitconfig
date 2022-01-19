@@ -49,6 +49,32 @@
     ctst = "!f() { git commit -e -m \"🤖 TEST: $@\"; }; f"
     # BREAKING CHANGE.
     cbrk = "!f() { git commit -e -m \"‼️ BREAKING: $@\"; }; f"
+
+    stash-unstaged = "!f() { \
+        if $(git diff --quiet --cached --exit-code); then \
+            git stash \"$@\"; return; fi ;\
+        branch=$(git rev-parse --abbrev-ref HEAD) &&\
+        id=$(git rev-parse HEAD) &&\
+        git switch --quiet --detach $id &&\
+        git commit --quiet --no-verify -m 'TEMP: for stashing unstaged' &&\
+        id=$(git rev-parse HEAD) &&\
+        git switch --quiet \"$branch\" &&\
+        git stash push \"$@\" &&\
+        git switch --quiet --detach $id &&\
+        git reset --quiet --soft \"$branch\" &&\
+        git switch --quiet \"$branch\" ;\
+    }; f"
+    stash-staged = "!f() { \
+        if $(git diff --quiet --cached --exit-code); then \
+            echo >&2 'No staged changes to save'; return; fi ;\
+        git stash push --quiet --keep-index -m 'TEMP: for stashing staged' &&\
+        git stash push \"$@\" &&\
+        git stash pop --quiet stash@{1} &&\
+        git stash show -p | git apply -R ;\
+    }; f"
+    stash-apply-staged = "stash apply --index"
+    stash-pop-staged = "stash pop --index"
+
 [delta]
 	side-by-side = false
 	line-numbers = true
