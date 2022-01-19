@@ -10,7 +10,7 @@
 [core]
 	#editor = code --wait
 	excludesfile = .gitignore-global
-    pager = "f() { if [ \"$(command -v delta)\" ]; then delta \"$@\"; else less \"$@\"; fi; }; f"
+    pager = "f() { if [ \"$(command -v delta)\" ]; then delta --max-line-length ${DELTA_MAX_LINE_LENGTH:-512} -- \"$@\"; else less \"$@\"; fi; }; f"
 [pull]
 	ff = only
 [merge]
