@@ -49,6 +49,8 @@
     ctst = "!f() { git commit -e -m \"🤖 TEST: $@\"; }; f"
     # BREAKING CHANGE.
     cbrk = "!f() { git commit -e -m \"‼️ BREAKING: $@\"; }; f"
+    # WIP.
+    cwip = "!f() { git commit -e -m \"🚧 WIP: $@\"; }; f"
 
     stash-unstaged = "!f() { \
         if $(git diff --quiet --cached --exit-code); then \
