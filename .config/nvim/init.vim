@@ -488,8 +488,9 @@ let mapleader = ' '
 
     let g:NERDTreeDirArrowExpandable = '▶'
     let g:NERDTreeDirArrowCollapsible = '▼'
-    nnoremap <M-n> :NERDTreeFocus<cr>
     nnoremap <M-N> :NERDTree<cr>
+    " Focus / toggle NERDTree
+    nnoremap <expr> <M-n> (exists('b:NERDTree') && b:NERDTree.isTabTree()) ? ':NERDTreeToggle<CR>' : ':NERDTreeFocus<CR>'
 
 
 " NERDCommenter
