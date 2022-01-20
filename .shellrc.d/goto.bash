@@ -25,6 +25,8 @@ goto() {
     fi
 
     if [[ $1 == '-l' ]]; then
+        echo >&2 "Bookmarks:"
+        echo >&2 ""
         for l in $(find "$bookmarks" -type l -printf '%f\n'); do
             t="$(readlink "$bookmarks/$l")"
             relAbs="rel"
