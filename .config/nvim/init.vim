@@ -62,6 +62,7 @@ let mapleader = ' '
         Plug 'mbbill/undotree'
         Plug 'liuchengxu/vim-which-key'
         Plug 'sbdchd/vim-shebang'
+
         Plug 'jremmen/vim-ripgrep'
         Plug 'airblade/vim-gitgutter'
     call plug#end()
@@ -573,8 +574,9 @@ let mapleader = ' '
     "    \  call CmdAlias('w', 'echoerr "Saving with `:w` is disabled. Use `\<leader\>fs` or `\<C-s\>` to save."')
     "    \| call CmdAlias('W', 'echoerr "Saving with `:W` is disabled. Use `\<leader\>fs` or `\<C-s\>` to save."')
     noremap  <silent> <C-S>   :update<CR>:echo "Saved"<CR>
-    vnoremap <silent> <C-S>   <C-C>:update<CR>:echo "Saved"<CR>
+    vnoremap <silent> <C-S>   <C-c>:update<CR>:echo "Saved"<CR>gv
     inoremap <silent> <C-S>   <C-o>:update<CR><C-o>:echo "Saved"<CR>
+
 
 
 map <Up> 
