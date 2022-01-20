@@ -96,5 +96,20 @@ WINIT_X11_SCALE_FACTOR=1 alacritty
 
 
 
+## Reload WiFi driver
 
+Run 
+
+```bash
+lshw -C network
+```
+
+and look for `driver=<driver-name>` (eg. `driver=ath10k_pci` for my Acer Nitro
+Laptop)
+
+then reload the kernel module:
+
+```bash
+sudo modprobe -r ath10k_pci && sudo modprobe ath10k_pci
+```
 
