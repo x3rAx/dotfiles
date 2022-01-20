@@ -110,10 +110,9 @@ _goto() {
 
     if [[ $cword == 1 ]]; then
         if [[ $word =~ ^- ]]; then
-            COMPREPLY+=( $( compgen -W "-s -sr -sa -srf -saf -d" -- "$word" ) )
+            COMPREPLY+=( $( compgen -W "-l -s -sr -sa -srf -saf -d" -- "$word" ) )
             return
         fi
-
         COMPREPLY+=( "${comp_bookmarks[@]}" )
     elif [[ $cword == 2 ]] && [[ ${words[1]} =~ ^- ]]; then
         COMPREPLY+=( "${comp_bookmarks[@]}" )
