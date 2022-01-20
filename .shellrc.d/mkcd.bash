@@ -3,7 +3,7 @@ mkcd() {
 Usage:
     mkcd [options] [--] <directory> [[directory]...]
 
-Creates all given directories and \`cd\`s into the first given one.
+Creates all given directories and \`cd\`s into the first one.
 
 OPTIONS:
     -h, --help                 Print this help
