@@ -63,6 +63,7 @@ let mapleader = ' '
         Plug 'liuchengxu/vim-which-key'
         Plug 'sbdchd/vim-shebang'
         Plug 'jremmen/vim-ripgrep'
+        Plug 'airblade/vim-gitgutter'
     call plug#end()
 
 
@@ -87,6 +88,11 @@ let mapleader = ' '
     let g:which_key_disable_default_offset = 1
 " TODO: --- Above is a test of `vim_which_key` -------------------------------
 
+
+" Set update time
+    " Write swap file if nothing is written for so many milliseconds
+    " (also influences update interval of 'gitgutter' plugin)
+    set updatetime=500
 
 " Set color scheme
     "colorscheme nord
