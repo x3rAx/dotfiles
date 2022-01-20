@@ -62,6 +62,7 @@ let mapleader = ' '
         Plug 'mbbill/undotree'
         Plug 'liuchengxu/vim-which-key'
         Plug 'sbdchd/vim-shebang'
+        Plug 'jremmen/vim-ripgrep'
     call plug#end()
 
 
