@@ -47,7 +47,7 @@
     enter:                     ( code: Enter,          modifiers: ( bits: 0 ) ),
     blame:                     ( code: Char('B'),      modifiers: ( bits: 1 ) ),
     //edit_file:                 ( code: Char('e'),      modifiers: ( bits: 0 ) ),
-    status_stage_all:          ( code: Char('a'),      modifiers: ( bits: 0 ) ),
+    status_stage_all:          ( code: Char('A'),      modifiers: ( bits: 1 ) ),
     //status_reset_item:         ( code: Char('D'),      modifiers: ( bits: 1 ) ),
     status_ignore_file:        ( code: Char('i'),      modifiers: ( bits: 0 ) ),
     //diff_stage_lines:          ( code: Char('s'),      modifiers: ( bits: 0 ) ),
@@ -73,11 +73,11 @@
     tags:                      ( code: Char('T'),      modifiers: ( bits: 1 ) ),
     delete_tag:                ( code: Char('D'),      modifiers: ( bits: 1 ) ),
     select_tag:                ( code: Enter,          modifiers: ( bits: 0 ) ),
-    push:                      ( code: Char('p'),      modifiers: ( bits: 0 ) ),
+    push:                      ( code: Char('u'),      modifiers: ( bits: 0 ) ),
     open_file_tree:            ( code: Char('F'),      modifiers: ( bits: 1 ) ),
     file_find:                 ( code: Char('f'),      modifiers: ( bits: 0 ) ),
-    force_push:                ( code: Char('P'),      modifiers: ( bits: 1 ) ),
-    pull:                      ( code: Char('f'),      modifiers: ( bits: 0 ) ),
+    force_push:                ( code: Char('U'),      modifiers: ( bits: 1 ) ),
+    pull:                      ( code: Char('d'),      modifiers: ( bits: 0 ) ),
     //abort_merge:               ( code: Char('A'),      modifiers: ( bits: 1 ) ),
     undo_commit:               ( code: Char('U'),      modifiers: ( bits: 1 ) ),
     stage_unstage_item:        ( code: Enter,          modifiers: ( bits: 0 ) ),
@@ -108,10 +108,10 @@
 
     edit_file:                 ( code: Char('I'),      modifiers: ( bits: 1 ) ),
 
-    status_reset_item:         ( code: Char('U'),      modifiers: ( bits: 1 ) ),
+    status_reset_item:         ( code: Char('R'),      modifiers: ( bits: 0 ) ),
 
     diff_stage_lines:          ( code: Char('s'),      modifiers: ( bits: 0 ) ),
-    diff_reset_lines:          ( code: Char('u'),      modifiers: ( bits: 0 ) ),
+    diff_reset_lines:          ( code: Char('r'),      modifiers: ( bits: 0 ) ),
 
     //stashing_save:             ( code: Char('w'),      modifiers: ( bits: 0 ) ),
     //stashing_toggle_index:     ( code: Char('m'),      modifiers: ( bits: 0 ) ),
