@@ -1,6 +1,8 @@
 alias forget='history-forget'
 
 history-forget() {
+    history -n # Sync history from file
+
     local header="=> Select multiple lines with TAB. Confirm deletion with ENTER.\n=> Cancel with Ctrl+C"
     local delete_list="$(history | sort --reverse | fzf --multi --header="$(echo -e "\n${header}\n ")" | sort -n)"
 
@@ -25,6 +27,8 @@ history-forget() {
     for i in $offsets_adapted; do
         history -d "$i"
     done
+
+    history -w # Write the history to file
 
     echo >&2 "Done"
 }
