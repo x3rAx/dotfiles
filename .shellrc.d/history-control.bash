@@ -4,6 +4,6 @@
 # `erasedups`   - Erase all duplicates in the whole history that match current line
 HISTCONTROL=ignoreboth
 
-HISTSIZE=50000
+HISTSIZE=5000000
 HISTFILESIZE="$HISTSIZE"
 
