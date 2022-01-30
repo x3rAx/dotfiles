@@ -65,6 +65,8 @@ let mapleader = ' '
 
         Plug 'jremmen/vim-ripgrep'
         Plug 'airblade/vim-gitgutter'
+        "Plug 'github/copilot.vim'
+        "Plug 'easymotion/vim-easymotion'
     call plug#end()
 
 
