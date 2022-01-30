@@ -17,7 +17,7 @@ function __ssh_start_agent {
     if [[ -n $SSH_AGENT_TIMEOUT ]]; then
         __timeout="-t ${SSH_AGENT_TIMEOUT}"
     fi
-    ssh-agent $__timeout | sed 's/^echo/#/' >> "${SSH_AGENT_ENV}"
+    ssh-agent $__timeout | sed 's/^echo/#/' > "${SSH_AGENT_ENV}"
     unset __timeout
     . "${SSH_AGENT_ENV}" > /dev/null
     #ssh-add
