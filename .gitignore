@@ -5,4 +5,6 @@ __pycache__
 
 /.config/copyq/copyq_tab_*.dat
 /.config/copyq/copyq_filter.ini
-
+/.config/copyq/copyq_geometry.ini
+/.config/copyq/copyq_no_session.ini
+/.config/copyq/copyq_tabs.ini
