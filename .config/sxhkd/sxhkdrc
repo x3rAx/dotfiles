@@ -1,8 +1,80 @@
+#: Reload sxhkd config
+super + Escape ; Return
+    pkill -USR1 -x sxhkd
+
+#: Open Alacritty
+super + Return
+    alacritty
+
+#: Focus windows in given direction
+super + {h,j,k,l}
+    bspc node --focus {west,south,north,east}
+
 #: Show sxhkd shortcuts
+# TODO: Get pid of current sxhkd instance
 super + Escape ; F1
-    sxhkd-shortcuts-rofi $PPID
+    sxhkd-shortcuts-rofi `pidof sxhkd`
 
 #: Run KeePass
 ctrl + alt + shift + k
     keepassxc-focus
 
+#: Rofi
+super + d
+    rofi -show drun
+
+#: Move nodes using smart move
+super + shift + {h,j,k,l}
+    ~/.local/bin/bspwm-smart-move {west,south,north,east}
+
+##: Move: Swap nodes
+#super + shift + ctrl {h,j,k,l}
+#    bspc node --swap {west,south,north,east} --follow
+
+##: Move: Move node into other
+#super + shift + alt + {h,j,k,l}
+#    bspc node --to-node {west,south,north,east} --follow
+
+#: Close/Kill window
+super + shift + {_,shift + }q
+    bspc node --{close,kill}
+
+#: Select parent
+super + a
+    bspc node --focus @parent
+
+#: Focus last window (undo "select parent")
+super + x
+    bspc node --focus last.window
+
+#: Rotate all children
+super + shift + r ; {h,l}
+    bspc node -R {-,_}90
+
+#: Rotate only direct children of current parent (silblings)
+super + r; super + {h,l}
+    { r1='-90'; r2='90';  \
+    , r1='90';  r2='-90'; } \
+    bspc node @parent -R $r1 ;\
+    bspc node @parent/1 -R $r2 ;\
+    bspc node @parent/2 -R $r2
+
+#: Rotate all children of current parent
+super + shift + r; super + shift + {h,l}
+    bspc node @parent -R {-,_}90
+
+#: Toggle monocle
+super + m
+    bspc desktop -l next
+
+#: Smart resize
+# Smart resize, will grow or shrink depending on location.
+# Will always grow for floating nodes.
+#super + ctrl + alt + {h,j,k,l}
+#    n=10; \
+#    { d1=left;   d2=right;  dx=-$n; dy=0;   \
+#    , d1=bottom; d2=top;    dx=0;   dy=$n;  \
+#    , d1=top;    d2=bottom; dx=0;   dy=-$n; \
+#    , d1=right;  d2=left;   dx=$n;  dy=0;   \
+#    } \
+#    bspc node --resize $d1 $dx $dy || bspc node --resize $d2 $dx $dy
