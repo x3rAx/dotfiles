@@ -10,10 +10,13 @@ super + Return
 super + {h,j,k,l}
     bspc node --focus {west,south,north,east}
 
-#: Show sxhkd shortcuts
-# TODO: Get pid of current sxhkd instance
+#: Sxhkd cheat sheet
+# The `;` at the beginning of the command makes it run synchronously. This
+# makes it possible to access the `$PPID`. The `&` at the end makes sure that
+# it is run asynchronously again, so that sxhkd does not get stuck and prevents
+# keys from being pressed
 super + Escape ; F1
-    sxhkd-shortcuts-rofi `pidof sxhkd`
+    ; sxhkd-shortcuts-rofi $PPID &
 
 #: Run KeePass
 ctrl + alt + shift + k
