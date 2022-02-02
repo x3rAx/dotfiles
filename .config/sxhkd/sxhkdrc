@@ -81,3 +81,16 @@ super + ctrl + {h,j,k,l}
     , d1=right;  d2=left; dx=$n;  dy=0;   \
     } \
     bspc node --resize $d1 $dx $dy || bspc node --resize $d2 $((-$dx)) $((-$dy))
+
+#: Volume control
+XF86Audio{Lower,Raise}Volume
+    pactl set-sink-volume @DEFAULT_SINK@ {-,+}2%
+
+#: Mute audio
+XF86AudioMute
+    pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+#: Media player controls
+XF86Audio{Play,Pref,Next,Stop}
+    playerctl {play-pause,previous,next,stop}
+
