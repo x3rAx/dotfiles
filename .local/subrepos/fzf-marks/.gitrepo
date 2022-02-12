@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/urbainvaes/fzf-marks.git
+	branch = master
+	commit = a0bea57978a246ed1ceca5d5845ddfe38c7ebf7d
+	parent = 7ec0e77ce0a15502caf770567f738b1607620964
+	method = merge
+	cmdver = 0.4.3
