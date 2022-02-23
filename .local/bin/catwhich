@@ -6,5 +6,5 @@ if [ "$(command -v bat)" ]; then
     cat='bat'
 fi
 
-dowhich "$cat" "$@"
+"$cat" "$(which "$1")"
 

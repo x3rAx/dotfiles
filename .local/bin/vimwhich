@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
 
-dowhich vim "$@"
+vim='vim'
+
+if [ "$(command -v nvim)" ]; then
+    vim='nvim'
+fi
+
+"$vim" "$(which "$1")"
 
