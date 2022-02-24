@@ -8,26 +8,46 @@ CONFIG_DIR="${XDG_CONFIG_HOME}/bspwm"
 RUN_DIR="${CONFIG_DIR}/run"
 mkdir -p "$RUND_DIR"
 
-PATH="${HOME}/.local/bin:${PATH}"
+path_prepend() { [ -e $1 ] && PATH=":${PATH}" && PATH="${1}${PATH//:$1/}"; }
+start() { "$@" & }
+
+path_prepend "${HOME}/.local/bin"
 export PATH
 
 # --- Autostart ---
 
-# sxhkd
+start $HOME/.config/polybar/launch.sh &
+start ~/.local/scripts/solaar-keys/solaar-key-daemon
+
+bspc rule --add "Anydesk" desktop=8
+start anydesk
+start birdtray
+start copyq
+bspc rule --add "Ferdi" desktop=10
+start ferdi
+start keepassxc
+bspc rule --add "Signal" desktop=10
+start signal-desktop --use-tray-icon # --start-in-tray
+start solaar --battery-icons solaar --window hide
+start syncthingtray
+bspc rule --add "TelegramDesktop" desktop=9
+start telegram-desktop
+bspc rule --add "Thunderbird" desktop=9
+start thunderbird
+start kopia-ui-crashsafe
+
 #sxhkd_pidfile="${RUN_DIR}/sxhkd.pid"
 #[[ -f $sxhkd_pidfile ]] && kill "$(< "$sxhkd_pidfile")" 2>/dev/null
 #sxhkd -c "${XDG_CONFIG_HOME}/sxhkd/bspwm.sxhkdrc" & echo "$!" >"$sxhkd_pidfile"
 
-#pgrep -x sxhkd >/dev/null || sxhkd &
 pkill sxhkd; sxhkd & # sxhkd is started by nix package of bspwm but with wrong PATH
 pkill picom; picom --experimental-backends & # Experimental for blur with "dual_kawase"
 feh --bg-fill ~/Pictures/\[Wallpapers\]/1920x1080/tree-on-a-hill.jpg &
 
-
 # --- Setup ---
 
 # Workspaces
-bspc monitor -d 1 2 3 4 5 6 7 8 9 10
+bspc monitor -d {1..10}
 
 # Config
 bspc config window_gap              20
