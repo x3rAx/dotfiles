@@ -1,0 +1,1 @@
+. "$HOME/.local/subrepos/fzf-marks/fzf-marks.plugin.bash"
