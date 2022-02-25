@@ -450,14 +450,28 @@ let mapleader = ' '
 
 " NERDTree
     function! StartNERDTree()
-        if argc() > 0
+        if argc() == 0
+            " When started without arguments, start NERDTree and focus main
+            " window
+            NERDTree
+            wincmd p
+        else
             if isdirectory(argv()[0])
                 " When started with a directory, bring NERDTree to the side
-                if !exists('s:std_in')
-                    " When started without STDIN piped, close fullscreen NERDTree
-                    bwipeout 
+                " and focus it
+                if exists('s:std_in')
+                    " When started with STDIN piped, switch buffer to
+                    " fullscreen NERDTree
+                    bnext
                 endif
-                execute 'NERDTree' argv()[0] | execute 'cd '.argv()[0]
+
+                " Close fullscreen NERDTree
+                bwipeout
+
+                " Start NERDTree to the side
+                execute 'NERDTree' argv()[0]
+                execute 'cd '.argv()[0]
+
                 if argc() > 1 || exists('s:std_in')
                     " When started with more paths or with STDIN piped, focus main window
                     wincmd p
@@ -465,13 +479,6 @@ let mapleader = ' '
             else
                 " When started with a file, start NERDTree and focus main window
                 NERDTree
-                wincmd p
-            endif
-        else
-            " When started without arguments, just start NERDTree
-            NERDTree
-            if argc() > 1 || exists('s:std_in')
-                " When started with STDIN piped, focus main window
                 wincmd p
             endif
         endif
