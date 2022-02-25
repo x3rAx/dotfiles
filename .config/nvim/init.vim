@@ -323,6 +323,7 @@ let mapleader = ' '
     endfunction
     command! -bang -nargs=+ Shebang call Shebang(<bang>0, <f-args>)
     command! -bang -nargs=+ Bang call Shebang(<bang>0, <f-args>)
+    command! -bang BashBang call Shebang(<bang>0, 'bash')
 
     command! -bang ChmodX if <bang>0 | Chmod -x | else | Chmod +x | endif
 
