@@ -9,32 +9,14 @@ RUN_DIR="${CONFIG_DIR}/run"
 mkdir -p "$RUND_DIR"
 
 path_prepend() { [ -e $1 ] && PATH=":${PATH}" && PATH="${1}${PATH//:$1/}"; }
-start() { "$@" & }
 
 path_prepend "${HOME}/.local/bin"
 export PATH
 
 # --- Autostart ---
 
-start $HOME/.config/polybar/launch.sh &
-start ~/.local/scripts/solaar-keys/solaar-key-daemon
-
-bspc rule --add "Anydesk" desktop=8
-start anydesk
-start birdtray
-start copyq
-bspc rule --add "Ferdi" desktop=10
-start ferdi
-start keepassxc
-bspc rule --add "Signal" desktop=10
-start signal-desktop --use-tray-icon # --start-in-tray
-start solaar --battery-icons solaar --window hide
-start syncthingtray
-bspc rule --add "TelegramDesktop" desktop=9
-start telegram-desktop
-bspc rule --add "Thunderbird" desktop=9
-start thunderbird
-start kopia-ui-crashsafe
+$HOME/.config/polybar/launch.sh &
+( sleep 1 && ./autostart.sh; ) &
 
 #sxhkd_pidfile="${RUN_DIR}/sxhkd.pid"
 #[[ -f $sxhkd_pidfile ]] && kill "$(< "$sxhkd_pidfile")" 2>/dev/null
