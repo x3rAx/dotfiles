@@ -33,6 +33,7 @@
 	amend = commit --amend
     sub = subrepo
     sub-st = sub status
+    sdiff = diff --staged
 
     # === Emoji Log ===
     # NEW.
