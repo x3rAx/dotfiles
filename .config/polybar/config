@@ -393,7 +393,7 @@ ramp-foreground = ${colors.foreground-alt}
 [module/powermenu]
 type = custom/menu
 
-expand-right = true
+expand-right = false
 
 format-spacing = 1
 
@@ -408,16 +408,30 @@ menu-0-0 = ﯩ reboot
 menu-0-0-exec = menu-open-1
 menu-0-1 = 襤 power off
 menu-0-1-exec = menu-open-2
+menu-0-2 =  hibernate
+menu-0-2-exec = menu-open-3
+menu-0-3 = 鈴 suspend
+menu-0-3-exec = menu-open-4
 
 menu-1-0 = ﰸ cancel
 menu-1-0-exec = menu-open-0
 menu-1-1 = ﯩ reboot
-menu-1-1-exec = sudo reboot
+menu-1-1-exec = systemctl reboot
 
-menu-2-0 = 襤 power off
-menu-2-0-exec = sudo poweroff
-menu-2-1 = ﰸ cancel
-menu-2-1-exec = menu-open-0
+menu-2-0 = ﰸ cancel
+menu-2-0-exec = menu-open-0
+menu-2-1 = 襤 power off
+menu-2-1-exec = systemctl poweroff
+
+menu-3-0 = ﰸ cancel
+menu-3-0-exec = menu-open-0
+menu-3-1 =  hibernate
+menu-3-1-exec = systemctl hibernate
+
+menu-4-0 = 鈴 suspend
+menu-4-0-exec = systemctl suspend
+menu-4-1 = ﰸ cancel
+menu-4-1-exec = menu-open-0
 
 [settings]
 screenchange-reload = true
