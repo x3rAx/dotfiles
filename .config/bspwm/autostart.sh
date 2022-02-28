@@ -1,5 +1,7 @@
 #!/bin/sh
 
+start() { "$@" & }
+
 start ~/.local/scripts/solaar-keys/solaar-key-daemon
 
 bspc rule --add "Anydesk" desktop=8

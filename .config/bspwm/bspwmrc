@@ -4,8 +4,8 @@ SCRIPT="$(realpath "$0")"
 SCRIPT_DIR="$(dirname "$SCRIPT")"
 
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
-CONFIG_DIR="${XDG_CONFIG_HOME}/bspwm"
-RUN_DIR="${CONFIG_DIR}/run"
+BSPWM_DIR="${XDG_CONFIG_HOME}/bspwm"
+RUN_DIR="${BSPWM_DIR}/run"
 mkdir -p "$RUND_DIR"
 
 path_prepend() { [ -e $1 ] && PATH=":${PATH}" && PATH="${1}${PATH//:$1/}"; }
@@ -16,7 +16,7 @@ export PATH
 # --- Autostart ---
 
 $HOME/.config/polybar/launch.sh &
-( sleep 1 && ./autostart.sh; ) &
+( sleep 1 && "${BSPWM_DIR}/autostart.sh"; ) &
 
 #sxhkd_pidfile="${RUN_DIR}/sxhkd.pid"
 #[[ -f $sxhkd_pidfile ]] && kill "$(< "$sxhkd_pidfile")" 2>/dev/null
@@ -38,3 +38,4 @@ bspc config pointer_follows_monitor false
 bspc config focus_follows_pointer   true
 bspc config focused_border_color    "#0071db"
 bspc config removal_adjustment      "false"
+
