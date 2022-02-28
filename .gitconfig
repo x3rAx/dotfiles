@@ -10,7 +10,9 @@
 [core]
     #editor = code --wait
     excludesfile = .gitignore-global
-    pager = "f() { if [ \"$(command -v delta)\" ]; then delta --max-line-length ${DELTA_MAX_LINE_LENGTH:-512} -- \"$@\"; else less \"$@\"; fi; }; f"
+    pager = git delta
+[interactive]
+    diffFilter = git delta --color-only
 [pull]
     ff = only
 [merge]
@@ -20,6 +22,7 @@
 [gc]
     autoDetach = false
 [alias]
+    delta = "!f() { if [ \"$(command -v delta)\" ]; then delta --max-line-length ${DELTA_MAX_LINE_LENGTH:-512} \"$@\"; else less \"$@\"; fi; }; f"
     user = "!user=\"^x3ro\" && email=\"git@x3ro.dev\" && echo \"Setting git identity to:\n  ${user} <${email}>\" && git config user.name \"^x3ro\" && git config user.email \"git@x3ro.dev\""
     initial = "commit --allow-empty -m \"🦄 Initial commit.\""
     new = "!if git rev-parse --git-dir &>/dev/null; then echo \"Git repo already initialized in: ${PWD}/.git/\"; exit; fi; git init && echo '' && git user && echo '' && git initial"
