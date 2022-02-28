@@ -24,9 +24,8 @@ nixify() {
         return 1
     fi
 
-    channel_version="$(nix-instantiate --eval -E '(import <nixpkgs> {}).lib.version')"
-    channel_version="${channel_version//\"/}"
-    channel_commit="$(echo "$channel_version" | cut -d'.' -f4)"
+    channel_version="$(cat "$(nix-instantiate --find-file nixpkgs)/.version-suffix")"
+    channel_commit="$(echo "$channel_version" | cut -d'.' -f3)"
     commit_info="$(curl -s https://api.github.com/repos/NixOS/nixpkgs/commits/${channel_commit})"
     commit_hash="$(echo "$commit_info" | jq -r '.sha')"
     commit_date="$(echo "$commit_info" | jq -r '.commit.committer.date')"
