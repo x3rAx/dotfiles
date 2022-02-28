@@ -65,7 +65,7 @@ font-0 = MonoLisa Nerd Font:size=12;2
 modules-left = bspwm
 modules-center = xwindow
 ;modules-right = filesystem xbacklight alsa xkeyboard memory cpu wlan eth battery temperature date powermenu
-modules-right = filesystem alsa xkeyboard memory cpu temperature date powermenu
+modules-right = filesystem alsa xkeyboard memory cpu temperature date rofi-powermenu
 
 tray-position = right
 tray-padding = 2
@@ -389,6 +389,14 @@ ramp-2 = 
 ramp-3 = 
 ramp-4 = 
 ramp-foreground = ${colors.foreground-alt}
+
+[module/rofi-powermenu]
+type = custom/text
+
+content = 
+content-foreground = ${colors.secondary}
+
+click-left = ".config/polybar/scripts/rofi-powermenu.sh --mouse --top 32 --right 10 --bottom 10 --left 10"
 
 [module/powermenu]
 type = custom/menu
