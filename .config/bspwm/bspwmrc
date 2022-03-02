@@ -13,21 +13,33 @@ path_prepend() { [ -e $1 ] && PATH=":${PATH}" && PATH="${1}${PATH//:$1/}"; }
 path_prepend "${HOME}/.local/bin"
 export PATH
 
+
+
 # --- Autostart ---
 
+# Bar
 $HOME/.config/polybar/launch.sh &
-( sleep 1 && "${BSPWM_DIR}/autostart.sh"; ) &
-
-#sxhkd_pidfile="${RUN_DIR}/sxhkd.pid"
-#[[ -f $sxhkd_pidfile ]] && kill "$(< "$sxhkd_pidfile")" 2>/dev/null
-#sxhkd -c "${XDG_CONFIG_HOME}/sxhkd/bspwm.sxhkdrc" & echo "$!" >"$sxhkd_pidfile"
 
 # Notification Center
 deadd-notification-center &
 
+# Shorcuts
 pkill sxhkd; sxhkd & # sxhkd is started by nix package of bspwm but with wrong PATH
+
+# Compositor
 pkill picom; picom --experimental-backends & # Experimental for blur with "dual_kawase"
+
+# Background
 feh --bg-fill ~/Pictures/\[Wallpapers\]/1920x1080/tree-on-a-hill.jpg &
+
+# Solaar Key Daemon
+~/.local/scripts/solaar-keys/solaar-key-daemon &
+
+
+# Other Autostart Apps
+( sleep 1 && "${BSPWM_DIR}/autostart.sh"; ) &
+
+
 
 # --- Setup ---
 
