@@ -22,6 +22,9 @@ $HOME/.config/polybar/launch.sh &
 #[[ -f $sxhkd_pidfile ]] && kill "$(< "$sxhkd_pidfile")" 2>/dev/null
 #sxhkd -c "${XDG_CONFIG_HOME}/sxhkd/bspwm.sxhkdrc" & echo "$!" >"$sxhkd_pidfile"
 
+# Notification Center
+deadd-notification-center &
+
 pkill sxhkd; sxhkd & # sxhkd is started by nix package of bspwm but with wrong PATH
 pkill picom; picom --experimental-backends & # Experimental for blur with "dual_kawase"
 feh --bg-fill ~/Pictures/\[Wallpapers\]/1920x1080/tree-on-a-hill.jpg &
