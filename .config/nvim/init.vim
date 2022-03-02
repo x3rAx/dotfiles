@@ -348,6 +348,13 @@ let mapleader = ' '
     "vnoremap <leader>P "+P
 
 
+" Clipboard using mouse
+    nnoremap <RightMouse> "+p
+    nnoremap <S-RightMouse> "+P
+    inoremap <RightMouse> <C-r>+
+    vnoremap <RightMouse> "+y
+
+
 " Alt bindings for select all, copy and paste
     "nnoremap <A-a> ggVG
     "vnoremap <A-c> "+y
