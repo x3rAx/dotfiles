@@ -18,6 +18,9 @@ super + {h,j,k,l}
 super + Escape ; F1
     ; sxhkd-shortcuts-rofi $PPID &
 
+super + f
+    bspc node --state ~floating
+
 #: Run KeePass
 ctrl + alt + shift + k
     keepassxc-focus
