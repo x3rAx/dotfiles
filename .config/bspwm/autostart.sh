@@ -4,6 +4,7 @@ start() { "$@" & }
 
 
 bspc rule --add "Anydesk"         desktop=8
+bspc rule --add "Rustdesk"        desktop=8  state=tiled hidden=on
 bspc rule --add "Thunderbird"     desktop=9
 bspc rule --add "Ferdi"           desktop=10
 bspc rule --add "Signal"          desktop=10
@@ -16,6 +17,7 @@ start copyq
 start ferdi
 start keepassxc
 start kopia-ui-crashsafe
+start rustdesk
 start signal-desktop --use-tray-icon # --start-in-tray
 start solaar --battery-icons solaar --window hide
 start syncthingtray
