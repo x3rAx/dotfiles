@@ -536,8 +536,13 @@ let mapleader = ' '
         return "suda://" . a:name
     endfunction
 
-    command! SudaWrite exec ":saveas " . GetSudaName(expand('%'))
+    command! SudaWriteFile
+        \  exec ":file " . GetSudaName(expand('%'))
+        \| set noreadonly
+        \| write
     command! SudaEdit exec ":file " . GetSudaName(expand('%'))
+
+    cnoreabbrev w!! SudaWriteFile
 
 
 " My SudoEdit
