@@ -29,11 +29,14 @@ pkill sxhkd; sxhkd & # sxhkd is started by nix package of bspwm but with wrong P
 # Compositor
 pkill picom; picom --experimental-backends & # Experimental for blur with "dual_kawase"
 
-# Background
+# Desktop Background
 feh --bg-fill ~/Pictures/\[Wallpapers\]/1920x1080/tree-on-a-hill.jpg &
 
 # Solaar Key Daemon
 ~/.local/scripts/solaar-keys/solaar-key-daemon &
+
+# Playerctl Daemon (keeps track of last active player)
+playerctld &
 
 # Other Autostart Apps
 ( sleep 3 && "${BSPWM_DIR}/autostart.sh"; ) &
