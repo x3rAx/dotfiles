@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+
+#/^KeyPress / {
+#/^KeyRelease / {
+#/\(keysym / {
+
+import subprocess
+import threading
+import time
+import re
+from dataclasses import dataclass
+
+
+re_keysym = re.compile(r"\(keysym 0x[a-fA-F0-9]+?, ([^)]+)\)")
+re_state = re.compile(r"state 0x([a-fA-F0-9]+?),")
+pressed = False
+
+@dataclass()
+class State:
+    pressed :bool = None
+    state: int = None
+    keysym :str = None
+
+    def is_complete(self):
+        return (
+                self.pressed is not None
+                and self.state is not None
+                and self.keysym is not None
+        )
+
+state = State()
+
+def handle_line(line :str):
+    global re_keysym
+    global re_state
+    global state
+
+    if state and state.is_complete():
+        s = int(state.state, 16)
+        if (s & 0b00000001):
+            print("shift + ", end="")
+        if (s & 0b00000100):
+            print("ctrl + ", end="")
+        if (s & 0b00001000):
+            print("alt + ", end="")
+        if (s & 0b01000000):
+            print("super + ", end="")
+        print("" if state.pressed else "@", end="")
+        print(f"{state.keysym}")
+        state = None
+
+    if line == '':
+        state = State()
+        return
+
+    if line.startswith('KeyPress '):
+        state.pressed = True
+
+    #if line.startswith('KeyRelease '):
+    #    state.pressed = False
+    
+    match = re_keysym.search(line)
+    if match:
+        keysym = match.group(1)
+        #if keysym.startswith('Shift_') or keysym.startswith("Control_") or keysym.startswith("Alt_") or keysym.startswith("Super_"):
+        #    return
+        state.keysym = keysym
+
+    match = re_state.search(line)
+    if match:
+        state.state = match.group(1)
+
+def output_reader(proc):
+    for line in iter(proc.stdout.readline, b''):
+        handle_line(line.decode('utf-8').rstrip("\n"))
+
+
+def main():
+    proc = subprocess.Popen(['xev'],
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT)
+
+    t = threading.Thread(target=output_reader, args=(proc,))
+    t.start()
+
+    try:
+        t.join()
+    except KeyboardInterrupt:
+        proc.terminate()
+    finally:
+        try:
+            proc.wait(timeout=0.2)
+            print('== subprocess exited with rc =', proc.returncode)
+        except subprocess.TimeoutExpired:
+            print('subprocess did not terminate in time')
+
+if __name__ == '__main__':
+    main()

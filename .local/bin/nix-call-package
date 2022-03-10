@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+# More safety by turning bugs into errors.
+# Use `${PIPESTATUS[n]}` to check for the `n`-th pipe command's exit status.
+# Make sure there are no uninitialized variables.
+# To allow a non-zero exit status or to allow a pipe to fail without exiting
+# the script, prefix the command with `!`.
+# Option `noclobber` makes sure piping into a file with `>` does not
+# override existing files. Use `>|` to overwrite files instead.
+# Environment variables are `UPPER_SNAKE_CASE`, global constants are
+# `_UNDERSCORE_PREFIXED` and global variables are `_underscore_prefixed`
+set -o errexit -o pipefail -o nounset -o noclobber
+
+: ${XDG_CONFIG_HOME:=$HOME/.config}
+: ${XDG_CACHE_HOME:=$HOME/.cache}
+
+readonly _SCRIPT="$(realpath "$0")"
+readonly _SCRIPT_NAME="${_SCRIPT##*/}"
+readonly _SCRIPT_DIR="${_SCRIPT%/*}"
+
+err() { echo >&2 "${_SCRIPT_NAME}: $@"; }
+
+readonly _ERR_GENERAL=1
+readonly _ERR_USAGE=2
+readonly _ERR_PROGRAMMING=255
+
+
+# ----- Usage -----
+readonly _USAGE="
+  Usage:
+    $_SCRIPT_NAME <options> <package-nix-file>
+
+  OPTIONS:
+    -h, --help              Show this help message.
+    -c, --call <call>       Use \`<call>\` instead of \`callPackage\` to call
+                            the package.
+"
+
+
+# ----- Options -----
+readonly _OPTIONS='hc:'
+readonly _LONGOPTS='help,call:'
+
+parsed="$(getopt -o "$_OPTIONS" -l "$_LONGOPTS" -n "$_SCRIPT_NAME" -- "$@")"
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then echo >&2 "$_USAGE"; exit $_ERR_USAGE; fi
+eval set -- "${parsed[@]}"; unset parsed
+
+
+# ----- Parse Options -----
+_config="${XDG_CONFIG_HOME}/${_SCRIPT_NAME}.conf"
+_call="callPackage"
+_packageNix=""
+
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)      echo "$_USAGE"; exit; ;;
+        -c|--call)      _call="$2"; shift 2; ;;
+        --)             shift; break; ;;
+        *)              err "Programming error"; exit $_ERR_PROGRAMMING; ;;
+    esac
+done
+
+
+# --- main program -------------------------------------------------------------
+
+if [[ -z ${1:-''} ]]; then
+    err "Missing argument 1 <package-nix-file>"; exit $_ERR_USAGE
+fi
+_packageNix="$1"
+
+if [[ ! -e $_packageNix ]]; then
+    err "File \"${_packageNix}\" does not exist."; exit $_ERR_GENERAL
+fi
+
+if [[ ! $_packageNix =~ ^(/|./) ]]; then
+    _packageNix="./${_packageNix}"
+fi
+
+nix-shell -p "with (import <nixpkgs> {}); ${_call} ${_packageNix} {}"

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+exec rsync --rsh 'ssh -o GlobalKnownHostsFile=/dev/null -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' "$@"
+
