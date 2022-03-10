@@ -349,8 +349,8 @@ let mapleader = ' '
 
 
 " Clipboard using mouse
-    nnoremap <RightMouse> "+p
-    nnoremap <S-RightMouse> "+P
+    "nnoremap <RightMouse> "+p
+    "nnoremap <S-RightMouse> "+P
     inoremap <RightMouse> <C-r>+
     vnoremap <RightMouse> "+y
 
