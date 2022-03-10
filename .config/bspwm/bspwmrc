@@ -35,9 +35,8 @@ feh --bg-fill ~/Pictures/\[Wallpapers\]/1920x1080/tree-on-a-hill.jpg &
 # Solaar Key Daemon
 ~/.local/scripts/solaar-keys/solaar-key-daemon &
 
-
 # Other Autostart Apps
-( sleep 1 && "${BSPWM_DIR}/autostart.sh"; ) &
+( sleep 3 && "${BSPWM_DIR}/autostart.sh"; ) &
 
 
 
