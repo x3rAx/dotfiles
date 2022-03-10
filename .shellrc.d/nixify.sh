@@ -42,6 +42,8 @@ let
   # Rolling updates, not deterministic.
   #pkgs = import (fetchTarball("channel:nixpkgs-unstable")) {};
 in pkgs.mkShell {
+  name = "nix-shell";
+
   # Programs and libraries used at *build*-time on the build host
   nativeBuildInputs = with pkgs; [
     bashInteractive
