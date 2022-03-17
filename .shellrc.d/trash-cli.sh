@@ -3,6 +3,7 @@
 function __rm-disabled() {
     echo >&2 "WARN: Use \`rt\` instead of \`rm\` to move files to trash."
     echo >&2 "      Use \`\\rm\` if you really want to permanently delete files."
+    return 1
 }
 
 function __empty-trash() {
