@@ -18,6 +18,9 @@ readonly _SCRIPT="$(realpath "$0")"
 readonly _SCRIPT_NAME="${_SCRIPT##*/}"
 readonly _SCRIPT_DIR="${_SCRIPT%/*}"
 
+readonly _TPUT_RESET="$(tput sgr0)"
+readonly _FG_YELLOW="$(tput setaf 11)"
+
 err() { echo >&2 "${_SCRIPT_NAME}: $@"; }
 
 readonly _ERR_USAGE=2
@@ -25,22 +28,26 @@ readonly _ERR_PROGRAMMING=255
 
 readonly _USAGE="
   Usage:
-    $_SCRIPT_NAME <generation>
+    $_SCRIPT_NAME <generation> [generation...]
 
   OPTIONS:
-    -h, --help              Show this help message.
+    -h, --help          Show this help message.
+    -l, --list          List generations
 "
 
-readonly _OPTIONS='h'
-readonly _LONGOPTS='help'
+readonly _OPTIONS='hl'
+readonly _LONGOPTS='help,list'
 
 parsed="$(getopt -o "$_OPTIONS" -l "$_LONGOPTS" -n "$_SCRIPT_NAME" -- "$@")"
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then echo >&2 "$_USAGE"; exit $_ERR_USAGE; fi
 eval set -- "${parsed[@]}"; unset parsed
 
+list_generations=false
+
 while [[ $# -gt 0 ]]; do
     case $1 in
         -h|--help)      echo "$_USAGE"; exit; ;;
+        -l|--list)      shift; list_generations=true; ;;
         --)             shift; break; ;;
         *)              err "Programming error"; exit $_ERR_PROGRAMMING; ;;
     esac
@@ -48,37 +55,74 @@ done
 
 # --- main program -------------------------------------------------------------
 
-gen=$1
+if [[ $list_generations == true ]]; then
+    for link in $(ls -vd '/nix/var/nix/profiles/system-'*'-link'); do
+        gen="$(basename "$link" | cut -d'-' -f2)"
+        date=$(date -r "$link")
 
-link="/nix/var/nix/profiles/system-${gen}-link"
-version_file="${link}/nixos-version"
+        version_file="${link}/nixos-version"
+        version="UNKNOWN_VERSION"
+        if [[ -e $version_file ]]; then
+            version="$(<"$version_file")"
+        fi
 
-if [[ ! -e $link ]]; then
-    err "Generation ${gen} does not exit"
-    exit 1
+        echo >&2 -e "  ${gen}:\t${version}\t(${date})"
+    done
+    exit
 fi
 
-date=$(date -r "$link")
 
-version="UNKNOWN_VERSION"
-if [[ -e $version_file ]]; then
-    version="$(<"$version_file")"
-fi
+gens=()
+declare -A gen_links=()
 
-read -p "Really delete generation ${gen} (${version} - ${date})? [yN] " inp;
-if [[ ${inp^^} != 'Y' ]]; then
+
+for gen in "$@"; do
+    link="/nix/var/nix/profiles/system-${gen}-link"
+
+    if [[ ! -e $link ]]; then
+        echo >&2 "${_FG_YELLOW}WARNING${_TPUT_RESET}: Generation ${gen} does not exist, skipping"
+        continue
+    fi
+
+    gens+=( "$gen" )
+    gen_links[$gen]="$link"
+done
+
+echo >&2 "The following generations will be deleted:"
+
+# Using array instead of map keys to ensure correct order
+for gen in "${gens[@]}"; do
+    link="${gen_links[$gen]}"
+
+    date=$(date -r "$link")
+
+    version_file="${link}/nixos-version"
+    version="UNKNOWN_VERSION"
+    if [[ -e $version_file ]]; then
+        version="$(<"$version_file")"
+    fi
+
+    echo >&2 -e "  ${gen}:\t${version}\t(${date})"
+done
+
+read -p "Type upper case yes to continue: " inp;
+if [[ ${inp} != 'YES' ]]; then
     echo >&2 'Exiting'
     exit 1
 fi
 
-rm "$link"
+for link in "${gen_links[@]}"; do
+    rm "$link"
+done
+
 # Update boot menu
 /nix/var/nix/profiles/system/bin/switch-to-configuration boot
 
-read -p "Do you want to collect garbage? [yN] " inp;
+read -p "Do you want to collect garbage now? [yN] " inp;
 if [[ ${inp^^} != 'Y' ]]; then
     echo >&2 'Exiting'
     exit 1
 fi
 
 nix-collect-garbage
+
