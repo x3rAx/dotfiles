@@ -2,7 +2,8 @@
 
 clean_exit=false
 while [[ $clean_exit == false ]]; do
-    nice -n 19 appimage-run ~/.local/opt/kopia/KopiaUI-0.9.5.AppImage \
+    #nice -n 19 ionice -n 7 appimage-run ~/.local/opt/kopia/KopiaUI-0.9.5.AppImage \
+    appimage-run ~/.local/opt/kopia/KopiaUI-0.9.5.AppImage \
         && clean_exit=true
     if [[ $clean_exit == false ]]; then
         notify-send "Kopia-UI Crashed" "Kopia-UI has exited with a non-zero exit code and will be restarted."

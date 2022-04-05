@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+tmpfiles=()
+histfile='/tmp/jqi.history'
+
+trap 'teardown' EXIT
+
+teardown() {
+    e=$?
+    history -w /tmp/jqi.history
+    cleanup
+    exit $e
+}
+
+cleanup() {
+    local f
+    for f in ${tmpfiles[@]}; do
+        rm -f -- "$f"
+    done
+}
+
+mktempfile() {
+    local var
+    declare -n var="$1"
+    var="$(mktemp --tmpdir jqi.XXXXXXXXXX)"
+    tmpfiles+=( "$var" )
+}
+
+line() {
+    local sym="${1:--}"
+    printf -v line '%*s' "${COLUMNS:-$(tput cols)}" ''; echo "${line// /$sym}"
+}
+
+str_to_args() {
+    local retvar
+    declare -d retvar="$1"
+
+
+}
+
+# Read json input
+mktempfile jsonfile
+cat >"$jsonfile"
+
+# Handle terminal input
+exec 0</dev/tty
+
+args=''
+touch /tmp/jqi.history
+history -r /tmp/jqi.history
+
+while true; do
+    echo ''
+    line '='
+    if [[ $args =~ ^[\-] ]]; then
+        # Argument mode (might need to quote selector string)
+        #argsarr=( $(printf "%q" "$args" | xargs -n 1 printf "%s\n") )
+        #argsarr=(); for arg in $args; do argsarr+=("$arg"); done
+        declare -a "argsarr=( $(printf '%s\n' "$args") )"
+        if [[ ${argsarr[0]} == "-" ]]; then argsarr=( "${argsarr[@]:1}" ); fi
+        jq <"$jsonfile" "${argsarr[@]}"
+        #echo "[a] jq ${args}"
+        #echo "[a] jq ${argsarr[@]}"
+    else
+        # Filter mode (just supply the filter)
+        jq <"$jsonfile" "$args"
+        echo [f] jq "$args"
+    fi
+    last_args="$args"
+    IFS= read -r -ei "$args" -p 'jq> ' next_args \
+        || { break; } # Handle Ctrl-D
+
+    args="$next_args"
+    history -s -- "$args"
+done

@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# More safety by turning bugs into errors.
+# Use `${PIPESTATUS[n]}` to check for the `n`-th pipe command's exit status.
+# Make sure there are no uninitialized variables.
+# To allow a non-zero exit status or to allow a pipe to fail without exiting
+# the script, prefix the command with `!`.
+# Option `noclobber` makes sure piping into a file with `>` does not
+# override existing files. Use `>|` to overwrite files instead.
+# Environment variables are `UPPER_SNAKE_CASE`, global constants are
+# `_UNDERSCORE_PREFIXED` and global variables are `_underscore_prefixed`
+set -o errexit -o pipefail -o nounset -o noclobber
+
+: ${XDG_CONFIG_HOME:=$HOME/.config}
+: ${XDG_CACHE_HOME:=$HOME/.cache}
+
+readonly _SCRIPT="$(realpath "$0")"
+readonly _SCRIPT_NAME="${_SCRIPT##*/}"
+readonly _SCRIPT_DIR="${_SCRIPT%/*}"
+
+err() { echo >&2 "${_SCRIPT_NAME}: $@"; }
+
+readonly _ERR_GENERAL=1
+readonly _ERR_USAGE=2
+readonly _ERR_PROGRAMMING=255
+
+
+# --- main program -------------------------------------------------------------
+
+
+mnt_base="/tmp"
+mnt=""
+
+mkdir -p "$mnt_base"
+
+for i in {1..1000}; do
+    mnt_tmp="${mnt_base}/android${i}"
+    if [[ ! -e "$mnt_tmp" ]]; then
+        mnt="$mnt_tmp"
+        break
+    fi
+done
+
+if [[ -z $mnt ]]; then
+    err "Could not find a suitable mount directory"
+    exit $_ERR_GENERAL
+fi
+
+mkdir -p "$mnt"
+
+echo "Mounting at: ${mnt}"
+go-mtpfs "$@" "$mnt"
+
+rmdir "$mnt"
