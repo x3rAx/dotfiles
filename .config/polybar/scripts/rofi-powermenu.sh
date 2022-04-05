@@ -92,7 +92,6 @@ if (( _window_y + _window_height + _bottom > _DISPLAY_HEIGHT )); then
     _window_y=$(( _DISPLAY_HEIGHT - _window_height - _bottom )); fi
 
 rofimenu() {
-    set -x
     local window_pos=''
     local monitor_opt=''
     if [[ $_mouse == true ]]; then
@@ -117,7 +116,6 @@ rofimenu() {
         " \
         $monitor_opt \
         "$@"
-    set +x
 }
 
 selection="$(echo "\
@@ -132,7 +130,8 @@ if [[ $selection == $_S_CANCEL ]] || [[ $selection == '' ]]; then
     exit
 fi
 
-confirmation="$(echo $'yes\nno' | rofimenu -p "${selection}?")"
+sleep 0.125 # Short delay to prevent next menu from crashing because previous menu still exists
+! confirmation="$(echo $'yes\nno' | rofimenu -p "${selection}?")"
 if [[ $confirmation != yes ]]; then
     exit
 fi
@@ -142,5 +141,8 @@ case $selection in
     "$_S_POWEROFF")  systemctl poweroff; ;;
     "$_S_HIBERNATE") systemctl hibernate; ;;
     "$_S_SUSPEND")   systemctl suspend; ;;
-    *) err "Invalid option: ${selection}"; exit 1; ;;
+    *)
+        err "Invalid option: ${selection}";
+        notify-send "rofimenu: Invalid option ${selection}";
+        exit 1; ;;
 esac
