@@ -17,6 +17,9 @@ export PATH
 
 # --- Autostart ---
 
+# Default monitor layout
+$HOME/.screenlayout/default.sh &
+
 # Bar
 $HOME/.config/polybar/launch.sh &
 
