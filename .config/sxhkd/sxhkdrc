@@ -18,8 +18,9 @@ super + {h,j,k,l}
 super + Escape ; F1
     ; sxhkd-shortcuts-rofi $PPID &
 
-super + f
-    bspc node --state ~floating
+#: Toggle floating / fullscreen
+super {_, + shift, + ctrl, + alt} + f
+    bspc node --state ~{floating,fullscreen,tiled,pseudo_tiled}
 
 #: Run KeePass
 ctrl + alt + shift + k
@@ -50,7 +51,7 @@ super + a
     bspc node --focus @parent
 
 #: Focus last window (undo "select parent")
-super + x
+super + Tab
     bspc node --focus last.window
 
 #: Rotate all children
@@ -109,4 +110,17 @@ super + shift + {1,2,3,4,5,6,7,8,9,0}
 super + period
     rofimoji
 
+#: Lock screen
+super + shift + x
+    xsecurelock
 
+#: Launch Browser
+super + x ; {_,shift +} b
+    firefox{_, --private-window}
+
+#: Launch File Manager
+super + x ; {_,shift +} e
+    {pcmanfm,dolphin}
+
+super + ctrl + shift + alt + q
+    ~/.config/polybar/scripts/rofi-powermenu.sh
