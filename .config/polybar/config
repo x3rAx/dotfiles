@@ -68,7 +68,7 @@ font-0 = MonoLisa Nerd Font:size=12;2
 modules-left = bspwm
 modules-center = xwindow
 ;modules-right = filesystem xbacklight alsa xkeyboard memory cpu wlan eth battery temperature date powermenu
-modules-right = filesystem alsa xkeyboard memory cpu temperature date rofi-powermenu
+modules-right = filesystem alsa xkeyboard memory cpu temperature date notification-center rofi-powermenu
 
 tray-position = right
 tray-padding = 2
@@ -410,6 +410,14 @@ ramp-2 = 
 ramp-3 = 
 ramp-4 = 
 ramp-foreground = ${colors.foreground-alt}
+
+[module/notification-center]
+type = custom/text
+
+content = 
+content-foreground = ${colors.primary}
+
+click-left = kill -s USR1 $(pidof deadd-notification-center)
 
 [module/rofi-powermenu]
 type = custom/text
