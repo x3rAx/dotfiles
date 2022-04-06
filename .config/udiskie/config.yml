@@ -18,7 +18,7 @@ program_options:
                             # disabled by default. It can be disabled
                             # explicitly by setting it to false
 
-  #file_manager:     xdg-open
+  file_manager:     xdg-open
     # [string] Set program to open directories. It will be invoked
     # with the folder path as its last command line argument.
 
@@ -93,11 +93,12 @@ program_options:
   # List of actions to be shown in the quickmenu or the special value 'all'.
   # The quickmenu is shown on left-click if using flat menu type.
 quickmenu_actions: 
+  - browse
+  - terminal
   - mount
   - unmount
   - unlock
-  - terminal
-  - detach
+  #- detach
   - delete
 
 #notification_actions:
