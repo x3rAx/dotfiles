@@ -1,0 +1,30 @@
+#!/usr/bin/env zx
+
+const s3alias = argv._[1]
+const user = argv._[2]
+
+function help() {
+    console.log(`
+Usage:
+    ${argv._[0]} <server-alias> <username>
+`)
+}
+
+function exit(code) {
+    process.exit(code)
+}
+
+if (argv['help'] || argv['h']) { help(); exit(0) }
+if (s3alias === undefined) { help(); exit(1) }
+if (user === undefined) { help(); exit(1) }
+
+await $`mc admin user add ${s3alias} ${user}`
+await $`mc admin policy add ${s3alias} user.${user} <(cat <<EOF
+{ "Version": "2012-10-17", "Statement": [ {
+    "Effect": "Allow", "Action": [ "s3:*" ],
+    "Resource": [ "arn:aws:s3:::${user}/*", "arn:aws:s3:::${user}.*/*" ]
+} ] }
+EOF
+)`
+    
+await $`mc admin policy set ${s3alias} user.${user} user=${user}`

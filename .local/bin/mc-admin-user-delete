@@ -1,0 +1,55 @@
+#!/usr/bin/env zx
+
+const s3alias = argv._[1]
+const user = argv._[2]
+const withBuckets = argv['with-buckets']
+const force = argv['force']
+
+function help() {
+    console.log(`
+Usage:
+    ${argv._[0]} <server-alias> <username> [options]
+
+OPTIONS:
+    --with-buckets  Also remove any buckets named \`<username>\` and
+                    \`<username>.*\` (username-dot-anything)
+    --force         Force recursive bucket removal
+`)
+}
+
+function exit(code=0) {
+    process.exit(code)
+}
+
+async function noVerbose(fn) {
+    const verbose = $.verbose
+    $.verbose = false
+    const res = await fn()
+    $.verbose = verbose
+    return res
+}
+
+if (argv['help'] || argv['h']) { help(); exit() }
+if (s3alias === undefined) { help(); exit(1) }
+if (user === undefined) { help(); exit(1) }
+
+await $`mc admin user remove ${s3alias} ${user}`
+await $`mc admin policy remove ${s3alias} user.${user}`
+
+if (withBuckets === true) {
+    const args = []
+    if (force === true) args.push('--force')
+
+    const bucketRegex = new RegExp(`^${user}(\\..+|)/$`)
+    const buckets = await noVerbose(
+        async () => (await $`mc ls ${s3alias} --json`).stdout
+            .trim()
+            .split('\n')
+            .map(x => JSON.parse(x))
+            .filter(x => x.type === 'folder' && bucketRegex.test(x.key))
+            .map(x => x.key)
+    )
+    for (const bucket of buckets) {
+        $`mc rb ${s3alias}/${bucket} ${args}`
+    }
+}
