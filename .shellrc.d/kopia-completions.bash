@@ -1,0 +1,1 @@
+eval "$(kopia --completion-script-bash)"
