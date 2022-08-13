@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+
+# More safety by turning bugs into errors.
+# Use `${PIPESTATUS[n]}` to check for the `n`-th pipe command's exit status.
+# Make sure there are no uninitialized variables.
+# To allow a non-zero exit status or to allow a pipe to fail without exiting
+# the script, prefix the command with `!`.
+# Option `noclobber` makes sure piping into a file with `>` does not
+# override existing files. Use `>|` to overwrite files instead.
+# Environment variables are `UPPER_SNAKE_CASE`, global constants are
+# `_UNDERSCORE_PREFIXED` and global variables are `_underscore_prefixed`
+set -o errexit -o pipefail -o nounset -o noclobber
+
+: ${XDG_CONFIG_HOME:=$HOME/.config}
+: ${XDG_CACHE_HOME:=$HOME/.cache}
+
+readonly _SCRIPT="$(realpath "$0")"
+readonly _SCRIPT_NAME="${_SCRIPT##*/}"
+readonly _SCRIPT_DIR="${_SCRIPT%/*}"
+
+err() { echo >&2 "${_SCRIPT_NAME}: $@"; }
+
+readonly _ERR_USAGE=2
+readonly _ERR_PROGRAMMING=255
+
+readonly _USAGE="
+  Usage:
+    $_SCRIPT_NAME [dependency [..dependency]]
+    $_SCRIPT_NAME -o <dir>
+
+  OPTIONS:
+    -h, --help              Show this help message.
+    -o, --open <dir>        Open an existing playground
+"
+
+readonly _OPTIONS='ho:'
+readonly _LONGOPTS='help,open:'
+
+parsed="$(getopt -o "$_OPTIONS" -l "$_LONGOPTS" -n "$_SCRIPT_NAME" -- "$@")"
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then echo >&2 "$_USAGE"; exit $_ERR_USAGE; fi
+eval set -- "${parsed[@]}"; unset parsed
+
+_open=
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)      echo "$_USAGE"; exit; ;;
+        -o|--open)      _open=$2; shift 2; ;;
+        --)             shift; break; ;;
+        *)              err "Programming error"; exit $_ERR_PROGRAMMING; ;;
+    esac
+done
+
+# --- main program -------------------------------------------------------------
+
+# Start in tmux when not already in a tmux session
+if [ -z "$TMUX" ]; then
+    exec tmux new-session "$0 $@"
+fi
+
+CONFIG_FILE_SAVE_DIR="${XDG_CONFIG_HOME}/playground-rust/save-dir"
+
+PLAYGROUNDS_DIR="/tmp/playgrounds-rust"
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+PROJECT_DIR="${PLAYGROUNDS_DIR}/playground_${TIMESTAMP}"
+if [[ -n $_open ]]; then
+    PROJECT_DIR="$_open"
+fi
+
+canonicalize_path() {
+    realpath -sm $1
+}
+
+if [[ -z $_open ]]; then
+    cargo new $PROJECT_DIR
+fi
+
+cd $PROJECT_DIR
+
+if [[ -z $_open ]]; then
+    # Add dependencies to Cargo.toml
+    for CRATE in $@; do
+        sed "/^\[dependencies\]/a $CRATE = \"*\"" -i Cargo.toml
+    done
+fi
+
+editor_pane="$TMUX_PANE"
+exec_pane="$(tmux split-window -hPF "#{pane_id}")"
+
+tmux \
+    send-keys "cargo watch -s 'clear && cargo run -q; echo \"\"'" C-m \;\
+    select-pane -t "$editor_pane"
+nvim ./src/main.rs
+
+tmux kill-pane -t "$exec_pane"
+
+if [[ -z $_open ]]; then
+    echo >&2 ""
+    read -p "Do you want to save the playground? [yN] " inp
+    if [[ ${inp,,} == "y" ]]; then
+        save_dir=""
+        save_dir_saved=false
+        if [[ -e $CONFIG_FILE_SAVE_DIR ]]; then
+            save_dir="$(<$CONFIG_FILE_SAVE_DIR)"
+            save_dir_saved=true
+        fi
+        save_dir="${save_dir:-$HOME}"
+        save_dir="$(canonicalize_path "$save_dir")/"
+
+        save_to=""
+        while true; do
+            echo >&2 ""
+            echo >&2 "Where do you want to save it to?"
+            read -p "> " -ei "${save_to:-$save_dir}" save_to
+
+            if [[ -z $save_to ]]; then
+                echo >&2 ""
+                echo >&2 "ERROR: The provided path is invalid."
+                continue
+            fi
+
+            if [[ -e $save_to ]]; then
+                echo >&2 ""
+                echo >&2 "ERROR: The provided path already exists."
+                continue
+            fi
+
+            save_to="$(canonicalize_path "$save_to")"
+            break
+        done
+
+        save_dir="$(dirname "$save_to")"
+
+        mkdir -p "$save_dir"
+        if [[ $? -gt 0 ]]; then
+            echo >&2 ""
+            echo >&2 "ERROR: Failed to create directory \"${save_dir}\"."
+            continue
+        fi
+
+        cp -ra "$PROJECT_DIR" "$save_to"
+        if [[ $? -gt 0 ]]; then
+            echo >&2 ""
+            echo >&2 "ERROR: Failed copy \"${PROJECT_DIR}\" to \"${save_to}\"."
+            continue
+        fi
+
+        if [[ $save_dir_saved != true ]]; then
+            echo >&2 ""
+            echo >&2 "Do you want to remember the directory \"${save_dir}\"?"
+            read -p "[y = yes, n = no (default), d = do not ask again] " inp
+
+            if [[ ${inp,,} == "d" ]]; then
+                mkdir -p "$(dirname "$CONFIG_FILE_SAVE_DIR")"
+                touch "$CONFIG_FILE_SAVE_DIR"
+                echo >&2 "==> To re-enable this prompt, delete the file \"${CONFIG_FILE_SAVE_DIR}\""
+            elif [[ ${inp,,} == "y" ]]; then
+                mkdir -p "$(dirname "$CONFIG_FILE_SAVE_DIR")"
+                echo "$save_dir" >"$CONFIG_FILE_SAVE_DIR"
+                echo >&2 "==> Saved to \"${CONFIG_FILE_SAVE_DIR}\""
+            fi
+        fi
+
+        echo >&2 ""
+        echo >&2 "==> Playground saved to \"${save_to}\""
+    fi
+fi
