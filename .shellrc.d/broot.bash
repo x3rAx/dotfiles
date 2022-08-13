@@ -1,1 +1,3 @@
-source /home/x3ro/.config/broot/launcher/bash/br
+if [ -e "$HOME/.config/broot/launcher/bash/br" ]; then
+    source "$HOME/.config/broot/launcher/bash/br"
+fi
