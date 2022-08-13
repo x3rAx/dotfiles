@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+NICE=19
+IONICE=3
+
+# ------------------------------------------------------------------------------
+
+renice -n $NICE -p $$
+ionice -c $IONICE -p $$
+
 run() {
     if command appimage-run >/dev/null 2>&1; then
         appimage-run "$@"
@@ -10,7 +18,6 @@ run() {
 
 clean_exit=false
 while [[ $clean_exit == false ]]; do
-    #nice -n 19 ionice -n 7 appimage-run ~/.local/opt/kopia/KopiaUI-0.9.5.AppImage \
     run ~/.local/opt/kopia/KopiaUI.AppImage \
         && clean_exit=true
 
