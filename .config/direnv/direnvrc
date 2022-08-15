@@ -16,3 +16,16 @@ direnv_layout_dir() {
         echo -n "$PWD" | tr '/' '@'
     )}"
 }
+
+# NOTE
+# ----
+#
+# Add the following to your project's `.envrc` to override the `nix-direnv`
+# cache directory to a `.direnv` directory inside your project:
+#
+# ```
+# declare -A direnv_layout_dirs
+# direnv_layout_dir() {
+#     echo "${direnv_layout_dirs[$PWD]:=$PWD/.direnv}"
+# }
+# ```
