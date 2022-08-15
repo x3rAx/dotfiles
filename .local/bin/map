@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+
+# More safety by turning bugs into errors.
+# Use `${PIPESTATUS[n]}` to check for the `n`-th pipe command's exit status.
+# Make sure there are no uninitialized variables.
+# To allow a non-zero exit status or to allow a pipe to fail without exiting
+# the script, prefix the command with `!`.
+# Option `noclobber` makes sure piping into a file with `>` does not
+# override existing files. Use `>|` to overwrite files instead.
+# Environment variables are `UPPER_SNAKE_CASE`, global constants are
+# `_UNDERSCORE_PREFIXED` and global variables are `_underscore_prefixed`
+set -o errexit -o pipefail -o nounset -o noclobber
+
+: ${XDG_CONFIG_HOME:=$HOME/.config}
+: ${XDG_CACHE_HOME:=$HOME/.cache}
+
+readonly _SCRIPT="$(realpath "$0")"
+readonly _SCRIPT_NAME="${_SCRIPT##*/}"
+readonly _SCRIPT_DIR="${_SCRIPT%/*}"
+
+err() { echo >&2 "${_SCRIPT_NAME}: $@"; }
+
+readonly _ERR_USAGE=1
+readonly _ERR_PROGRAMMING=255
+
+readonly _USAGE="
+  Usage:
+    $_SCRIPT_NAME <options> <variable> '<command>'
+
+  OPTIONS:
+    -h, --help              Show this help message.
+    -b, --batch <n>         The \`<variable>\` is a bash array of \`<n>\` items
+                            instead of only one. To pass all items, as arguments
+                            to another program, use it like this:
+                            \`program \"\${variable[@]}\"\` (with double quotes!)
+    -i, --ignore-empty      Ignore empyt lines
+    -p, --parallel <n>      Run \`<n>\` instances in parallel
+"
+
+readonly _OPTIONS='hb:ip:'
+readonly _LONGOPTS='help,batch:,ignore-empty,parallel:'
+
+parsed="$(getopt -o "$_OPTIONS" -l "$_LONGOPTS" -n "$_SCRIPT_NAME" -- "$@")"
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then echo >&2 "$_USAGE"; exit $_ERR_USAGE; fi
+eval set -- "${parsed[@]}"; unset parsed
+
+_batch=1
+_parallel=1
+_ignore_empty=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)          echo "$_USAGE"; exit; ;;
+        -b|--batch)         _batch="$2"; shift 2; ;;
+        -i|--ignore-empty)  _ignore_empty=true; shift; ;;
+        -p|--parallel)      _parallel="$2"; shift 2; ;;
+        --)                 shift; break; ;;
+        *)                  err "Programming error"; exit $_ERR_PROGRAMMING; ;;
+    esac
+done
+
+# --- main program -------------------------------------------------------------
+
+if [[ $# -ne 2 ]]; then
+    err "Expected 2 arguments, got ${#}"
+    echo >&2 "$_USAGE"
+    exit $_ERR_USAGE
+fi
+
+var="$1"
+cmd="$2"
+
+if [[ $_batch -lt 1 ]]; then
+    err "Batch size cannot be less than 1"
+    exit $_ERR_USAGE
+fi
+
+if [[ $_parallel -lt 1 ]]; then
+    err "Cannot run less then 1 execution in parallel"
+    exit $_ERR_USAGE
+fi
+
+if [[ ! $var =~ ^[a-zA-Z_]+(-*[a-zA-Z0-9_])*$ ]]; then
+    err "Variable name is invalid. Variable names can only contain alphanumeric characters, underscores and minus signs. They can not start with a number or a minus and can not end with a minus."
+    exit $_ERR_USAGE
+fi
+
+run() {
+    local var="$1"
+    local cmd="$2"
+    shift 2
+    local args=( "$@" )
+
+    local values="$(declare -p args)"
+    values="${values#*=}"
+
+    bash -c "declare -a -- ${var}=${values}; $cmd"
+}
+
+run_parallel() {
+    local parallel="$1"
+    local var="$2"
+    local cmd="$3"
+    shift 3
+
+    if [[ $parallel -lt 2 ]]; then
+        run "$var" "$cmd" "$@"
+        return
+    fi
+
+    run "$var" "$cmd" "$@" &
+
+    jobs_count="$(jobs -p | wc -l)"
+    if [[ $jobs_count -lt $parallel ]]; then
+        return
+    fi
+
+    wait -n
+}
+
+
+if [[ $_batch -eq 1 ]]; then
+    while read line || [[ -n $line ]]; do
+        if [[ $_ignore_empty == true ]] && [[ -z $line ]]; then
+            continue
+        fi
+
+        run_parallel $_parallel "$var" "$cmd" "$line"
+    done
+else
+    # TODO: maybe only concat lines with \n and have a counter to track how
+    # many are already read
+    lines=( )
+
+    while read line || [[ -n $line ]]; do
+        if [[ $_ignore_empty == true ]] && [[ -z $line ]]; then
+            continue
+        fi
+
+        lines+=( "$line" )
+
+        if [[ ${#lines[@]} -lt $_batch ]]; then
+            continue
+        fi
+
+        run_parallel "$_parallel" "$var" "$cmd" "${lines[@]}"
+
+        lines=( )
+    done
+
+    if [[ ${#lines[@]} -gt 0 ]]; then
+        run_parallel "$_parallel" "$var" "$cmd" "${lines[@]}"
+    fi
+fi
+
+wait
