@@ -23,7 +23,7 @@ while [[ $clean_exit == false ]]; do
 
     if [[ $clean_exit == false ]]; then
         notify-send "Kopia-UI Crashed" "Kopia-UI has exited with a non-zero exit code and will be restarted."
-        sleep 1
+        sleep 10
     fi
 done
 
