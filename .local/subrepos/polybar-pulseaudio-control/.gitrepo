@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/marioortizmanero/polybar-pulseaudio-control.git
+	branch = master
+	commit = a84e283066a29098c39b6d21fc0495c4d50f0fc1
+	parent = a10115b18f9c3bf230b7f7d1bac60140fd8f1bc4
+	method = merge
+	cmdver = 0.4.3
