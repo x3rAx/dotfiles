@@ -6,7 +6,7 @@ SCRIPT_DIR="$(dirname "$SCRIPT")"
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
 BSPWM_DIR="${XDG_CONFIG_HOME}/bspwm"
 RUN_DIR="${BSPWM_DIR}/run"
-mkdir -p "$RUND_DIR"
+mkdir -p "$RUN_DIR"
 
 path_prepend() { [ -e $1 ] && PATH=":${PATH}" && PATH="${1}${PATH//:$1/}"; }
 
