@@ -30,7 +30,7 @@ deadd-notification-center &
 pkill sxhkd; sxhkd & # sxhkd is started by nix package of bspwm but with wrong PATH
 
 # Compositor
-pkill picom; picom --experimental-backends & # Experimental for blur with "dual_kawase"
+"${BSPWM_DIR}/scripts/start-picom.sh" &
 
 # Desktop Background
 feh --bg-fill ~/Pictures/\[Wallpapers\]/1920x1080/tree-on-a-hill.jpg &
