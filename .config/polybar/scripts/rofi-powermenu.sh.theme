@@ -20,7 +20,7 @@
     alternate-normal-foreground: var(foreground);
     urgent-background:           rgba ( 0, 0, 0, 0 % );
     selected-normal-foreground:  rgba ( 255, 255, 255, 100 % );
-    selected-active-background:  rgba ( 38, 139, 210, 100 % );
+    selected-active-background:  rgba ( 38, 139, 10, 100 % );
     background:                  rgba ( 0, 0, 0, 0 % );
     selected-urgent-background:  rgba ( 38, 139, 210, 100 % );
     active-background:           rgba ( 57, 57, 57, 100 % );
@@ -31,19 +31,22 @@
     selected-urgent-foreground:  rgba ( 255, 195, 156, 100 % );
     spacing:                     2;
     normal-foreground:           var(foreground);
-    selected-normal-background:  rgba ( 38, 139, 210, 100 % );
+    selected-normal-background:  rgba ( 19, 69, 105, 100 % );
 }
 window {
     padding:          5;
-    /*background-color: rgba ( 100, 100, 100, 50 % );*/
-    background-color: #22222208;
+    background-color: rgba ( 0, 0, 0, 90 % );
+    /*background-color: #22222208;*/
+    /*background-color: none;*/
     border-color: #555;
     border:           1;
 }
 mainbox {
-    padding: 0;
+    /*background-color: none;*/
+    /*padding: 5;*/
     border:  0;
 }
+
 message {
     padding:      1px ;
     border-color: var(separatorcolor);
