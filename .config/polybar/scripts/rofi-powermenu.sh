@@ -69,10 +69,10 @@ done
 # --- main program -------------------------------------------------------------
 
 readonly _S_CANCEL='Cancel'
-readonly _S_REBOOT='Reboot'
-readonly _S_POWEROFF='Power Off'
-readonly _S_HIBERNATE='Hibernate'
-readonly _S_SUSPEND='Suspend (Sleep)'
+readonly _S_REBOOT='勒 Reboot'
+readonly _S_POWEROFF=' Power Off'
+readonly _S_HIBERNATE=' Hibernate'
+readonly _S_SUSPEND='鈴 Suspend (Sleep)'
 
 readonly _ROFI_THEME="${_SCRIPT}.theme"
 
