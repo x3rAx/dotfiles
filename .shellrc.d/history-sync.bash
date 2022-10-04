@@ -7,9 +7,11 @@ shopt -s histappend
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND" # Append to
 
 # Sync history from file to session
-alias history-sync='history -n'
+#alias history-sync='history -n'
+alias history-sync='history -a; history -c; history -r'
 
 # ALT-Shift-r - Sync history from file to session
-bind -m emacs-standard '"\eR": " \C-b\C-k \C-u history-sync\e\C-e\er\C-m\C-y\C-h\e \C-y\ey\C-x\C-x\C-d"'
+#bind -m emacs-standard '"\eR": " \C-b\C-k \C-u history-sync\e\C-e\er\C-m\C-y\C-h\e \C-y\ey\C-x\C-x\C-d"'
+bind -m emacs-standard '"\eR": " \C-b\C-k \C-u history-sync\er\C-m\C-y\C-h\e \C-y\ey\C-x\C-x\C-d"'
 bind -m vi-command '"\eR": "\C-z\er\C-z"'
 bind -m vi-insert '"\eR": "\C-z\er\C-z"'
