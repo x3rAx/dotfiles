@@ -9,7 +9,7 @@ renice -n $NICE -p $$
 ionice -c $IONICE -p $$
 
 run() {
-    if command appimage-run >/dev/null 2>&1; then
+    if command -v appimage-run >/dev/null; then
         appimage-run "$@"
     else
         "$@"
