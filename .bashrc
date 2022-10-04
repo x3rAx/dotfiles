@@ -10,7 +10,7 @@
     _IFS=$IFS
     IFS=$'\n'
     # For POSIX incompatible shells, remove this part ----------------------------------------------------------vvvvvvvvvvvvvvvv
-    for f in $(find ~/.shellrc.d -type f \! -name '#*' -and \! -path '*/#*' -and \( -name "*.${__SHELL_SUFFIX}" -or -name '*.sh' \) | sort ); do
+    for f in $(find ~/.shellrc.d -type f \! -name '#*' -and \! -path '*/#*' -and \( -name "*.${__SHELL_SUFFIX}" -or -name '*.sh' \) | sort --ignore-case ); do
         source "$f"
     done
 
