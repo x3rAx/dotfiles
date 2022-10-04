@@ -1,0 +1,23 @@
+#/usr/bin/bash
+
+SCRIPT="$0"
+SCRIPT_NAME="$(basename $0)"
+
+USAGE="
+  Usage:
+    ${SCRIPT_NAME} <channel> <nix-shell-options...>
+"
+
+if [[ $1 =~ ^-h|--help$ ]]; then
+    echo "$USAGE"
+    exit
+elif [[ -z $1 ]]; then
+    echo >&2 "$USAGE"
+    exit 1
+fi
+
+channel="$1"
+shift
+
+# nix-shell -p package '<channel>'
+nix-shell "$@" "<${channel}>"
