@@ -43,6 +43,7 @@
     u = unstage
     unadd = unstage
     ua = unadd
+    pop = stash pop
 
     # === Emoji Log ===
     # NEW.
