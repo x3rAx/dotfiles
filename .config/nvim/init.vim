@@ -329,6 +329,9 @@ let mapleader = ' '
 
 
 " System Clipboard
+    " Copy from visual mode
+    vnoremap <C-c> "+ygv
+
     " Copy to clipboard
     vnoremap  <leader><leader>y  "+y
     nnoremap  <leader><leader>Y  "+yg_
