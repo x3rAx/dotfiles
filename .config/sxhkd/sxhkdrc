@@ -95,7 +95,7 @@ XF86AudioMute
     pactl set-sink-mute @DEFAULT_SINK@ toggle
 
 #: Media player controls
-XF86Audio{Play,Pref,Next,Stop}
+XF86Audio{Play,Prev,Next,Stop}
     playerctl {play-pause,previous,next,stop}
 
 #: Select desktop 1-10
