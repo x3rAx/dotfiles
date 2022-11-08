@@ -1,0 +1,49 @@
+"
+" .ideavimrc
+"
+"""""""""""""
+
+let mapleader = "<Space>"
+
+" IdeaVim plugins
+set surround
+set multiple-cursors
+
+
+" Other plugins
+"source '~/.vim/bundle/targets.vim/plugin/targets.vim'
+
+" Relative line nubers
+set number
+set relativenumber
+
+" Use system clipboard
+"set clipboard+=unnamed
+" Send `x` to "black hole" buffer to prevent flooding clipboard
+"nnoremap <x> "_x
+" System clipboard
+vnoremap <C-c> "+ygv
+inoremap <C-v> <C-r>+
+#inoremap <M-v> <C-v>
+
+" Scroll with Ctrl+<homerow-key>
+"map <C-j> 2<C-e>
+"map <C-k> 2<C-y>
+"
+" Reload .ideavimrc
+nnoremap <Space>vs :source ~/.ideavimrc<CR>
+
+
+"" Command to (write and) reload .ideavimrc
+"command! RR
+"  \ if expand('%:p') == expand('~/.ideavimrc') |
+"  \   write |
+"  \ endif |
+"  \ source ~/.ideavimrc |
+"  \ redraw | echo "===> :source ~/.ideavimrc <==="
+
+"" Line / Block comments
+"nnoremap  gc  :action CommentByLineComment<CR>
+"vnoremap  gc  :action CommentByLineComment<CR>
+"nnoremap  gC  :action CommentByBlockComment<CR>
+"vnoremap  gC  :action CommentByBlockComment<CR>
