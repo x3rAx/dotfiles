@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=x3ro's Autostart Script
+Exec=sh -c 'exec ~/.local/scripts/autostart.sh'
+Comment=x3ro's Autostart Script
+Icon=autostart
+Type=Application
+Terminal=false
+X-GNOME-Autostart-Delay=0
+X-GNOME-Autostart-enabled=true
