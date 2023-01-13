@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+#########
+# Setup ########################################################################
+#########
+
+DATE="$(date -Is)"
+
 set -eu -o pipefail
 # keep track of the last executed command
 trap 'last_command=${current_command:-""}; current_command=$BASH_COMMAND' DEBUG
@@ -26,24 +32,57 @@ fg_blue="$(tput setaf 4)"
 fg_magenta="$(tput setaf 5)"
 fg_cyan="$(tput setaf 6)"
 fg_white="$(tput setaf 7)"
+reset="$(tput sgr0)"
 
 __task_name=""
 task() {
-    local name="$1"
-    if [[ $name == done ]]; then __task_name=""; return; fi
-    __task_name="$name"
-    info "$name"
+    case "$1" in
+        '--done')
+            __task_name=""
+            return
+            ;;
+        '--print')
+            if [[ -n "${2:-}" ]]; then
+                __task_name="$2"
+            fi
+            echo ""
+            echo "${fg_green}==> ${__task_name} <==${reset}"
+            return
+            ;;
+        '--'*)
+            err "Wrong task action \"${action}\""
+            exit 1
+            ;;
+    esac
+    __task_name="$1"
 }
 
 info() {
-    echo ""
-    echo "${fg_green}==> $@ <=="
+    echo "${fg_blue}:: ${@}${reset}"
 }
 
 err() {
     echo ""
-    echo "${fg_red}==> ERROR: $@ <=="
+    echo "${fg_red}=> ERROR: $@${reset}"
 }
+
+__notificaions=()
+notify() {
+    if [[ "$1" == "--print" ]]; then
+        if [[ ${#__notificaions[@]} -eq 0 ]]; then
+            return
+        fi
+        echo ""
+        echo "${fg_magenta}Notifications:${reset}"
+        local n
+        for n in "${__notificaions[@]}"; do
+            echo "  --> $n"
+        done
+        echo ""
+    fi
+    __notificaions+=("$1")
+}
+
 
 installed() {
     if ! command -v "$1" >/dev/null; then
@@ -51,28 +90,72 @@ installed() {
     fi
 }
 
+backup-mv() {
+    local path="$1"
+    local bak="${path}.${DATE}.bak"
+    if [[ ! -e $path ]]; then return; fi
+    if [[ -e $bak ]]; then
+        err "A the backup \"${bak}\" already exists"
+        exit 1
+    fi
+    info "Backing up \"${path}\" -> \"${bak}\""
+    mv -- "$path" "$bak"
+    notify "Backup created: \"${path}\" -> \"${bak}\""
+}
 
 
+#############
+# Bootstrap ####################################################################
+#############
+
+
+task "Include global \`~/.yadm-gitconfig\` in yadm's gitconfig"
 if [[ "$(yadm gitconfig include.path)" != "~/.yadm-gitconfig" ]]; then
-    task "Include global \`~/.yadm-gitconfig\` in yadm's gitconfig"
+    task --print
+
     yadm gitconfig include.path '~/.yadm-gitconfig'
-    task done
 fi
+task --done
 
+
+task "Install nix"
 if ! installed nix; then
-    task "Install nix"
-    curl -L https://nixos.org/nix/install | sh
-    task done
-fi
+    task --print
 
+    curl -L https://nixos.org/nix/install | sh
+fi
+task --done
+
+
+task "Install Homebrew"
 if ! installed brew; then
-    task "Install Homebrew"
+    task --print
+
     sudo -k
     SUDO_ASKPASS="$(which false)" \
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    task done
 fi
+task --done
 
-task "Check installed programs"
+
+task "Install AstroNvim"
+if ! git -C ~/.config/nvim remote -v 2>/dev/null | grep -q $'origin\thttps://github.com/AstroNvim/AstroNvim (fetch)'; then
+    task --print
+
+    backup-mv ~/.config/nvim
+    backup-mv ~/.local/share/nvim
+    backup-mv ~/.local/state/nvim
+    backup-mv ~/.cache/nvim
+    
+    git clone https://github.com/AstroNvim/AstroNvim ~/.config/nvim
+
+    notify "AstroNvim has been installed. Open nvim to install packages."
+fi
+task --done
+
+
+task --print "Check installed programs"
 x3ro.check
-task done
+task --done
+
+notify --print

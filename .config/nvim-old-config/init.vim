@@ -328,6 +328,20 @@ let mapleader = ' '
     command! -bang ChmodX if <bang>0 | Chmod -x | else | Chmod +x | endif
 
 
+" Command Aliases
+    "fun! MkCmdAlias(...)
+    "    let l:args = join(a:000[:-3], " ")
+    "    let l:lhs = a:000[-2]
+    "    let l:rhs = a:000[-1]
+    "    exec "cnoreabbrev <expr> " .. l:args .. " " .. l:lhs .. " (getcmdtype() == \":\" && getcmdline() ==# \"" .. l:lhs .. "\" ? \"" .. l:rhs .. "\" : \"" .. l:lhs .."\")"
+    "endfun
+    "command! -nargs=+ MkCmdAlias call MkCmdAlias(<f-args>)
+    ":MkCmdAlias E e
+
+    "                     check it is command && check it is exact    ? replace                      : or dont
+    cnoreabbrev <expr> E (getcmdtype() == ":" && getcmdline() ==# "E" ? "e " .. expand("%:h") .. "/" : "E")
+
+
 " System Clipboard
     " Copy from visual mode
     vnoremap <C-c> "+ygv
