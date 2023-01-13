@@ -13,6 +13,9 @@ trap 'last_command=${current_command:-""}; current_command=$BASH_COMMAND' DEBUG
 trap 'trap_exit $?' EXIT
 trap_exit() {
     local err=$1;
+
+    notify --print
+
     if [[ $err > 0 ]]; then
         if [[ $__task_name != "" ]]; then
             err "Task \"${__task_name}\" failed with exit code ${err}."
@@ -157,5 +160,3 @@ task --done
 task --print "Check installed programs"
 x3ro.check
 task --done
-
-notify --print
