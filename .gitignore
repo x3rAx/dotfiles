@@ -8,3 +8,6 @@ __pycache__
 /.config/copyq/copyq_geometry.ini
 /.config/copyq/copyq_no_session.ini
 /.config/copyq/copyq_tabs.ini
+
+/.config/nushell/x3ro/generated/
+/.config/nushell/history.txt
