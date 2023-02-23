@@ -7,6 +7,17 @@ return {
     wrap = false, -- Configure line wrap
     wildmode = { "longest:full", "full" }, -- Autocomplete to the longes common match, then cycle through each full match
     clipboard = "", -- Disable system clipboard connection
+    timeoutlen = 1000,
+    colorcolumn = { 81, 101, 121, 122 },
+
+    -- Line wrapping
+    breakindent = true, -- Indent wrapped lines
+    breakindentopt = {
+      "shift:4", -- Indent wrapped lines by N chars
+      "min:40", -- Leave at least N chars for the line when indenting
+      "sbr", -- Show the `showbreak` symbol at the beginning of wrapped lines
+    },
+    showbreak = "", -- Show this at the beginning of wrapped lines
   },
   g = {
     mapleader = " ", -- sets vim.g.mapleader

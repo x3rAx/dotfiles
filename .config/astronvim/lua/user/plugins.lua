@@ -21,6 +21,38 @@ return {
     --     require("lsp_signature").setup()
     --   end,
     -- },
+
+    {
+      "kylechui/nvim-surround",
+      tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+      config = function()
+        require("nvim-surround").setup({
+          -- Configuration here, or leave empty to use defaults
+          --keymaps =       -- Defines plugin keymaps,
+          --surrounds =     -- Defines surround keys and behavior,
+          --aliases =       -- Defines aliases,
+          --highlight =     -- Defines highlight behavior,
+          --move_cursor =   -- Defines cursor behavior,
+        })
+      end,
+    },
+
+    ["mg979/vim-visual-multi"] = {
+      branch = 'master',
+      setup = function()
+        -- TODO: Why do changes to this only take effect after reinstalling the plugin?
+        vim.g.VM_theme = 'nord' -- See: https://github.com/mg979/vim-visual-multi/wiki/Highlight-colors#selecting-a-theme
+        vim.g.VM_maps = {
+          ['Find Under'] = '<M-C-L>',
+          ['Add Cursor Up'] = '<M-C-K>',
+          ['Add Cursor Down'] = '<M-C-J>',
+        }
+      end,
+    },
+
+    ["~/Projects/x3ro/nvim-qalc"] = {},
+
+    ['NoahTheDuke/vim-just'] = {},
   },
 
   --
@@ -78,11 +110,20 @@ return {
     window = {
       mappings = {
         ["g/"] = "fuzzy_finder",
+        ["gf"] = "fuzzy_finder",
         ["/"] = false,
+        ["Q"] = 'close_window',
+        ["q"] = 'clear_filter',
+        ["l"] = { "toggle_preview", config = { use_float = true } }, -- Also prevents moving cursor to the right
+        --[":"] = 'run_file_command',
       },
     },
     filesystem = {
       hijack_netrw_behavior = "open_default",
     },
+  },
+
+  ["better_escape"] = {
+    timeout = 300,
   },
 }
