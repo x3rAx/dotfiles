@@ -65,6 +65,8 @@ bspc config focus_follows_pointer   true
 bspc config focused_border_color    "#0071db"
 bspc config removal_adjustment      "false"
 bspc config gapless_monocle         true
+bspc config automatic_scheme        alternate
+bspc config split_ratio             0.6
 
 
 
@@ -72,4 +74,5 @@ bspc config gapless_monocle         true
 
 bspc rule --add 'Tor Browser:Navigator' state=pseudo_tiled private=on
 bspc rule --add 'copyq'                 state=floating
+bspc rule --add 'ksnip'                 state=floating layer=above
 
