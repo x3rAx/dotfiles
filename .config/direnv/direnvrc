@@ -8,14 +8,27 @@ else
     echo >&2 $(tput setab 9)'WARNING: `nix-direnv` could not be found. Direnvs using Nix will lose their build dependencies on `nix-collect-garbage`'$(tput sgr0)
 fi
 
+#backup old direnv_layout_dir to _direnv_layout_dir
+eval "`declare -f direnv_layout_dir| sed '1s/.*/_&/'`"
+
+# Create `.gitignore` in direnv layout directory
+direnv_layout_dir() {
+    local dir="$(_direnv_layout_dir)"
+    local gitignore="${dir}/.gitignore"
+    if [[ ! -f "$gitignore" ]]; then
+        echo '*' >"$gitignore"
+    fi
+    echo "$dir"
+}
+
 # Create `.direnv` in cache directory instead of in the project directory
 #: ${XDG_CACHE_HOME:=$HOME/.cache}
 #declare -A direnv_layout_dirs
 #direnv_layout_dir() {
-#    echo "${direnv_layout_dirs[$PWD]:=$(
+#    echo "${direnv_layout_dir:-${direnv_layout_dirs[$PWD]:=$(
 #        echo -n "$XDG_CACHE_HOME"/direnv/layouts/
 #        echo -n "$PWD" | tr '/' '@'
-#    )}"
+#    )}}"
 #}
 
 # NOTE
@@ -23,6 +36,12 @@ fi
 #
 # Add the following to your project's `.envrc` to override the `nix-direnv`
 # cache directory to a `.direnv` directory inside your project:
+#
+# ```
+# direnv_layout_dir='.direnv'
+# ```
+#
+# or override the function
 #
 # ```
 # declare -A direnv_layout_dirs
