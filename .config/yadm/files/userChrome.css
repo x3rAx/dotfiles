@@ -1,8 +1,31 @@
-/****************
- * {{ Pinstripe *******************************************************************
- ****************
+/**
+ * # UserChrome CSS
  *
- * See:
+ * ## Setup Firefox:
+ *
+ * In `about:config` set the following:
+ *
+ * - `toolkit.legacyUserProfileCustomizations.stylesheets	= true`
+ * - `layout.css.has-selector.enabled = true`
+ *
+ * ## Live Editing
+ *
+ * 1. In devtools, go to settings and enable:
+ *
+ *    - Enable browser chrome and add-on debugging toolbox
+ *    - Enable remote debugging
+ *
+ * 2. Press `Ctrl + Shift + Alt + i` and accept the incoming request.
+ *
+ * 3. Go to tab "Style Editor" and search for `userChrome.css`
+ *
+ * 4. Click the "Save" link or save with `Ctrl + s` (this updates the CSS file)
+ */
+
+
+/****************
+ * {{ Pinstripe ****************************************************************
+ ****************
  *
  * - https://addons.mozilla.org/de/firefox/addon/pinstripe-pinned-tab-sidebar/
  * - https://github.com/TRPB/pinstripe
@@ -37,5 +60,5 @@
 }
 
 /****************
- * }} Pinstripe *******************************************************************
+ * }} Pinstripe ****************************************************************
  ****************/
