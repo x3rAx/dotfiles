@@ -1,0 +1,36 @@
+customCommands:
+  - key: 'C'
+    context: 'files'
+    prompts:
+      - type: 'menu'
+        title: 'Emojy Log'
+        options:
+          - name: '📦 NEW: '
+            value: '📦 NEW: '
+            description: "Use when you add something entirely new."
+          - name: '👌 IMPROVE: '
+            value: '👌 IMPROVE: '
+            description: "Use when you improve/enhance piece of code like refactoring etc."
+          - name: '🐛 FIX: '
+            value: '🐛 FIX: '
+            description: "Use when you fix a bug — need I say more?"
+          - name: '📖 DOC: '
+            value: '📖 DOC: '
+            description: "Use when you add documentation like README.md, or even inline docs."
+          - name: '🚀 RELEASE: '
+            value: '🚀 RELEASE: '
+            description: "Use when you release a new version."
+          - name: '🤖 TEST: '
+            value: '🤖 TEST: '
+            description: "Use when it's related to testing."
+          - name: '‼️ BREAKING: '
+            value: '‼️ BREAKING: '
+            description: "Use when releasing a change that breaks previous versions."
+          - name: '<empty>'
+            description: 'Choose a custom message'
+            value: ''
+    command: "git commit -e -m '{{index .PromptResponses 0}}'"
+    loadingText: '...'
+    subprocess: true
+    stream: true
+
