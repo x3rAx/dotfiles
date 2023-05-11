@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+_SCRIPT="${BASH_SOURCE}"
+_SCRIPT_DIR="${_SCRIPT%/*}"
+
+
 #########
 # Setup ########################################################################
 #########
@@ -157,6 +161,15 @@ fi
 task --done
 
 
+task --print "Install Firefox userChrome.css link"
+if [[ -f .mozilla/firefox/profiles.ini ]]; then
+    "${_SCRIPT_DIR}/scripts/create-firefox-userchrome-link.py" "${_SCRIPT_DIR}/files/userChrome.css" ~/.mozilla/firefox/profiles.ini
+fi
+task --done
+
+
 task --print "Check installed programs"
 x3ro.check
 task --done
+
+
