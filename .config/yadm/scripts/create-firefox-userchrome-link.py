@@ -76,7 +76,7 @@ def create_symlink(file: Path, firefox_dir: Path, profile_conf: dict):
 
     relative_file = path.relpath(file, link.parent)
 
-    print(f'Creating link: {userhome_link} -> {userhome_file}', file=sys.stderr)
+    print(f'Creating link: {userhome_link} -> {userhome_file}')
     symlink(relative_file, link)
 
 
