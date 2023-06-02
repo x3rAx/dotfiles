@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+set -eu
+
+_SCRIPT="$BASH_SOURCE"
+_SCRIPT_NAME="${_SCRIPT##*/}"
+
+_DBOX_HOMES="${HOME}/.distrobox/homes"
+_HOME="${_DBOX_HOMES}/ros"
+
+is_existing() {
+    sudo podman container list --all --format "{{.Names}}" | grep -qP '^ros.dbox$'
+}
+
+is_running() {
+    sudo podman container list --format "{{.Names}}" | grep -qP '^ros.dbox$'
+}
+
+do_backup() {
+    if is_running; then
+        distrobox stop --root ros.dbox
+    fi
+
+    # Test if it is still running
+    if is_running; then
+        echo >&2 "ERROR: Container must be stopped before it can be cloned"
+        exit 1
+    fi
+
+    date="$(date -Is | tr 'T' '_' | tr ':' '-' | tr '+' '_')"
+    bak_home="${_DBOX_HOMES}/ros.bak-${date}"
+
+    echo >&2 "Duplicating ros.dbox home..."
+    cp --reflink=always -a "$_HOME" "$bak_home"
+
+    exec distrobox create --root --clone ros.dbox --name "ros.bak-${date}.dbox" --home "$bak_home"
+}
+
+do_setup() {
+    if ! is_existing; then
+        mkdir -p "$_HOME"
+        distrobox create --root --image ubuntu:20.04 --name ros.dbox --home "$_HOME"
+    fi
+
+    local tmp="$(mktemp)"
+    echo >"$tmp" "
+        set -xeu
+        
+        DEBIAN_FRONTEND=noninteractive
+        export DEBIAN_FRONTEND
+
+        dpkg --configure -a # In case something went wrong with configuring before
+
+        apt-get update
+        apt-get upgrade -y
+        apt-get install -y lsb-release
+        apt-get install -y kitty-terminfo direnv
+
+        sh -c 'echo \"deb http://packages.ros.org/ros/ubuntu \$(lsb_release -sc) main\" > /etc/apt/sources.list.d/ros-latest.list'
+        apt-get install -y curl # if you haven't already installed curl
+        curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
+        apt-get update
+        apt-get install -y ros-noetic-desktop-full
+        apt-get install -y python3-catkin-tools
+    "
+    distrobox enter --root ros.dbox -- sudo sh /run/host"$tmp" # No slash here since $tmp already starts with a slash
+    rm "$tmp"
+}
+
+if [[ $# -gt 0 ]]; then
+    cmd="$1"
+    shift
+
+    if [[ $cmd == 'setup' ]]; then
+        do_setup
+        exit
+    fi
+
+    if [[ $cmd == 'backup' ]]; then
+        do_backup
+        exit
+    fi
+
+    if [[ $cmd == 'rm' ]]; then
+        echo >&2 'Please use `distrobox rm --root ros.dbox` if you really want to delete this box!'
+        exit 1
+    fi
+
+    exec distrobox "$cmd" --root ros.dbox "$@"
+fi
+
+if ! is_existing; then
+    echo >&2 "Box not existing. Run \`${_SCRIPT_NAME} setup\` to setup the box"
+    exit 1
+fi
+
+xhost +si:localuser:$USER
+exec distrobox enter --root ros.dbox
