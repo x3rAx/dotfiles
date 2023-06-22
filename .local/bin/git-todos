@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+# More safety by turning bugs into errors.
+# Use `${PIPESTATUS[n]}` to check for the `n`-th pipe command's exit status.
+# Make sure there are no uninitialized variables.
+# To allow a non-zero exit status or to allow a pipe to fail without exiting
+# the script, prefix the command with `!`.
+# Option `noclobber` makes sure piping into a file with `>` does not
+# override existing files. Use `>|` to overwrite files instead.
+# Environment variables are `UPPER_SNAKE_CASE`, global constants are
+# `_UNDERSCORE_PREFIXED` and global variables are `_underscore_prefixed`
+set -o errexit -o pipefail -o nounset -o noclobber
+IFS=$'\n\t' # Split on newlines and tabs (but not on spaces)
+
+: ${XDG_CONFIG_HOME:=$HOME/.config}
+: ${XDG_CACHE_HOME:=$HOME/.cache}
+
+readonly _SCRIPT="$(realpath "$0")"
+readonly _SCRIPT_NAME="${_SCRIPT##*/}"
+readonly _SCRIPT_DIR="${_SCRIPT%/*}"
+
+err() { echo >&2 "${_SCRIPT_NAME}: $@"; }
+
+readonly _ERR_USAGE=2
+readonly _ERR_PROGRAMMING=255
+
+_diff_to="main"
+_diff_from="HEAD"
+_todo_word="TODO:"
+
+readonly _USAGE="
+  Usage:
+    $_SCRIPT_NAME [options] [<diff-to>]
+
+  ARGUMENTS:
+    diff-to                 The commit/branch to compare to (default \"${_diff_to}\")
+
+  OPTIONS:
+    -h, --help              Show this help message.
+    -c, --commit            The commit/branch to compare from (containing the
+                            new TODOs we are interested in) (default:
+                            \"${_diff_from}\")
+    -t, --todo <TODO-WORD>  The todo word to match against. (default:
+                            \"${_todo_word}\")
+
+  EXAMPLES:
+    Find all TODOs for the current HEAD commit that are not on branch \`main\`:
+        $_SCRIPT_NAME
+
+    Find all TODOs on branch \`other-branch\` that are not on branch \`develop\`:
+        $_SCRIPT_NAME -c other-branch develop
+
+    Find all FIXMEs for the current HEAD commit that are not on branch \`main\`:
+        $_SCRIPT_NAME -t 'FIXME:'
+"
+
+readonly _OPTIONS='hc:t:'
+readonly _LONGOPTS='help,commit:,todo:'
+
+parsed="$(getopt -o "$_OPTIONS" -l "$_LONGOPTS" -n "$_SCRIPT_NAME" -- "$@")"
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then echo >&2 "$_USAGE"; exit $_ERR_USAGE; fi
+eval set -- "${parsed[@]}"; unset parsed
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)      echo "$_USAGE"; exit; ;;
+        -t|--todo)      _todo_word="$2"; shift 2; ;;
+        -c|--commit)    _commit_from="$2"; shift 2; ;;
+        --)             shift; break; ;;
+        *)              err "Programming error"; exit $_ERR_PROGRAMMING; ;;
+    esac
+done
+
+_diff_to="${1:-${_diff_to}}"
+
+# --- main program -------------------------------------------------------------
+
+git diff "${_diff_to}..${_diff_from}" | grep -P '^\+.*'"${_todo_word}"
+
