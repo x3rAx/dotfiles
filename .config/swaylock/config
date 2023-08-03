@@ -1,0 +1,16 @@
+color=111111
+
+show-failed-attempts
+
+indicator-radius=100
+
+# Background
+inside-color=111111
+
+# Cear
+inside-clear-color=111111
+text-clear-color=aaaaaa
+
+# Verifying
+inside-ver-color=111111
+text-ver-color=aaaaaa
