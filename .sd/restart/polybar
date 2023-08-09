@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+pkill polybar
+~/.config/polybar/launch.sh >/dev/null 2>&1 &
+

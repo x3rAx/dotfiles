@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# List installed fonts and filter for given words
+
+set -euo pipefail
+
+joinx() {
+    local sep="$1"
+    shift
+    echo -n "$1"
+    shift
+
+    for x in "$@"; do
+      echo -n "${sep}${x}"
+    done
+}
+
+if [ $# -gt 0 ]; then
+    # Build a search query that matches all lines where every word is present
+    # in any order.
+    # For example, the search words `foo` and `bar` would result in the search
+    # string `(?=.*foo)(?=.*bar)`.
+    search='(?='
+    search+="$(joinx ')(?=.*' "$@")"
+    search+=')'
+
+    # Do a second `grep` just for highlighting the searched words. Appending
+    # this search query to the first query should also work but for some
+    # reason, when doing so, only the first matched word gets highlighted.
+    highlight='('
+    highlight+="$(joinx '|' "$@")"
+    highlight+=')'
+
+    echo >&2 "=> Searching for: ${search}"
+    fc-list \
+      | grep -iP "$search" \
+      | grep --color -iP "$highlight"
+    exit
+fi
+
+fc-list

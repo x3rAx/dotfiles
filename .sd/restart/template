@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+function start() {
+  nohup "$@" >/dev/null 2>&1 & disown;
+}
+
+pkill -x 'the-app' \
+  || pkill -x '.the-app-wrapped'
+
+start the-app

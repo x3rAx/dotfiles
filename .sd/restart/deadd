@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+pkill -x deadd-notificat \
+  || pkill -x deadd-notification-center
+
+nohup deadd-notification-center >/dev/null 2>&1 & disown
+

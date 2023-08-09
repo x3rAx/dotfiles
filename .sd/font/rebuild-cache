@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Erase all existing caches, then rescan
+
+set -euo pipefail
+
+fc-cache -r "$@"

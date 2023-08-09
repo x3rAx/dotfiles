@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Scan directories with apparently valid caches
+
+set -euo pipefail
+
+fc-cache -f "$@"

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sudo inxi --admin --verbosity=7 --filter --no-host --width

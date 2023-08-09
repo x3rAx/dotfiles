@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+if [[ $(id -u) != 0 ]]; then
+  exec sudo "$0" "$@"
+fi
+
+devices=( $(ip -j link | jq '
+  .[]
+  | select(.link_type == "ether")
+  | select(.operstate == "UP")
+  | select(.ifname | match("^(enp|wlp|eth|wlan)"))
+  | .ifname
+' -r) )
+
+for dev in ${devices[@]}; do
+  echo "Setting ${dev} DOWN"
+  sudo ip link set "$dev" down
+done
+
+echo ""
+sleep 1
+
+for dev in ${devices[@]}; do
+  echo "Setting ${dev} UP"
+  sudo ip link set "$dev" up
+done
+
