@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+set -eu
+
+main() {
+    run sudo nix-channel --update
+    run sudo nixos-rebuild switch --upgrade
+
+    run nix-channel --update
+    #run nix-env --upgrade
+
+    run-if - home-manager switch
+
+    run-if - flatpak update
+
+    run-if - lug-helper-update
+    run-if - starship-update
+    run-if - youtube-dl-update
+}
+
+################################################################################
+
+_bold=$(tput bold)
+_normal=$(tput sgr0)
+_yellow=$(tput setaf 11)
+_red=$(tput setaf 1)
+_teal=$(tput setaf 14)
+_green=$(tput setaf 10)
+
+run() {
+    local err=0
+    echo >&2 "${_bold}${_yellow}==> RUN: ${*}${_normal}"
+    "$@" || err=$?
+    if [[ $err -ne 0 ]]; then
+        echo >&2 ""
+        echo >&2 "${_bold}${_red}ERROR: Command \`${*}\` exited with an exit code of ${err}.${_normal}"
+        echo >&2 "${_bold}       Do you want to continue? (Y/n) ${_normal}"
+        read inp
+        if [[ -n $inp ]] && [[ ${inp,,} != 'y' ]]; then
+            exit $err
+        fi
+    fi
+}
+
+# Usage:
+#   run-if command-to-check command-to-run arg1 arg2
+#   run-if - command-to-check-and-run arg1 arg2
+run-if() {
+    local check=$1
+    shift
+    if [[ $check == '-' ]]; then
+        check=$1
+    fi
+    if ! command -v "$1" >/dev/null; then
+        echo >&2 "${_bold}${_teal}==> SKIPPING (missing ${check}): ${@}${_normal}"
+        return
+    fi
+    run "$@"
+}
+
+finish() {
+    local code=$?
+    echo ''
+    if [[ $code -gt 0 ]]; then
+        echo >&2 "${_bold}${_red}ERROR: Update exited with code: ${code}${_normal}"
+        exit
+    fi
+    echo >&2 "${_bold}${_green}==> Done${_normal}"
+}
+trap finish EXIT
+
+sudo true
+main "$@"
