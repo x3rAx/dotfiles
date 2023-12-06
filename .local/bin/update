@@ -30,16 +30,25 @@ _green=$(tput setaf 10)
 run() {
     local err=0
     echo >&2 "${_bold}${_yellow}==> RUN: ${*}${_normal}"
-    "$@" || err=$?
-    if [[ $err -ne 0 ]]; then
-        echo >&2 ""
-        echo >&2 "${_bold}${_red}ERROR: Command \`${*}\` exited with an exit code of ${err}.${_normal}"
-        echo >&2 "${_bold}       Do you want to continue? (Y/n) ${_normal}"
-        read inp
-        if [[ -n $inp ]] && [[ ${inp,,} != 'y' ]]; then
-            exit $err
+
+    while :; do
+        "$@" || err=$?
+        if [[ $err -ne 0 ]]; then
+            echo >&2 ""
+            echo >&2 "${_bold}${_red}ERROR: Command \`${*}\` exited with an exit code of ${err}.${_normal}"
+            echo >&2 "${_bold}       Do you want to continue or retry? (Y/n/r) ${_normal}"
+            read inp
+
+            if [[ ${inp,,} == 'r' ]]; then
+                continue
+            fi
+
+            if [[ -n $inp ]] && [[ ${inp,,} != 'y' ]]; then
+                exit $err
+            fi
         fi
-    fi
+        break
+    done
 }
 
 # Usage:
@@ -71,3 +80,4 @@ trap finish EXIT
 
 sudo true
 main "$@"
+
