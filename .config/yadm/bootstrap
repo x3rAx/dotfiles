@@ -102,7 +102,7 @@ backup-mv() {
     local bak="${path}.${DATE}.bak"
     if [[ ! -e $path ]]; then return; fi
     if [[ -e $bak ]]; then
-        err "A the backup \"${bak}\" already exists"
+        err "A backup \"${bak}\" already exists"
         exit 1
     fi
     info "Backing up \"${path}\" -> \"${bak}\""
