@@ -145,8 +145,8 @@ fi
 task --done
 
 
-task "Install AstroNvim"
-if ! git -C ~/.config/nvim remote -v 2>/dev/null | grep -q $'origin\thttps://github.com/AstroNvim/AstroNvim (fetch)'; then
+task --print "Install NvChad"
+if ! git -C ~/.config/nvim remote -v 2>/dev/null | grep -q $'origin\thttps://github.com/NvChad/NvChad (fetch)'; then
     task --print
 
     backup-mv ~/.config/nvim
@@ -154,9 +154,10 @@ if ! git -C ~/.config/nvim remote -v 2>/dev/null | grep -q $'origin\thttps://git
     backup-mv ~/.local/state/nvim
     backup-mv ~/.cache/nvim
     
-    git clone https://github.com/AstroNvim/AstroNvim ~/.config/nvim
+    git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+    ln -sr ~/.config/nvchad ~/.config/nvim/lua/custom
 
-    notify "AstroNvim has been installed. Open nvim to install packages."
+    notify "NvChad has been installed. Open nvim to install packages."
 fi
 task --done
 
