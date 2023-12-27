@@ -4,6 +4,9 @@ local g = vim.g
 -- Numbers
 opt.relativenumber = true
 
+-- Copilot
+g.copilot_assume_mapped = true -- Fix copilot complaining about <Tab> key being mapped already
+
 -- Indenting
 local indent = 4
 opt.expandtab = true
