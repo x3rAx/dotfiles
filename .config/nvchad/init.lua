@@ -12,3 +12,6 @@ opt.smartindent = true
 opt.tabstop = indent
 opt.softtabstop = indent
 
+-- Hint to help limit line length
+opt.colorcolumn = "80,100,120,121"
+
