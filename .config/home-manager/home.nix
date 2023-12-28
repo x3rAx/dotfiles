@@ -16,6 +16,10 @@ let
   unstable = mkUnstable { config = nixpkgs-config; };
 in
 {
+  imports = [
+    ./overlays
+  ];
+
   nixpkgs.config = nixpkgs-config;
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -93,6 +97,7 @@ in
     protonup-qt # Manage Steam games & ProtonGE versions
     qpwgraph # Pipewire connection graph
     qutebrowser
+    razer-battery-tray
     remmina
     ripgrep-all
     shutter
@@ -114,7 +119,6 @@ in
     xsecurelock
     xss-lock
 
-    (python3Packages.callPackage ./packages/razer-battery-tray {})
   ]) ++ (with unstable; [
     telegram-desktop
     obsidian
