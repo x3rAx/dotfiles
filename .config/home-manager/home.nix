@@ -114,6 +114,7 @@ in
     xsecurelock
     xss-lock
 
+    (python3Packages.callPackage ./packages/razer-battery-tray {})
   ]) ++ (with unstable; [
     telegram-desktop
     obsidian
