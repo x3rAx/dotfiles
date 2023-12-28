@@ -250,6 +250,16 @@ in
 
     ]);
   };
+
+  programs.script-directory = {
+    enable = true;
+    settings = {
+      SD_ROOT = "${config.home.homeDirectory}/.sd";
+      SD_EDITOR = "${pkgs.neovim}/bin/nvim";
+      SD_CAT = "${pkgs.bat}/bin/bat";
+    };
+  };
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
