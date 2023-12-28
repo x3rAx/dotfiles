@@ -1,4 +1,4 @@
-{ config, pkgs, unstable, lib, ... }:
+{ config, pkgs, mkUnstable, lib, ... }:
 
 let
   nixpkgs-config = {
@@ -12,6 +12,7 @@ let
       "vscode"
     ];
   };
+  unstable = mkUnstable { config = nixpkgs-config; };
 in
 {
   nixpkgs.config = nixpkgs-config;

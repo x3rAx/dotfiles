@@ -15,6 +15,8 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+
+      mkUnstable = config: import unstable ({ inherit system; } // config);
     in {
       homeConfigurations."x3ro" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
@@ -26,7 +28,7 @@
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
         extraSpecialArgs = {
-           inherit unstable;
+          inherit mkUnstable;
         };
       };
     };
