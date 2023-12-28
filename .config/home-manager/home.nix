@@ -120,14 +120,16 @@ in
     xss-lock
 
   ]) ++ (with unstable; [
-    telegram-desktop
+
+    easyeffects
+    just
+    nushell
     obsidian
     quickemu
-    nushell
-    zoxide
-    easyeffects
+    telegram-desktop
     thunderbird-bin
-    just
+    zoxide
+
   ]);
 
   # Home Manager can also manage your environment variables through
