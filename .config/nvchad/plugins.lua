@@ -13,6 +13,13 @@ local plugins = {
             },
         },
     },
+
+    {
+        "williamboman/mason.nvim",
+        opts = {
+            ensure_installed = {}, -- Overwrite the default list to prevent installing binaries already installed by home-manager
+        },
+    },
 }
 
 return plugins
