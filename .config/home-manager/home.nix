@@ -162,6 +162,27 @@ in
     # '';
   };
 
+  programs.neovim = {
+    enable = true;
+
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+
+    # Use latest neovim
+    #package = unstable.neovim-unwrapped;
+
+    extraPackages = with pkgs; [
+      gnumake gcc # Required to build telescope-fzf-native plugin # TODO: Try to install through home-manager?
+      nodejs # Copilot
+      tree-sitter # For nvim-treesitter command `:TSInstallFromGrammar`
+      sumneko-lua-language-server # Lua LS
+    ];
+
+    plugins = with pkgs.vimPlugins; [
+    ];
+  };
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
