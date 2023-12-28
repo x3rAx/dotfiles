@@ -162,6 +162,13 @@ in
     # '';
   };
 
+  xdg.configFile = {
+    # Enable `virsh` to access the local machines
+    "libvirt/libvirt.conf".text = ''
+      uri_default = "qemu:///system"
+    '';
+  };
+
   programs.neovim = {
     enable = true;
 
