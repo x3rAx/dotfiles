@@ -1,6 +1,21 @@
 { config, pkgs, unstable, lib, ... }:
 
+let
+  nixpkgs-config = {
+    permittedInsecurePackages = [
+      "electron-24.8.6"
+    ];
+    allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+      "cudatoolkit"
+      "discord"
+      "obsidian"
+      "vscode"
+    ];
+  };
+in
 {
+  nixpkgs.config = nixpkgs-config;
+
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "x3ro";
@@ -8,7 +23,7 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
+  home.packages = with pkgs; [
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -25,6 +40,77 @@
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
+
+    android-tools
+    autorandr
+    barrier
+    binutils
+    cinnamon.nemo
+    cli-visualizer # CLI audio visualizer
+    cryptomator
+    dbeaver
+    deadd-notification-center
+    discord
+    distrobox
+    duf
+    element-desktop
+    evcxr # Rust REPL
+    eww # Status bar
+    expect
+    filezilla
+    fish
+    fx # Terminal JSON viewer
+    gamescope # Restrict mouse to game
+    gimp
+    glxinfo
+    gparted
+    handlr
+    htmlq
+    httpie
+    httrack
+    inxi
+    kitty
+    kopia
+    lazygit
+    libreoffice
+    lolcat
+    lsd
+    mangohud
+    mimeo
+    multitail
+    neofetch
+    nerdfonts
+    nix-direnv
+    nmap
+    nvtop
+    oh-my-posh
+    openfortivpn
+    parallel
+    pavucontrol
+    pcmanfm
+    protonup-qt # Manage Steam games & ProtonGE versions
+    qpwgraph # Pipewire connection graph
+    qutebrowser
+    remmina
+    ripgrep-all
+    shutter
+    spectacle
+    spice-gtk
+    sshpass
+    stalonetray # Used to hack tray icons into my eww bar
+    tesseract5
+    tldr # Simplified man pages
+    udiskie
+    unclutter-xfixes
+    ventoy-bin-full # or `ventoy-bin`?
+    whois
+    wireguard-tools
+    xorg.xhost
+    xorg.xkill
+    xorg.xwininfo
+    xournalpp
+    xsecurelock
+    xss-lock
   ];
 
   # Home Manager can also manage your environment variables through
