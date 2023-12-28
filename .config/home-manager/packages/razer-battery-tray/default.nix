@@ -13,13 +13,13 @@ buildPythonPackage {
   format = "other";
 
   pname = "RazerBatteryTray";
-  version = "0.0.0";
+  version = "1.0.0";
 
   src = fetchFromGitHub {
     owner = "HoroTW";
     repo = "RazerBatteryTray";
-    rev = "268ae04";
-    sha256 = "sha256-Mrg6kW2et4wCQ8Z+f9Tfr+qOmLb8RLvzBTN5BB1Ah4s=";
+    rev = "v1.0";
+    sha256 = "sha256-SBDzJi5KOi15PWJR1gdSp47MK1ihvgXjIxxPKBFKHvw=";
   };
 
   # Programs and libraries used at *build*-time on the build host
@@ -43,22 +43,23 @@ buildPythonPackage {
   propagatedBuildInputs = [
   ];
 
-  patches = [
-    ./icons-dir.patch
-  ];
-
-  dontConfigure = true;
-
   buildPhase = ''
-    cat ./razer_battery_tray.py
-    python ./generate_new_bat_icons.py
+    python ./src/generate_new_bat_icons.py
   '';
 
   installPhase = ''
     mkdir -p $out/bin
-    mkdir -p $out/share/razerBatteryTray/
-    cp ./razer_battery_tray.py $out/bin/razer_battery_tray
-    cp -R ./icons $out/share/razerBatteryTray/
+
+    # Modules
+    cp ./src/logger.py $out/bin/
+    cp ./src/argument_parser.py $out/bin/
+    cp ./src/rbt_manager.py $out/bin/
+
+    # Binary
+    cp ./src/razer_battery_tray.py $out/bin/razer_battery_tray
+
+    # Icons
+    cp -R ./icons $out/
   '';
 }
 
