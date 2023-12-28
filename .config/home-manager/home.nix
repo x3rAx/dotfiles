@@ -4,6 +4,7 @@ let
   nixpkgs-config = {
     permittedInsecurePackages = [
       "electron-24.8.6"
+      "electron-25.9.0"
     ];
     allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
       "cudatoolkit"
@@ -24,7 +25,7 @@ in
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [
+  home.packages = (with pkgs; [
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -112,7 +113,17 @@ in
     xournalpp
     xsecurelock
     xss-lock
-  ];
+
+  ]) ++ (with unstable; [
+    telegram-desktop
+    obsidian
+    quickemu
+    nushell
+    zoxide
+    easyeffects
+    thunderbird-bin
+    just
+  ]);
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. If you don't want to manage your shell through Home
