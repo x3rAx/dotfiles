@@ -35,7 +35,7 @@ local plugins = {
     {
         "rootkiter/vim-hexedit",
         cmd = { "Hexedit" },
-        lazy = false, -- TODO: Only load when file is binary. Have a look at this commit to get an idea: https://github.com/RaafatTurki/hex.nvim/commit/944b9913d7fd39d51a2c2b5539ab138a9f22305a
+        lazy = false, -- TODO: Use `event = "VeryLazy"` or do only load when file is binary. Have a look at this commit to get an idea: https://github.com/RaafatTurki/hex.nvim/commit/944b9913d7fd39d51a2c2b5539ab138a9f22305a
     },
 
     -- File explorer
@@ -46,6 +46,31 @@ local plugins = {
         end,
     },
 
+    -- Surround
+    {
+        "kylechui/nvim-surround",
+        version = "*", -- Use for stability; omit to use `main` branch for the latest features
+        event = "VeryLazy",
+        config = function()
+            require("nvim-surround").setup({
+                -- Configuration here, or leave empty to use defaults
+            })
+        end
+    },
+
+    -- Notifications
+    {
+        "rcarriga/nvim-notify",
+        module = "notify",
+        lazy = false,
+        opts = function()
+            return require "custom.configs.notify"
+        end,
+        config = function(_, opts)
+            local notify = require "notify"
+            notify.setup(opts)
+            vim.notify = notify
+        end,
     },
 
 }
