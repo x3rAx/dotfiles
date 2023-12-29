@@ -51,6 +51,7 @@ in
     autorandr
     barrier
     binutils
+    bvi # VI like hex editor
     cinnamon.nemo
     cli-visualizer # CLI audio visualizer
     cryptomator
