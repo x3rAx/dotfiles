@@ -185,6 +185,7 @@ in
       nodejs # Copilot
       tree-sitter # For nvim-treesitter command `:TSInstallFromGrammar`
       sumneko-lua-language-server # Lua LS
+      unixtools.xxd # `xxd` for Hex extension
     ];
 
     plugins = with pkgs.vimPlugins; [
