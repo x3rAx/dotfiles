@@ -1,5 +1,7 @@
 local opt = vim.opt
 local g = vim.g
+local autocmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
 
 -- Numbers
 opt.relativenumber = true
@@ -17,4 +19,13 @@ opt.softtabstop = indent
 
 -- Hint to help limit line length
 opt.colorcolumn = "80,100,120,121"
+
+-- Highlight on yank
+autocmd("TextYankPost", {
+  desc = "Highlight yanked text",
+  group = augroup("highlightyank", { clear = true }),
+  pattern = "*",
+  callback = function() vim.highlight.on_yank() end,
+})
+
 
