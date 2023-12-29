@@ -27,4 +27,11 @@ M.tabufline = {
     }
 }
 
+-- Save file with <C-s> in normal, visual and insert mode
+M.save_file = {
+    n = { ["<C-s>"] = { function() vim.cmd("update") end, "Save file" } },
+    v = { ["<C-s>"] = { function() vim.cmd("update") end, "Save file" } },
+    i = { ["<C-s>"] = { function() vim.cmd("update") end, "Save file" } },
+}
+
 return M
