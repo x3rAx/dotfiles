@@ -28,4 +28,6 @@ autocmd("TextYankPost", {
   callback = function() vim.highlight.on_yank() end,
 })
 
+-- Custom command `CD` to change directory to current file
+vim.cmd [[ command! -nargs=0 CD :cd %:p:h ]]
 
