@@ -31,11 +31,21 @@ local plugins = {
         end,
     },
 
-
+    -- Hex editor
     {
         "rootkiter/vim-hexedit",
         cmd = { "Hexedit" },
         lazy = false, -- TODO: Only load when file is binary. Have a look at this commit to get an idea: https://github.com/RaafatTurki/hex.nvim/commit/944b9913d7fd39d51a2c2b5539ab138a9f22305a
+    },
+
+    -- File explorer
+    {
+        "nvim-tree/nvim-tree.lua",
+        opts = function()
+            return require "custom.configs.nvimtree"
+        end,
+    },
+
     },
 
 }
