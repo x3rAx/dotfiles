@@ -55,7 +55,7 @@ local plugins = {
             require("nvim-surround").setup({
                 -- Configuration here, or leave empty to use defaults
             })
-        end
+        end,
     },
 
     -- Notifications
@@ -68,6 +68,21 @@ local plugins = {
         end,
         init = function ()
             vim.notify = require('notify')
+        end,
+    },
+
+    {
+        "mg979/vim-visual-multi",
+        branch = 'master',
+        lazy = false,
+        init = function()
+            -- TODO: Why do changes to this only take effect after reinstalling the plugin?
+            vim.g.VM_theme = 'nord' -- See: https://github.com/mg979/vim-visual-multi/wiki/Highlight-colors#selecting-a-theme
+            vim.g.VM_maps = {
+                ['Find Under'] = '<M-C-L>',
+                ['Add Cursor Up'] = '<M-C-K>',
+                ['Add Cursor Down'] = '<M-C-J>',
+            }
         end,
     },
 
