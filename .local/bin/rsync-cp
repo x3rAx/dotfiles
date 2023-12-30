@@ -1,0 +1,4 @@
+#!/bin/sh
+
+rsync -a --no-i-r --info=progress2 "$@"
+
