@@ -66,10 +66,8 @@ local plugins = {
         opts = function()
             return require "custom.configs.notify"
         end,
-        config = function(_, opts)
-            local notify = require "notify"
-            notify.setup(opts)
-            vim.notify = notify
+        init = function ()
+            vim.notify = require('notify')
         end,
     },
 
