@@ -97,6 +97,12 @@ local plugins = {
         end,
     },
 
+    -- Lorem Ipsum generator
+    {
+        "vim-scripts/loremipsum",
+        event = 'VeryLazy',
+    },
+
 }
 
 return plugins
