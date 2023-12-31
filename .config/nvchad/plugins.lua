@@ -115,6 +115,77 @@ local plugins = {
         },
     },
 
+    -- BROKEN: Does not work with NvChad base64 theme plugin. Statusline is broken when activated.
+    -- { "catppuccin/nvim", name = "catppuccin", priority = 1000, lazy = false },
+
+    ---- TODO: Use this?
+    --{
+    --    "mrjones2014/smart-splits.nvim",
+    --    event = 'VeryLazy',
+    --    opts = {
+    --        ignored_filetypes = { "nofile", "quickfix", "qf", "prompt" },
+    --        ignored_buftypes = { "nofile" },
+    --    }
+    --},
+
+    ---- TODO: Use this?
+    ---- Toggleterm
+    --{
+    --    "akinsho/toggleterm.nvim",
+    --    event = 'VeryLazy',
+    --    config = function()
+    --        require("toggleterm").setup {
+    --            size = 20,
+    --            open_mapping = [[<c-\>]],
+    --            shade_filetypes = {},
+    --            shade_terminals = true,
+    --            shading_factor = 1,
+    --            start_in_insert = true,
+    --            insert_mappings = true,
+    --            persist_size = true,
+    --            direction = 'horizontal',
+    --        }
+    --    end,
+    --},
+
+    -- Modern folding
+    -- BUG: It always folds functions when pressing ESC.
+    --{
+    --    "kevinhwang91/nvim-ufo",
+    --    lazy = false,
+    --    dependencies = {
+    --        "kevinhwang91/promise-async",
+    --    },
+    --    opts = {
+    --        preview = {
+    --            mappings = {
+    --                scrollB = "<C-b>",
+    --                scrollF = "<C-f>",
+    --                scrollU = "<C-u>",
+    --                scrollD = "<C-d>",
+    --            },
+    --        },
+    --        provider_selector = function(_, filetype, buftype)
+    --            return (filetype == "" or buftype == "nofile") and "indent" -- only use indent until a file is opened
+    --                or { "treesitter", "indent" } -- if file opened, try to use treesitter if available
+    --        end,
+    --    },
+    --    init = function()
+    --        vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+    --        vim.o.foldcolumn = '1'
+    --    end,
+
+    --}
+
+    -- Language Server Config
+    {
+       "neovim/nvim-lspconfig",
+       config = function()
+           require "plugins.configs.lspconfig"
+           require "custom.configs.lspconfig"
+       end
+    },
+
 }
 
 return plugins
