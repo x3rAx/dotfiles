@@ -40,6 +40,9 @@ M.tabufline = {
 
 M.telescope = {
     n = {
+        -- Open recent Telescope picker(s)
+        ["<leader>fr"] = { "<cmd>Telescope resume<cr>", "Open recent Telescope picker" },
+        ["<leader>fR"] = { "<cmd>Telescope pickers<cr>", "Select recent Telescope pickers" },
         -- Show TODOs
         ["<leader>ft"] = { "<cmd>TodoTelescope<cr>", "Show TODOs" },
     }
