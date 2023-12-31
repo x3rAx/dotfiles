@@ -71,15 +71,26 @@ local plugins = {
         end,
     },
 
+    -- Multi-cursor
     {
         "mg979/vim-visual-multi",
         branch = 'master',
-        lazy = false,
+        event = 'VeryLazy',
         init = function()
-            -- TODO: Why do changes to this only take effect after reinstalling the plugin?
-            vim.g.VM_theme = 'nord' -- See: https://github.com/mg979/vim-visual-multi/wiki/Highlight-colors#selecting-a-theme
+            -- vim.g.VM_theme = 'nord' -- See: https://l.x3ro.net/Ftobnk4inu (selecting a theme)
+            -- vim.g.VM_set_statusline = 0 -- Do not set statusline
+            vim.g.VM_silent_exit = 1 -- Do not print "Exited Visual-Multi."
+
+            -- Set statusline colors -- TODO: This also changes colors of the cursor and region selection. How to fix?
+            vim.g.VM_Insert_hl = "Pmenu"
+            vim.g.VM_Extend_hl = "St_NormalMode"
+            vim.g.VM_Cursor_hl = "St_InsertMode"
+            vim.g.VM_Mono_hl = "St_ReplaceMode"
+
+            -- TODO: Move this into mappings.lua
             vim.g.VM_maps = {
                 ['Find Under'] = '<M-C-L>',
+                ['Find Subword Under'] = '<M-C-L>',
                 ['Add Cursor Up'] = '<M-C-K>',
                 ['Add Cursor Down'] = '<M-C-J>',
             }
