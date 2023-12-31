@@ -6,7 +6,18 @@ M.disabled = {
         -- Disable default "cycle through buffers" mappings
         ['<tab>'] = "",
         ['<S-tab>'] = "",
+        ['<C-n>'] = "",
     }
+}
+
+M.nvimtree = {
+  n = {
+    -- toggle
+    ["<leader>e"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
+    -- focus
+    -- TODO: Find a good mappings for this
+    -- ["<leader>o"] = { "<cmd> NvimTreeFocus <CR>", "Focus nvimtree" },
+  },
 }
 
 M.tabufline = {
