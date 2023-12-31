@@ -27,6 +27,13 @@ M.tabufline = {
     }
 }
 
+M.telescope = {
+    n = {
+        -- Show TODOs
+        ["<leader>ft"] = { "<cmd>TodoTelescope<cr>", "Show TODOs" },
+    }
+}
+
 -- Save file with <C-s> in normal, visual and insert mode
 M.save_file = {
     n = { ["<C-s>"] = { function() vim.cmd("update") end, "Save file" } },
