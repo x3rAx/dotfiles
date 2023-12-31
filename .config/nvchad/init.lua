@@ -31,3 +31,6 @@ autocmd("TextYankPost", {
 -- Custom command `CD` to change directory to current file
 vim.cmd [[ command! -nargs=0 CD :cd %:p:h ]]
 
+-- Do not use system clipboard
+opt.clipboard = ""
+
