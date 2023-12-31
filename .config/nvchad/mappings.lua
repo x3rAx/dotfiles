@@ -55,14 +55,15 @@ M.save_file = {
     i = { ["<C-s>"] = { function() vim.cmd("update") end, "Save file" } },
 }
 
-M.undo = {
-    n = { ["<C-z>"] = { function() vim.cmd("undo") end, "Undo" } },
-    i = { ["<C-z>"] = { function() vim.cmd("undo") end, "Undo" } },
-}
-
-M.redo = {
-    n = { ["<C-S-z>"] = { function() vim.cmd("redo") end, "Redo" } },
-    i = { ["<C-S-z>"] = { function() vim.cmd("redo") end, "Redo" } },
+M.undo_redo = {
+    n = {
+        ["<C-z>"] = { function() vim.cmd("undo") end, "Undo" },
+        ["<C-S-z>"] = { function() vim.cmd("redo") end, "Redo" }
+    },
+    i = {
+        ["<C-z>"] = { function() vim.cmd("undo") end, "Undo" },
+        ["<C-S-z>"] = { function() vim.cmd("redo") end, "Redo" }
+    },
 }
 
 M.copy = {
