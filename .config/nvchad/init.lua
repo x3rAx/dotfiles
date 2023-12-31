@@ -34,3 +34,6 @@ vim.cmd [[ command! -nargs=0 CD :cd %:p:h ]]
 -- Do not use system clipboard
 opt.clipboard = ""
 
+-- Fix NvChad status line
+vim.cmd [[ command! -nargs=0 FixNvChadStatusLine :set statusline=%!v:lua.require('nvchad.statusline.default').run() ]]
+
