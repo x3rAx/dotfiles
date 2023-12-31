@@ -75,7 +75,10 @@ M.background = {
 }
 
 M.quit = {
-    n = { ["<C-q>"] = { function() vim.cmd("qa!") end, "Force close vim" } },
+    n = {
+        ["<C-q>"] = { function() vim.cmd("qa!") end, "Force close vim" },
+        ["<leader>q"] = { function() vim.cmd("q") end, "Close current window" },
+    },
 }
 
 return M
