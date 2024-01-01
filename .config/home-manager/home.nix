@@ -181,7 +181,9 @@ in
     #package = unstable.neovim-unwrapped;
 
     extraPackages = with pkgs; [
+      #nixd # Nix LS - Links to official Nix library and should also have support for home-manager bug I couldn't get it to work
       gnumake gcc # Required to build telescope-fzf-native plugin # TODO: Try to install through home-manager?
+      nil # Nix LS - Supports home-manager out of the box
       nodePackages.vim-language-server # Vimscript LS
       nodejs # Copilot
       sumneko-lua-language-server # Lua LS
