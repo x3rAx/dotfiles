@@ -210,6 +210,17 @@ local plugins = {
         "mfussenegger/nvim-dap",
     },
 
+    -- Cargo Crates support
+    {
+        "saecki/crates.nvim",
+        ft = { "rust", "toml" },
+        config = function(_, opts)
+            local crates = require("crates")
+            crates.setup(opts)
+            crates.show() -- Show crates versions when opening a Cargo.toml file
+        end,
+    },
+
 }
 
 return plugins
