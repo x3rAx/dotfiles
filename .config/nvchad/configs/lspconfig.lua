@@ -5,6 +5,7 @@ local lspconfig = require("lspconfig")
 
 -- Servers to auto-setup
 local servers = {
+    "vimls", -- Vimscript
 }
 
 -- Auto-setup servers

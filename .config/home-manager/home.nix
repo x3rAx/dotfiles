@@ -186,6 +186,7 @@ in
       tree-sitter # For nvim-treesitter command `:TSInstallFromGrammar`
       sumneko-lua-language-server # Lua LS
       unixtools.xxd # `xxd` for Hex extension
+      nodePackages.vim-language-server # Vimscript LS
     ];
 
     plugins = with pkgs.vimPlugins; [
