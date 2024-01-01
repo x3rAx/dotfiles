@@ -182,11 +182,11 @@ in
 
     extraPackages = with pkgs; [
       gnumake gcc # Required to build telescope-fzf-native plugin # TODO: Try to install through home-manager?
-      nodejs # Copilot
-      tree-sitter # For nvim-treesitter command `:TSInstallFromGrammar`
-      sumneko-lua-language-server # Lua LS
-      unixtools.xxd # `xxd` for Hex extension
       nodePackages.vim-language-server # Vimscript LS
+      nodejs # Copilot
+      sumneko-lua-language-server # Lua LS
+      tree-sitter # For nvim-treesitter command `:TSInstallFromGrammar`
+      unixtools.xxd # `xxd` for Hex extension
     ];
 
     plugins = with pkgs.vimPlugins; [
