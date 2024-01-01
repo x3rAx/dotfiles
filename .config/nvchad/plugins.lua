@@ -193,7 +193,22 @@ local plugins = {
         init = function()
             vim.g.rustfmt_autosave = 1
         end,
-    }
+    },
+
+    -- Rust tools - a lot of useful tools for Rust development (including debugging)
+    {
+        "simrat39/rust-tools.nvim",
+        dependencies = { "neovim/nvim-lspconfig" },
+        ft = { "rust" },
+        opts = function()
+            return require "custom.configs.rust-tools"
+        end,
+    },
+
+    -- DAP - Debugging adapter protocol
+    {
+        "mfussenegger/nvim-dap",
+    },
 
 }
 

@@ -18,21 +18,4 @@ for _, lsp in ipairs(servers) do
     }
 end
 
--- Rust
-lspconfig.rust_analyzer.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-    -- filetypes = { "rust" },
-    -- root_dir = root_pattern("Cargo.toml"),
-    settings = {
-        ["rust-analyzer"] = {
-            -- checkOnSave = {
-            --     command = "clippy",
-            -- },
-            cargo = {
-                allFeatures = true, -- Help with auto-completion on cargo crates
-            },
-        },
-    },
-}
 

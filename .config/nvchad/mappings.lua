@@ -81,4 +81,21 @@ M.quit = {
     },
 }
 
+M.dap = {
+    n = {
+        ["<leader>db"] = { "<cmd> DapToggleBreakpoint <CR>", "Toggle breakpoint" },
+        ["<leader>dus"] = {
+            function()
+                local widgets = require("dap.ui.widgets")
+                local sidebar = widgets.sidebar(widgets.scopes)
+                sidebar.open()
+            end,
+           "Open debugging sidebar"
+        },
+        ["<leader>dC"] = { function() require('dap').continue() end, "Continue" },
+        ["<leader>ds"] = { function() require('dap').step_over() end, "Step over" },
+        ["<leader>dr"] = { function() require('dap').repl.open() end, "Open REPL" },
+    },
+}
+
 return M
