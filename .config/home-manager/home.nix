@@ -186,6 +186,7 @@ in
       nil # Nix LS - Supports home-manager out of the box
       nodePackages.vim-language-server # Vimscript LS
       nodejs # Copilot
+      rust-analyzer # Rust LS
       sumneko-lua-language-server # Lua LS
       tree-sitter # For nvim-treesitter command `:TSInstallFromGrammar`
       unixtools.xxd # `xxd` for Hex extension
