@@ -179,11 +179,10 @@ local plugins = {
 
     -- Language Server Config
     {
-       "neovim/nvim-lspconfig",
-       config = function()
-           require "plugins.configs.lspconfig"
-           require "custom.configs.lspconfig"
-       end
+        "neovim/nvim-lspconfig",
+        config = function()
+            require "custom.configs.lspconfig"
+        end,
     },
 
     -- Rust support (e.g. auto-foramtting)
