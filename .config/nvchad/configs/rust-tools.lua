@@ -1,5 +1,5 @@
-local on_attach = require("plugins.configs.lspconfig").on_attach
-local capabilities = require("plugins.configs.lspconfig").capabilities
+local on_attach = require("custom.configs.lspconfig").on_attach
+local capabilities = require("custom.configs.lspconfig").capabilities
 
 local options = {
     -- Configure LSP server (rust-analyzer)
