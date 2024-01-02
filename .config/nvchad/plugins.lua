@@ -229,6 +229,33 @@ local plugins = {
         end,
     },
 
+    {
+        "SmiteshP/nvim-navic",
+        dependencies = {
+            "neovim/nvim-lspconfig",
+            "SmiteshP/nvim-navbuddy",
+        },
+        init = function()
+            vim.o.winbar = "%{%v:lua.require'custom.lib.navic'.get_location()%}"
+        end,
+        opts = function()
+            return require "custom.configs.navic"
+        end,
+    },
+
+    {
+        "SmiteshP/nvim-navbuddy",
+        dependencies = {
+            "neovim/nvim-lspconfig",
+            "SmiteshP/nvim-navic",
+            "MunifTanjim/nui.nvim",
+            "numToStr/Comment.nvim",        -- Optional
+            "nvim-telescope/telescope.nvim" -- Optional
+        },
+        lazy = false,
+        opts = { lsp = { auto_attach = true } }
+    },
+
 }
 
 return plugins
