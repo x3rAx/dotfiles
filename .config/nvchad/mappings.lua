@@ -99,6 +99,7 @@ M.dap = {
 }
 
 M.crates = {
+    plugin = true,
     n = {
         -- Update crates
         ["<leader>rcu"] = { function() require('crates').update_all_crates() end, "Update all crates" },

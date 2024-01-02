@@ -214,6 +214,9 @@ local plugins = {
     {
         "saecki/crates.nvim",
         ft = { "rust", "toml" },
+        init = function()
+            require("core.utils").load_mappings "crates"
+        end,
         opts = function()
             return require "custom.configs.crates"
         end,
