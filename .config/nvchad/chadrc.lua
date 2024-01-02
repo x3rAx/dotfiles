@@ -1,9 +1,19 @@
+local colors = require 'custom.lib.colors'
+
 ---@type ChadrcConfig
 local M = {}
 
 M.ui = {
     theme = 'catppuccin',
     theme_toggle = { "catppuccin", "one_light" },
+
+    hl_override = {
+        DiagnosticError = { fg = colors.dimmed('#f38ba8', 0.5) },
+        DiagnosticWarn = { fg = colors.dimmed('#fae3b0', 0.5) },
+        DiagnosticInfo = { fg = colors.dimmed('LightBlue', 0.5) },
+        DiagnosticHint = { fg = colors.dimmed('#d0a9e5', 0.5) },
+        DiagnosticOk = { fg = colors.dimmed('LightGreen', 0.5) },
+    },
     hl_add = {
         -- Add custom highlighting to fix `vim-visual-multi` statusline
         TabLine = {
