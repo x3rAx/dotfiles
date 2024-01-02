@@ -214,6 +214,13 @@ local plugins = {
     {
         "saecki/crates.nvim",
         ft = { "rust", "toml" },
+        opts = {
+            src = {
+                cmp = {
+                    enabled = true,
+                },
+            },
+        },
         config = function(_, opts)
             local crates = require("crates")
             crates.setup(opts)

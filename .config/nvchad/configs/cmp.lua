@@ -19,4 +19,9 @@ options.mapping = vim.tbl_extend("force", options.mapping, {
 
 })
 
+-- Enable auto-completion for crates
+table.insert(options.sources, {
+    name = "crates",
+})
+
 return options
