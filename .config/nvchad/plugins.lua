@@ -255,6 +255,14 @@ local plugins = {
         opts = { lsp = { auto_attach = true } }
     },
 
+    -- File tree
+    {
+        "nvim-telescope/telescope.nvim",
+        opts = function()
+            return require "custom.configs.telescope"
+        end,
+    },
+
 }
 
 return plugins
