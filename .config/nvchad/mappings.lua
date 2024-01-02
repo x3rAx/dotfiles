@@ -115,4 +115,11 @@ M.crates = {
     },
 }
 
+M.copilot = {
+    i = {
+        ["<S-Tab>"] = { 'copilot#Accept("\\<CR>")', "Autocomplete",
+            opts = { expr = true, replace_keycodes = false } },
+    },
+}
+
 return M

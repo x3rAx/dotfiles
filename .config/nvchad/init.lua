@@ -7,7 +7,8 @@ local augroup = vim.api.nvim_create_augroup
 opt.relativenumber = true
 
 -- Copilot
-g.copilot_assume_mapped = true -- Fix copilot complaining about <Tab> key being mapped already
+--g.copilot_assume_mapped = true -- Stop copilot complaining about <Tab> key being mapped already
+g.copilot_no_tab_map = true -- Disable copilot's default <Tab> mapping
 
 -- Indenting
 local indent = 4
