@@ -4,6 +4,9 @@ local config = {
             enabled = true,
         },
     },
+    popup = {
+        autofocus = true,
+    },
 }
 
 return config

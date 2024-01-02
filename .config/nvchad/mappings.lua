@@ -100,12 +100,13 @@ M.dap = {
 
 M.crates = {
     n = {
-        ["<leader>rcu"] = {
-            function()
-                require("crates").update_all_crates()
-            end,
-            "Update all crates"
-        },
+        -- Update crates
+        ["<leader>rcu"] = { function() require('crates').update_all_crates() end, "Update all crates" },
+        -- Show popups
+        ["<leader>rcc"] = { function() require('crates').show_crate_popup() end, "Show crate popup" },
+        ["<leader>rcv"] = { function() require('crates').show_versions_popup() end, "Show versions popup" },
+        ["<leader>rcf"] = { function() require('crates').show_features_popup() end, "Show features popup" },
+        ["<leader>rcd"] = { function() require('crates').show_dependencies_popup() end, "Show dependencies popup" },
     },
 }
 
