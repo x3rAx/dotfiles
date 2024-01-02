@@ -213,7 +213,9 @@ local plugins = {
     -- Cargo Crates support
     {
         "saecki/crates.nvim",
-        ft = { "rust", "toml" },
+        tag = 'stable',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        event = { "BufRead Cargo.toml" },
         init = function()
             require("core.utils").load_mappings "crates"
         end,
