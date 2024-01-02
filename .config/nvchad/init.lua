@@ -38,3 +38,6 @@ opt.clipboard = ""
 -- Fix NvChad status line
 vim.cmd [[ command! -nargs=0 FixNvChadStatusLine :set statusline=%!v:lua.require('nvchad.statusline.default').run() ]]
 
+-- Autocomplete to the longes common match, then cycle through each full match
+opt.wildmode = { "longest:full", "full" }
+
