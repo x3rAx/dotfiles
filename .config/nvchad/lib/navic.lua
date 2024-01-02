@@ -1,8 +1,9 @@
 local M = {}
 
 local function prepend_buffer_name(data, bufnr)
-    -- TODO: handle bufnr
-    local buf_name = vim.fn.fnamemodify(vim.fn.bufname(), ':t')
+    bufnr = bufnr or vim.api.nvim_get_current_buf()
+
+    local buf_name = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ':t')
 
     if buf_name == '' then
         return
