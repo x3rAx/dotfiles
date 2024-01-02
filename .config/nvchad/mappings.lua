@@ -36,7 +36,10 @@ M.tabufline = {
             end,
             "Goto prev buffer",
         },
-    }
+        -- Close all but current buffer and keep cursor in place
+        -- (close all, reopen last buffer, close intermediate "[No Name]" buffer)
+        ["<leader><S-x>"] = { function() vim.cmd([[ %bd|e#|bd# ]]) end, "Close all but current buffer" },
+    },
 }
 
 M.telescope = {
