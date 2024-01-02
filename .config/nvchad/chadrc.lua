@@ -20,6 +20,7 @@ M.ui = {
             fg = "white",
             bg = "statusline_bg"
         },
+        NvimTreeGitStaged   = { fg = colors.color2hex('LightGreen') },
     },
 
     statusline = {
