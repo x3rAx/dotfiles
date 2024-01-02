@@ -6,22 +6,22 @@ options.mapping['<Tab>'] = nil
 options.mapping["<S-Tab>"] = nil
 options.mapping["<CR>"] = nil
 
-options.mapping = vim.tbl_extend("force", options.mapping, {
+options = vim.tbl_deep_extend("force", options, {
+    mappings = {
+        -- Close completion window
+        ["<S-Esc>"] = cmp.mapping.close(),
 
-    -- Close completion window
-    ["<S-Esc>"] = cmp.mapping.close(),
-
-    -- Accept completion
-    ["<Tab>"] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Insert,
-      select = true,
+        -- Accept completion
+        ["<Tab>"] = cmp.mapping.confirm {
+            behavior = cmp.ConfirmBehavior.Insert,
+            select = true,
+        },
     },
 
+    sources = vim.list_extend(options.sources, {
+        { name = "crates" } -- Enable auto-completion for crates
+    }),
 })
 
--- Enable auto-completion for crates
-table.insert(options.sources, {
-    name = "crates",
-})
 
 return options
