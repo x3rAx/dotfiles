@@ -33,11 +33,27 @@ local function hex2dec(hex)
     return tonumber(hex, 16)
 end
 
+local function splitHexColor(color)
+    if color:len() == 4 then
+        local r, g, b = color:match("^#(%x)(%x)(%x)$")
+        return r, g, b
+    end
+    local r, g, b = color:match("^#(%x%x)(%x%x)(%x%x)$")
+    return r, g, b
+end
+
+function M.color2hex(color)
+    if colorMap[color] then
+        color = colorMap[color]
+    end
+    return color
+end
+
 function M.color2rgb(color)
     if colorMap[color] then
         color = colorMap[color]
     end
-    local r, g, b = color:match("^#(%x%x)(%x%x)(%x%x)$")
+    local r, g, b = splitHexColor(color)
     return hex2dec(r), hex2dec(g), hex2dec(b)
 end
 
