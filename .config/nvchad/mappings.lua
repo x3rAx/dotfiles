@@ -122,4 +122,10 @@ M.copilot = {
     },
 }
 
+M.lspconfig = {
+    n = {
+        ["<leader>."] = { function() vim.lsp.buf.code_action() end, "LSP code action" },
+    },
+}
+
 return M
