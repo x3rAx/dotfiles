@@ -74,15 +74,25 @@ if [[ -z $_address ]]; then
     exit $_ERR_USAGE
 fi
 
+_color_support=false
+if [[ -t 1 && -n $(tput colors) ]]; then
+    _color_support=true
+fi
+
 function main() {
     last_addr=""
 
     for ((i=1; _max_hops==0 || i<=_max_hops; i++)); do
         response="$(ping -t"$i" -c1 -w"${_timeout}" "$_address" || true)"
         if [[ $_verbose == true ]]; then
-            # Echo response with gray fg color
             echo ''
-            echo -e "\e[90m$response\e[0m"
+            if [[ $_color_support == true ]]; then
+                echo -n "$(tput setaf 8)"
+            fi
+            echo "$response"
+            if [[ $_color_support == true ]]; then
+                echo -n "$(tput sgr0)"
+            fi
         fi
         addr="$(
             echo "$response" \
