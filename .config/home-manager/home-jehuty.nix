@@ -1,6 +1,36 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, mkUnstable, ... }:
 
-{
+let
+  nixpkgs-config = {
+    permittedInsecurePackages = [
+      "electron-23.3.13" # For super-productivity
+      "electron-25.9.0" # For obsidian
+    ];
+    allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+      "teamspeak-client"
+      "phpstorm"
+      "burpsuite" "burpsuite-2023.5.3"
+      "obsidian"
+      # "electron-25.9.0" # For Obsidian
+    ];
+  };
+  unstable = mkUnstable { config = nixpkgs-config; };
+
+in {
+  imports = [
+    #./home-env-packages.nix
+  ];
+
+
+  nixpkgs.config = nixpkgs-config; nixpkgs.overlays = [
+    # TODO: Remove when super-productivity works again
+    (self: super: {
+      super-productivity = super.super-productivity.override {
+        electron = pkgs.electron_23;
+      };
+    })
+  ];
+
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "x3ro";
@@ -8,7 +38,7 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = [
+  home.packages = with pkgs; [
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -25,6 +55,61 @@
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
+
+    python3Packages.openrazer
+    python3Packages.pystray
+    python3Packages.pillow
+    libappindicator
+    lolcat
+    teamspeak_client
+    p7zip
+    nerdfonts
+    zoxide
+    unstable.just
+    neovide
+    unstable.jetbrains.phpstorm
+    #ungoogled-chromium
+    duf
+    udiskie
+    handlr
+    fx
+    burpsuite
+    curlie
+    inkscape
+    unstable.nushell
+    eww-wayland
+    nerdfonts
+    hurl
+    unstable.minio-client
+    #(pkgs.nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+    #netavark
+    unstable.thunderbird-bin
+    super-productivity
+    yq-go # `jq` for Yaml
+    anki
+    brave
+    cpulimit
+    lazygit
+    remmina
+    unstable.obsidian
+    insomnia # Postman alternative
+    bruno # Postman alternative (plain text request files)
+    distrobox
+    bat-extras.batman
+
+    ## Pipewire
+    pipecontrol
+    pipectl
+    wireplumber
+    #carla # Audio plugin host
+
+    (copyq.overrideAttrs (oldAttrs: {
+      buildInputs = oldAttrs.buildInputs or [] ++ [ ydotool grim slurp ];
+      postInstall = oldAttrs.postInstall or "" + ''
+        wrapProgram $out/bin/copyq \
+          --set QT_QPA_PLATFORM xcb
+      '';
+    }))
   ];
 
   # Home Manager can also manage your environment variables through
@@ -56,6 +141,131 @@
     #   org.gradle.daemon.idletimeout=3600000
     # '';
   };
+
+  programs.neovim = {
+    enable = true;
+
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+
+    # Use latest neovim
+    #package = unstable.neovim-unwrapped;
+
+    extraPackages = with pkgs; [
+      #nixd # Nix LS - Links to official Nix library and should also have support for home-manager bug I couldn't get it to work
+      gnumake gcc # Required to build telescope-fzf-native plugin # TODO: Try to install through home-manager?
+      lldb # For rust debugging
+      nil # Nix LS - Supports home-manager out of the box
+      nodePackages.vim-language-server # Vimscript LS
+      nodejs # Copilot
+      rust-analyzer # Rust LS
+      sumneko-lua-language-server # Lua LS
+      tree-sitter # For nvim-treesitter command `:TSInstallFromGrammar`
+      unixtools.xxd # `xxd` for Hex extension
+      #rnix-lsp
+    ];
+
+    plugins = with pkgs.vimPlugins; [
+      #telescope-fzf-native-nvim # Adding this here does not prevent lazy.nvim to build it anywaus...
+      #parinfer-rust # TODO: maybe this must be `pkgs.parinfer` (without `vimPlugins`)?
+      #lazy-nvim
+      #nvim-tree-lua
+      #{
+      #  plugin = pkgs.vimPlugins.vim-startify;
+      #  config = "let g:startify_change_to_vcs_root = 0";
+      #}
+      # coc-sumneko-lua # Lua language server
+    ];
+  };
+
+  programs.script-directory = {
+    enable = true;
+    settings = {
+      SD_ROOT = "${config.home.homeDirectory}/.sd";
+      #SD_EDITOR = "nvim";
+      #SD_CAT = "lolcat";
+    };
+  };
+
+  # Enable `virsh` to access the local machines
+  xdg.configFile."libvirt/libvirt.conf".text = ''
+    uri_default = "qemu:///system"
+  '';
+
+  dconf.settings = with lib.hm.gvariant; {
+    "org/gnome/mutter" = {
+      experimental-features = [
+        "scale-monitor-framebuffer" # Wayland: Allow display scaling in smaller steps than 100% / 200%
+        #"x11-randr-fractional-scaling" # X11 fractional scaling - didn't work
+      ];
+      attach-modal-dialogs = false; # Do not move the parent window when moving a modal window
+    };
+    "org/gnome/desktop/peripherals/keyboard" = {
+      repeat-interval = mkUint32 25;
+      delay = lib.hm.gvariant.mkUint32 200;
+      numlock-state = true;
+    };
+    "org/gnome/desktop/input-sources" = {
+      show-all-sources = true; # To make EurKey work in Gnome
+    };
+    "org/gnome/desktop/wm/preferences" = {
+      resize-with-right-button = true; # Resize windows with right mouse button
+      mouse-button-modifier = "<Super>"; # Window resize modifier key
+    };
+    "org/gnome/desktop/peripherals/touchpad" = {
+      speed = 0.2; # [-1; 1]
+    };
+    "org/gnome/desktop/wm/keybindings" = {
+      switch-windows               = mkArray type.string [ "<Alt>Tab" ];
+      switch-windows-backward      = mkArray type.string [ "<Shift><Alt>Tab" ];
+      switch-applications          = mkArray type.string [ "<Super>Tab" ];
+      switch-applications-backward = mkArray type.string [ "<Shift><Super>Tab" ];
+      switch-group                 = mkArray type.string [ "<Super>Escape" ];
+      switch-group-backward        = mkArray type.string [ "<Super><Alt>Escape" ];
+
+      switch-to-workspace-1  = mkArray type.string [ "<Super>1" ];
+      switch-to-workspace-2  = mkArray type.string [ "<Super>2" ];
+      switch-to-workspace-3  = mkArray type.string [ "<Super>3" ];
+      switch-to-workspace-4  = mkArray type.string [ "<Super>4" ];
+      switch-to-workspace-5  = mkArray type.string [ "<Super>5" ];
+      switch-to-workspace-6  = mkArray type.string [ "<Super>6" ];
+      switch-to-workspace-7  = mkArray type.string [ "<Super>7" ];
+      switch-to-workspace-8  = mkArray type.string [ "<Super>8" ];
+      switch-to-workspace-9  = mkArray type.string [ "<Super>9" ];
+      switch-to-workspace-10 = mkArray type.string [ "<Super>0" ];
+
+      move-to-workspace-1 = mkArray type.string [ "<Shift><Super>1" ];
+      move-to-workspace-2 = mkArray type.string [ "<Shift><Super>2" ];
+      move-to-workspace-3 = mkArray type.string [ "<Shift><Super>3" ];
+      move-to-workspace-4 = mkArray type.string [ "<Shift><Super>4" ];
+      move-to-workspace-5 = mkArray type.string [ "<Shift><Super>5" ];
+      move-to-workspace-6 = mkArray type.string [ "<Shift><Super>6" ];
+      move-to-workspace-7 = mkArray type.string [ "<Shift><Super>7" ];
+      move-to-workspace-8 = mkArray type.string [ "<Shift><Super>8" ];
+      move-to-workspace-9 = mkArray type.string [ "<Shift><Super>9" ];
+      move-to-workspace-10 = mkArray type.string [ "<Shift><Super>0" ];
+    };
+    "org/gnome/shell/keybindings" = {
+      switch-to-application-1 = mkArray type.string [ ];
+      switch-to-application-2 = mkArray type.string [ ];
+      switch-to-application-3 = mkArray type.string [ ];
+      switch-to-application-4 = mkArray type.string [ ];
+      switch-to-application-5 = mkArray type.string [ ];
+      switch-to-application-6 = mkArray type.string [ ];
+      switch-to-application-7 = mkArray type.string [ ];
+      switch-to-application-8 = mkArray type.string [ ];
+      switch-to-application-9 = mkArray type.string [ ];
+      switch-to-application-10 = mkArray type.string [ ];
+    };
+    "org/gnome/mutter/keybindings" = {
+      switch-monitor = mkArray type.string [ "<Alt><Super>p" ];
+    };
+  };
+
+  # TODO: Do I need this?
+  #fonts.fontconfig.enable = true; # For nerdfonts?
+  #services.copyq.enable = true;
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
