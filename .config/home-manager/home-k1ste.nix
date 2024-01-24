@@ -17,6 +17,7 @@ let
 in
 {
   imports = [
+    ./modules/nvim.nix
     ./overlays
   ];
 
@@ -168,33 +169,6 @@ in
     "libvirt/libvirt.conf".text = ''
       uri_default = "qemu:///system"
     '';
-  };
-
-  programs.neovim = {
-    enable = true;
-
-    viAlias = true;
-    vimAlias = true;
-    vimdiffAlias = true;
-
-    # Use latest neovim
-    #package = unstable.neovim-unwrapped;
-
-    extraPackages = with pkgs; [
-      #nixd # Nix LS - Links to official Nix library and should also have support for home-manager bug I couldn't get it to work
-      gnumake gcc # Required to build telescope-fzf-native plugin # TODO: Try to install through home-manager?
-      lldb # For rust debugging
-      nil # Nix LS - Supports home-manager out of the box
-      nodePackages.vim-language-server # Vimscript LS
-      nodejs # Copilot
-      rust-analyzer # Rust LS
-      sumneko-lua-language-server # Lua LS
-      tree-sitter # For nvim-treesitter command `:TSInstallFromGrammar`
-      unixtools.xxd # `xxd` for Hex extension
-    ];
-
-    plugins = with pkgs.vimPlugins; [
-    ];
   };
 
   programs.vscode = {
