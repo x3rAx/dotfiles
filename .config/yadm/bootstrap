@@ -145,23 +145,6 @@ fi
 task --done
 
 
-task --print "Install NvChad"
-if ! git -C ~/.config/nvim remote -v 2>/dev/null | grep -q $'origin\thttps://github.com/NvChad/NvChad (fetch)'; then
-    task --print
-
-    backup-mv ~/.config/nvim
-    backup-mv ~/.local/share/nvim
-    backup-mv ~/.local/state/nvim
-    backup-mv ~/.cache/nvim
-    
-    git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
-    ln -sr ~/.config/nvchad ~/.config/nvim/lua/custom
-
-    notify "NvChad has been installed. Open nvim to install packages."
-fi
-task --done
-
-
 task --print "Install Firefox userChrome.css link"
 if [[ -f ~/.mozilla/firefox/profiles.ini ]]; then
     "${_SCRIPT_DIR}/scripts/create-firefox-userchrome-link.py" "${_SCRIPT_DIR}/files/userChrome.css" ~/.mozilla/firefox/profiles.ini
