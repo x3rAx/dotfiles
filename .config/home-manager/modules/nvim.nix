@@ -31,6 +31,9 @@ in {
       #sumneko-lua-language-server # Lua LS
       #tree-sitter # For nvim-treesitter command `:TSInstallFromGrammar`
       #unixtools.xxd # `xxd` for Hex extension
+      gcc # For nvim-treesitter
+      stylua # Opinionated Lua code formatter
+      sumneko-lua-language-server # Lua LS
     ];
 
     plugins = with pkgs.vimPlugins; [
