@@ -17,3 +17,6 @@ opt.softtabstop = indent
 
 --- Hint to help limit line length
 opt.colorcolumn = "80,100,120,121"
+
+--- Show more lines below / above cursor when reaching window border
+opt.scrolloff = 10
