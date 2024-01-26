@@ -4,13 +4,17 @@ let
   nixpkgs-config = { };
   unstable = mkUnstable { config = nixpkgs-config; };
 
+  nvim-ld-libraries = with pkgs; [
+    zlib
+  ];
   nvim-ld = pkgs.symlinkJoin {
     name = "nvim-ld";
     paths = [ pkgs.neovim-unwrapped ];
     nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
     postBuild = ''
       wrapProgram "$out/bin/nvim" \
-        --set NIX_LD `cat '${pkgs.stdenv.cc}/nix-support/dynamic-linker'`
+        --set NIX_LD `cat '${pkgs.stdenv.cc}/nix-support/dynamic-linker'` \
+        --set NIX_LD_LIBRARY_PATH '${lib.makeLibraryPath nvim-ld-libraries}'
     '';
   };
 in {
