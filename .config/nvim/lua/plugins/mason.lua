@@ -3,13 +3,10 @@ return {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       -- Add more tools to install
-      local ensure_installed = {
-      }
+      local ensure_installed = {}
 
       -- Specify tools that should not be installed through Mason
-      local prevent_install = {
-        "stylua", -- Installed through home-manager
-      }
+      local prevent_install = {}
 
       -- Merge ensure_installed lists
       vim.list_extend(opts.ensure_installed, ensure_installed)

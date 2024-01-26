@@ -3,6 +3,16 @@
 let
   nixpkgs-config = { };
   unstable = mkUnstable { config = nixpkgs-config; };
+
+  nvim-ld = pkgs.symlinkJoin {
+    name = "nvim-ld";
+    paths = [ pkgs.neovim-unwrapped ];
+    nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+    postBuild = ''
+      wrapProgram "$out/bin/nvim" \
+        --set NIX_LD `cat '${pkgs.stdenv.cc}/nix-support/dynamic-linker'`
+    '';
+  };
 in {
   programs.neovim = {
     enable = true;
@@ -13,6 +23,7 @@ in {
 
     # Use latest neovim
     #package = unstable.neovim-unwrapped;
+    package = nvim-ld;
 
     extraPackages = with pkgs; [
       #nixd # Nix LS - Links to official Nix library and should also have support for home-manager bug I couldn't get it to work
@@ -31,9 +42,8 @@ in {
       #sumneko-lua-language-server # Lua LS
       #tree-sitter # For nvim-treesitter command `:TSInstallFromGrammar`
       #unixtools.xxd # `xxd` for Hex extension
+      #stylua # Opinionated Lua code formatter
       gcc # For nvim-treesitter
-      stylua # Opinionated Lua code formatter
-      sumneko-lua-language-server # Lua LS
     ];
 
     plugins = with pkgs.vimPlugins; [
