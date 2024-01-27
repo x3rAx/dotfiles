@@ -5,6 +5,8 @@ let
   unstable = mkUnstable { config = nixpkgs-config; };
 
   nvim-ld-libraries = with pkgs; [
+    stdenv.cc.cc.lib
+    icu
     zlib
   ];
   nvim-ld = pkgs.symlinkJoin {
