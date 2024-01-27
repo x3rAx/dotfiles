@@ -3,9 +3,10 @@ return {
   --- Disable default <tab> and <s-tab> behavior in LuaSnip
   {
     "L3MON4D3/LuaSnip",
-    keys = function()
-      return {}
-    end,
+    keys = {
+      { "<Tab>", false },
+      { "<S-Tab>", false },
+    },
   },
 
   --- Setup supertab in cmp
@@ -48,6 +49,8 @@ return {
 
           fallback()
         end, { "i", "s" }),
+
+        ["<CR>"] = nil, -- Disable accept completion with <CR>
 
         ["<S-Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
