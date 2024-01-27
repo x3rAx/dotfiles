@@ -2,6 +2,9 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+-- This file is automatically loaded by lazyvim.config.init
+local Util = require("lazyvim.util")
+
 local map = vim.keymap.set
 
 --- Undo / Redo
@@ -22,3 +25,10 @@ map({ "n" }, "<leader>Q", "<C-W>c", { desc = "Delete Window" })
 --- Comments
 map({ "n" }, "<c-/>", "gcc", { desc = "Comment line", remap = true })
 map({ "v" }, "<c-/>", "gc", { desc = "Comment selected lines", remap = true })
+
+--- Floating Terminal
+local lazyterm = function()
+  Util.terminal(nil, { cwd = Util.root() })
+end
+map("n", "<m-`>", lazyterm, { desc = "Terminal (root dir)" })
+map("t", "<m-`>", "<cmd>close<cr>", { desc = "Hide Terminal" })
