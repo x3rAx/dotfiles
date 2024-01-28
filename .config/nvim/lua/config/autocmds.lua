@@ -28,3 +28,33 @@ vim.api.nvim_create_autocmd("BufReadPost", {
     end
   end,
 })
+
+--- Change directory if a directory is provided as an argument to nvim
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = augroup("change_dir"),
+  pattern = "*",
+  callback = function()
+    local args = vim.v.argv
+    if #args < 1 then
+      return
+    end
+
+    -- Find the first positional argument
+    local dir = nil
+    local stop_parsing = false
+    for _, arg in ipairs(args) do
+      if arg == "--" then
+        stop_parsing = true
+        break
+      end
+      if (stop_parsing or arg:sub(1, 1) ~= "-") and vim.fn.isdirectory(arg) == 1 then
+        dir = arg
+        break
+      end
+    end
+
+    if dir then
+      vim.cmd("cd " .. dir)
+    end
+  end,
+})
