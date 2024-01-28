@@ -1,4 +1,3 @@
--- TODO: Integrate into statusline
 return {
   {
     "mg979/vim-visual-multi",
@@ -15,4 +14,26 @@ return {
       }
     end,
   },
+
+  -- TODO: This is a proof of concept. Now the lualine config has to be extended.
+  --{
+  --  "nvim-lualine/lualine.nvim",
+  --  opts = function(_, opts)
+  --    return {
+  --      sections = {
+  --        lualine_a = {
+  --          {
+  --            "mode",
+  --            fmt = function(res)
+  --              if vim.fn.VMInfos and not vim.tbl_isempty(vim.fn.VMInfos()) then
+  --                return "MULTI"
+  --              end
+  --              return res
+  --            end,
+  --          },
+  --        },
+  --      },
+  --    }
+  --  end,
+  --},
 }
