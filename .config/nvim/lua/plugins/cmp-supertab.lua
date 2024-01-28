@@ -28,6 +28,8 @@ return {
       local cmp = require("cmp")
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
+        ["<CR>"] = cmp.config.disable, -- Disable accept completion with <CR>
+
         -- Tab accepts completion if the popup is visible,
         -- otherwise it jumps to the next snippet placeholder.
         ["<Tab>"] = cmp.mapping(function(fallback)
@@ -49,8 +51,6 @@ return {
 
           fallback()
         end, { "i", "s" }),
-
-        ["<CR>"] = nil, -- Disable accept completion with <CR>
 
         ["<S-Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
