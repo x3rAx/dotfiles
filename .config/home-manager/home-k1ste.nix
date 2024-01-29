@@ -18,6 +18,7 @@ in
 {
   imports = [
     ./modules/nvim.nix
+    ./modules/gamemode-config.nix
     ./overlays
   ];
 
