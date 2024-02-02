@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 SCRIPT="$(realpath "$0")"
 SCRIPT_DIR="$(dirname "$SCRIPT")"
@@ -49,6 +49,13 @@ pkill unclutter; unclutter & # install `unclutter-xfixes`
 
 # Other Autostart Apps
 ( sleep 3 && "${BSPWM_DIR}/autostart.sh"; ) &
+
+
+
+
+# --- Restart user services that need access to the X server ---
+systemctl --user restart \
+    gamemoded
 
 
 

@@ -15,7 +15,10 @@ let
         ${pkgs.libnotify}/bin/notify-send "GameMode ended"
 
         # TODO: Find a way to use the same picom version as the one installed
-        #       by the system config
+        #       by the system config. Maybe by using a systemd user service?
+        #       In that case, remember to restart the service upon login to
+        #       give it access to the Xauthority file.
+        #       Then stop and start the service from the hook scripts.
         ${pkgs.picom-next}/bin/picom
     '';
 
