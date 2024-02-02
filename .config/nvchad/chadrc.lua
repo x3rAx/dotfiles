@@ -13,6 +13,7 @@ M.ui = {
         DiagnosticInfo = { fg = colors.dimmed('LightBlue', 0.5) },
         DiagnosticHint = { fg = colors.dimmed('#d0a9e5', 0.5) },
         DiagnosticOk = { fg = colors.dimmed('LightGreen', 0.5) },
+
     },
     hl_add = {
         -- Add custom highlighting to fix `vim-visual-multi` statusline
@@ -20,7 +21,15 @@ M.ui = {
             fg = "white",
             bg = "statusline_bg"
         },
+
+        -- NvimTreeGitNew      = { fg = 'LightGreen' },
+        -- NvimTreeGitDirty    = { fg = 'LightGreen' },
+        -- NvimTreeGitMerge    = { fg = 'LightGreen' },
+        -- NvimTreeGitStaged   = { fg = colors.color2hex('LightGreen') },
         NvimTreeGitStaged   = { fg = colors.color2hex('LightGreen') },
+        -- NvimTreeGitDeleted  = { fg = 'LightGreen' },
+        -- NvimTreeGitIgnored  = { fg = 'LightGreen' },
+        -- NvimTreeGitRenamed  = { fg = 'LightGreen' },
     },
 
     statusline = {
