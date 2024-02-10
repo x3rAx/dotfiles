@@ -5,8 +5,8 @@ let
   unstable = mkUnstable { config = nixpkgs-config; };
 
   nvim-ld-libraries = with pkgs; [
-    stdenv.cc.cc.lib
     icu
+    stdenv.cc.cc.lib
     zlib
   ];
   nvim-ld = pkgs.symlinkJoin {
@@ -33,6 +33,7 @@ in {
 
     extraPackages = with pkgs; [
         gcc # For nvim-treesitter
+        rust-analyzer cargo # For Rust support; `rust-analyzer` is not installed by Mason since it does not play well with `cargo` installed through Nix
     ];
 
     plugins = with pkgs.vimPlugins; [
