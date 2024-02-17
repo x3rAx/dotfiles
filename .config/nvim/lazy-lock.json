@@ -64,6 +64,7 @@
   "telescope.nvim": { "branch": "master", "commit": "0f865f17af4f9bc1587a0132414cdfd32d91852e" },
   "todo-comments.nvim": { "branch": "main", "commit": "833d8dd8b07eeda37a09e99460f72a02616935cb" },
   "tokyonight.nvim": { "branch": "main", "commit": "610179f7f12db3d08540b6cc61434db2eaecbcff" },
+  "tree-sitter-nu": { "branch": "main", "commit": "7dd29f9616822e5fc259f5b4ae6c4ded9a71a132" },
   "trouble.nvim": { "branch": "main", "commit": "f1168feada93c0154ede4d1fe9183bf69bac54ea" },
   "typst.vim": { "branch": "main", "commit": "e28d440c7ba4df2516d7d7f908c4fb664a8cf86c" },
   "venv-selector.nvim": { "branch": "main", "commit": "fcb30164f2c4f8a34a305ead3247954a1fd8634f" },
