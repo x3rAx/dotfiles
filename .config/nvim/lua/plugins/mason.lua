@@ -27,6 +27,7 @@ return {
     opts = {
       servers = {
         rust_analyzer = { mason = false }, -- Installed through home-manager; Does not play well with `cargo` installed through Nix
+        clangd = { mason = false }, -- Installed through home-manager
       },
     },
   },

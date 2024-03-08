@@ -32,6 +32,7 @@ in {
     package = nvim-ld;
 
     extraPackages = with pkgs; [
+        clang clang-tools
         gcc # For nvim-treesitter
         rust-analyzer cargo # For Rust support; `rust-analyzer` is not installed by Mason since it does not play well with `cargo` installed through Nix
     ];
