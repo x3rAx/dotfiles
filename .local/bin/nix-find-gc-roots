@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# ORIGINAL: https://github.com/colonelpanic8/dotfiles/blob/00cfd236ab933db37306796080b3c7cc35a02ffe/dotfiles/lib/functions/find_store_path_gc_roots
 
 # This lists all symlinks pointing to gcroots in the given store path.
 # It will also automatically remove gcroots if they are no longer referenced.
@@ -16,6 +17,5 @@ sudo nix-store --gc --print-roots |
 
 		nix-store -qR "$derivation" |
 			grep -q "/nix/store" &&
-			echo "$gcroot" ||
-			echo .
+			echo "$gcroot"
 	done
