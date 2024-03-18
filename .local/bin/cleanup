@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# TIP: Use `nix-find-gc-roots` to identify gcroots that can be removed
+
+set -x
+
+#home-manager expire-generations '-30 days'
+
+sudo nix-trim-generations 30 30 system
+nix-trim-generations 30 30 user
+nix-trim-generations 30 30 home-manager
+nix-trim-generations 30 30 channels
+
+nix-collect-garbage
