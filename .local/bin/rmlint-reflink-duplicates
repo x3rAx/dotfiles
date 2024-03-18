@@ -1,15 +1,7 @@
 #!/usr/bin/env bash
 
-types=(
-	'defaults'
-	'-ef' # Do not delete empty files
-	'-ed' # Do not delete empty directories
-	'-bl' # Do not delete broken symlinks
-	'-bi' # Do not try to fix bad UID/GID
-)
-
-# `-c sh:link`   - create reflinks
-# `-T "<types>"` - The lint actions to perform
-# `-g`           - show progress bar instead of dumping all planned file
-#                  actions (use `-G` to not show progress bar)
-rmlint -c sh:link -T "${types[*]}" -g "$@"
+# `-c 'sh:handler=reflink'` - Create only reflinks, no hardlinks, no symlinks
+# `-T 'duplicates'`         - Only lint action is to find duplicates
+# `-g`                      - show progress bar instead of dumping all planned
+#                             file actions (use `-G` to not show progress bar)
+rmlint -c 'sh:handler=reflink' -T 'duplicates' -g "$@"
