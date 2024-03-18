@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# `-c sh:link` - create reflinks
+# `-T "defaults -ef -ed"` - ignore empty files (`-ef`) and directories (`-ed`)
+# `-g` - show progress bar instead of dumping all planned file actions (use `-G` to not show progress bar)
+rmlint -c sh:link -T "defaults -ef -ed" -g "$@"
