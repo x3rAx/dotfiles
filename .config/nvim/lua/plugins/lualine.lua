@@ -23,6 +23,26 @@ return {
           {
             "mode",
             icon = "",
+            separator = "",
+          },
+          -- Mode-Separator part 1 --
+          {
+            function()
+              return ""
+            end,
+            padding = 0,
+            separator = "",
+            color = get_mode_seperator_color("fg"),
+          },
+          -- Mode-Separator part 2 --
+          {
+            function()
+              return ""
+            end,
+            draw_empty = true,
+            padding = 0,
+            separator = { right = "" },
+            color = get_mode_seperator_color("bg"),
           },
         },
       },
