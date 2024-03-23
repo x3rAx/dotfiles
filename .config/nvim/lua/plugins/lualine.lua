@@ -17,6 +17,11 @@ return {
         --component_separators = { left = "", right = "" },
         --component_separators = { left = "", right = "" },
         component_separators = { left = "", right = "" },
+
+        disabled_filetypes = {
+          statusline = {},
+          winbar = { "neo-tree" },
+        },
       },
       sections = {
         lualine_a = {
@@ -46,6 +51,13 @@ return {
           },
         },
       },
+      winbar = {
+        lualine_b = { "filename" },
+      },
+      inactive_winbar = {
+        lualine_a = { "filename" },
+      },
+      ignore_focus = { "neo-tree" },
     },
   },
 }
