@@ -20,7 +20,9 @@ map({ "v" }, "<C-c>", '"+y', { desc = "Copy to system clipboard" })
 
 --- Close Buffer / Window
 map({ "n" }, "<leader>X", "<Space>bd", { desc = "Delete Buffer", remap = true })
+map({ "n" }, "zx", "<Space>bd", { desc = "Delete Buffer", remap = true })
 map({ "n" }, "<leader>Q", "<C-W>c", { desc = "Delete Window" })
+map({ "n" }, "zq", "<C-W>c", { desc = "Delete Window" })
 
 --- Comments
 map({ "n" }, "<c-/>", "gcc", { desc = "Comment line", remap = true })
