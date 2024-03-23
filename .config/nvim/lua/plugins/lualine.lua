@@ -20,7 +20,7 @@ return {
 
         disabled_filetypes = {
           statusline = {},
-          winbar = { "neo-tree" },
+          winbar = { "neo-tree", "dashboard" },
         },
       },
       sections = {
