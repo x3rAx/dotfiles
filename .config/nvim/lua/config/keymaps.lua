@@ -45,3 +45,7 @@ map("t", "<m-`>", "<cmd>close<cr>", { desc = "Hide Terminal" })
 -- NOTE: This must be a vimscript mapping because otherwise only the last
 --       `print` statement of the executed buffer is shown
 map({ "n" }, "<leader>rl", ':lua require("lib.exec-lua-buf")()<CR>', { desc = "Run current buffer with vim-lua" })
+
+-------------------------------------------------------------------------------
+--- Misc
+map({ "i" }, "<C-BS>", "<C-w>", { desc = "Delete word to the left" })
