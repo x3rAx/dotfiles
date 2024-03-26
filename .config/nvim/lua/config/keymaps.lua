@@ -7,6 +7,7 @@ local Util = require("lazyvim.util")
 
 local map = vim.keymap.set
 
+-------------------------------------------------------------------------------
 --- Undo / Redo
 map({ "n", "i" }, "<C-z>", function()
   vim.cmd("undo")
@@ -15,22 +16,32 @@ map({ "n", "i" }, "<C-S-z>", function()
   vim.cmd("redo")
 end, { desc = "Redo" })
 
+-------------------------------------------------------------------------------
 --- Copy to system clipboard
 map({ "v" }, "<C-c>", '"+y', { desc = "Copy to system clipboard" })
 
+-------------------------------------------------------------------------------
 --- Close Buffer / Window
 map({ "n" }, "<leader>X", "<Space>bd", { desc = "Delete Buffer", remap = true })
 map({ "n" }, "zx", "<Space>bd", { desc = "Delete Buffer", remap = true })
 map({ "n" }, "<leader>Q", "<C-W>c", { desc = "Delete Window" })
 map({ "n" }, "zq", "<C-W>c", { desc = "Delete Window" })
 
+-------------------------------------------------------------------------------
 --- Comments
 map({ "n" }, "<c-/>", "gcc", { desc = "Comment line", remap = true })
 map({ "v" }, "<c-/>", "gc", { desc = "Comment selected lines", remap = true })
 
+-------------------------------------------------------------------------------
 --- Floating Terminal
 local lazyterm = function()
   Util.terminal(nil, { cwd = Util.root() })
 end
 map("n", "<m-`>", lazyterm, { desc = "Terminal (root dir)" })
 map("t", "<m-`>", "<cmd>close<cr>", { desc = "Hide Terminal" })
+
+-------------------------------------------------------------------------------
+--- Run current buffer with vim-lua
+-- NOTE: This must be a vimscript mapping because otherwise only the last
+--       `print` statement of the executed buffer is shown
+map({ "n" }, "<leader>rl", ':lua require("lib.exec-lua-buf")()<CR>', { desc = "Run current buffer with vim-lua" })
