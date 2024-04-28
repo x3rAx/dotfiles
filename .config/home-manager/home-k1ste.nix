@@ -15,18 +15,30 @@ let
   };
   unstable = mkUnstable { config = nixpkgs-config; };
 
-  godot_4-libraries = with pkgs; [
+  godot-libraries = with pkgs; [
     stdenv.cc.cc.lib # For git support
   ];
-  godot_4-with-libs = pkgs.symlinkJoin {
-    name = "godot_4-with-libs";
-    paths = [ unstable.godot_4 ];
-    nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
-    postBuild = ''
-      wrapProgram "$out/bin/godot4" \
-        --set LD_LIBRARY_PATH '${lib.makeLibraryPath godot_4-libraries}'
-    '';
-  };
+  godot-with-libs =
+    let
+        godot-package = unstable.godot_4;
+    in
+      pkgs.symlinkJoin {
+        name = godot-package.name + "-with-libs";
+        paths = [ godot-package ];
+        nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+        postBuild = ''
+        wrapProgram "$out/bin/godot4" \
+          --set LD_LIBRARY_PATH '${lib.makeLibraryPath godot-libraries}'
+
+        cp --remove-destination \
+          $(readlink -f $out/share/applications/org.godotengine.Godot4.desktop) \
+          $out/share/applications/org.godotengine.Godot4.desktop
+        sed -i 's|^\(Name=.*\)|\1 (with libs)|g' \
+          $out/share/applications/org.godotengine.Godot4.desktop
+        sed -i "s|^Exec=[^[:space:]]*|Exec=$out/bin/godot4|g" \
+          $out/share/applications/org.godotengine.Godot4.desktop
+        '';
+      };
 in
 {
   imports = [
