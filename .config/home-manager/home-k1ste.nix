@@ -14,6 +14,19 @@ let
     ];
   };
   unstable = mkUnstable { config = nixpkgs-config; };
+
+  godot_4-libraries = with pkgs; [
+    stdenv.cc.cc.lib # For git support
+  ];
+  godot_4-with-libs = pkgs.symlinkJoin {
+    name = "godot_4-with-libs";
+    paths = [ unstable.godot_4 ];
+    nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+    postBuild = ''
+      wrapProgram "$out/bin/godot4" \
+        --set LD_LIBRARY_PATH '${lib.makeLibraryPath godot_4-libraries}'
+    '';
+  };
 in
 {
   imports = [
@@ -121,6 +134,7 @@ in
     xournalpp
     xsecurelock
     xss-lock
+    godot_4-with-libs
 
   ]) ++ (with unstable; [
 
