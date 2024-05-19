@@ -20,3 +20,6 @@ opt.colorcolumn = "80,100,120,121"
 
 --- Show more lines below / above cursor when reaching window border
 opt.scrolloff = 10
+
+--- Autocomplete to the longes common match, then cycle through each full match
+opt.wildmode = { "longest:full", "full" }
