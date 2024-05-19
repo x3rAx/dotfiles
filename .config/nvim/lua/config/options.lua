@@ -23,3 +23,9 @@ opt.scrolloff = 10
 
 --- Autocomplete to the longes common match, then cycle through each full match
 opt.wildmode = { "longest:full", "full" }
+
+-------------------------------------------------------------------------------
+--- Custom commands
+
+-- `CD` to change directory to current file
+vim.cmd([[ command! -nargs=0 CD :cd %:p:h ]])
