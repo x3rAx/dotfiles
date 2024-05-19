@@ -43,6 +43,13 @@ map("n", "<m-`>", lazyterm, { desc = "Terminal (root dir)" })
 map("t", "<m-`>", "<cmd>close<cr>", { desc = "Hide Terminal" })
 
 -------------------------------------------------------------------------------
+--- Show relative/absolute path of current file
+---
+map({ "n" }, "<leader>fp", function()
+  vim.notify("Relative: " .. vim.fn.expand("%") .. "\n" .. "Absolute: " .. vim.api.nvim_buf_get_name(0))
+end, { desc = "Show relative/absolute path" })
+
+-------------------------------------------------------------------------------
 --- Run current buffer with vim-lua
 ---
 -- NOTE: This must be a vimscript mapping because otherwise only the last
