@@ -11,7 +11,7 @@ let
   ];
   nvim-ld = pkgs.symlinkJoin {
     name = "nvim-ld";
-    paths = [ pkgs.neovim-unwrapped ];
+    paths = [ unstable.neovim-unwrapped ];
     nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
     postBuild = ''
       wrapProgram "$out/bin/nvim" \
