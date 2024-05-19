@@ -31,7 +31,7 @@ map({ "n" }, "ZX", "<leader>bd", { desc = "Delete Buffer", remap = true })
 --- Comments
 ---
 map({ "n" }, "<c-/>", "gcc", { desc = "Comment line", remap = true })
-map({ "v" }, "<c-/>", "gc", { desc = "Comment selected lines", remap = true })
+map({ "v" }, "<c-/>", "gcgv", { desc = "Comment selected lines", remap = true })
 
 -------------------------------------------------------------------------------
 --- Floating Terminal
