@@ -58,3 +58,31 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end
   end,
 })
+
+-- Override hlgroups for lsp diagnostics
+local function update_diagnostics_colors()
+  local colors = require("lib.colors")
+  local hlgroups = {
+    "DiagnosticVirtualTextError",
+    "DiagnosticVirtualTextWarn",
+    "DiagnosticVirtualTextInfo",
+    "DiagnosticVirtualTextHint",
+  }
+  for _, hl_group in ipairs(hlgroups) do
+    local fg = colors.get_hl_color(hl_group, "fg")
+    local bg = colors.get_hl_color(hl_group, "bg")
+    local new_fg = colors.dimmed(fg, 0.5)
+    local new_bg = colors.dimmed(bg, 0.8)
+    colors.set_hl_color(hl_group, "fg", new_fg)
+    colors.set_hl_color(hl_group, "bg", new_bg)
+  end
+end
+if vim.v.vim_did_enter then
+  update_diagnostics_colors()
+else
+  vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
+    group = augroup("lsp_diagnostics"),
+    pattern = "*",
+    callback = update_diagnostics_colors,
+  })
+end
