@@ -1,9 +1,10 @@
 customCommands:
-  - key: 'C'
+  - description: 'Commit with Emoji-Log'
+    key: 'C'
     context: 'files'
     prompts:
       - type: 'menu'
-        title: 'Emojy Log'
+        title: 'Emoji-Log'
         options:
           - name: '📦 NEW: '
             value: '📦 NEW: '
