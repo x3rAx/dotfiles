@@ -25,7 +25,8 @@ map({ "v" }, "<C-c>", '"+y', { desc = "Copy to system clipboard" })
 -------------------------------------------------------------------------------
 --- Close Buffer
 ---
-map({ "n" }, "ZX", "<leader>bd", { desc = "Delete Buffer", remap = true })
+map({ "n" }, "ZZ", "<leader>bd", { desc = "Delete Buffer", remap = true })
+map({ "n" }, "ZX", "<leader>wd", { desc = "Delete Window", remap = true })
 
 -------------------------------------------------------------------------------
 --- Comments
