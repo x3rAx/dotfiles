@@ -34,3 +34,8 @@ customCommands:
     subprocess: true
     stream: true
 
+  - description: 'Unstage all changes'
+    key: 'U'
+    context: 'files'
+    command: 'git restore --staged .'
+
