@@ -2,12 +2,13 @@
 -- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
 -- Add any additional autocmds here
 
+local autocmd = vim.api.nvim_create_autocmd
 local function augroup(name)
   return vim.api.nvim_create_augroup("x3ro_" .. name, { clear = true })
 end
 
 --- Fix for LazyVim autocommand to go to last loc when opening a buffer
-vim.api.nvim_create_autocmd("BufReadPost", {
+autocmd("BufReadPost", {
   group = augroup("last_loc"),
   callback = function(event)
     local buf = event.buf
@@ -30,7 +31,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 })
 
 --- Change directory if a directory is provided as an argument to nvim
-vim.api.nvim_create_autocmd("VimEnter", {
+autocmd("VimEnter", {
   group = augroup("change_dir"),
   pattern = "*",
   callback = function()
@@ -80,9 +81,20 @@ end
 if vim.v.vim_did_enter then
   update_diagnostics_colors()
 else
-  vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
+  autocmd({ "ColorScheme", "VimEnter" }, {
     group = augroup("lsp_diagnostics"),
     pattern = "*",
     callback = update_diagnostics_colors,
   })
 end
+
+-- Add mappings to return to insert mode in terminal buffers
+autocmd("TermOpen", {
+  group = augroup("term_return_to_insert"),
+  pattern = "*",
+  callback = function(event)
+    local buf = event.buf
+    vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>startinsert<CR>", { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(buf, "n", "<Esc><Esc>", "<cmd>startinsert<CR>", { noremap = true, silent = true })
+  end,
+})
