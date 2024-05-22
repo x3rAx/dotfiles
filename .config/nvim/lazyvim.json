@@ -3,6 +3,8 @@
     "lazyvim.plugins.extras.dap.core",
     "lazyvim.plugins.extras.coding.codeium",
     "lazyvim.plugins.extras.coding.copilot",
+    "lazyvim.plugins.extras.coding.mini-surround",
+    "lazyvim.plugins.extras.dap.core",
     "lazyvim.plugins.extras.editor.mini-diff",
     "lazyvim.plugins.extras.lang.clangd",
     "lazyvim.plugins.extras.lang.markdown",
@@ -14,4 +16,3 @@
     "NEWS.md": "4964"
   },
   "version": 5
-}
