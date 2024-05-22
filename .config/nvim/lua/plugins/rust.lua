@@ -12,7 +12,7 @@ return {
         "<leader>CC",
         function()
           if require("crates").popup_available() then
-            require("crates").show_popup()
+            require("crates").show_crate_popup()
           end
         end,
         desc = "Show crate popup",
@@ -25,6 +25,15 @@ return {
           end
         end,
         desc = "Show versions popup",
+      },
+      {
+        "<leader>CF",
+        function()
+          if require("crates").popup_available() then
+            require("crates").show_features_popup()
+          end
+        end,
+        desc = "Show features popup",
       },
       {
         "<leader>uR",
