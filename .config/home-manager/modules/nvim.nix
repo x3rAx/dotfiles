@@ -34,7 +34,7 @@ in {
     extraPackages = with pkgs; [
         clang clang-tools
         gcc # For nvim-treesitter
-        rust-analyzer cargo # For Rust support; `rust-analyzer` is not installed by Mason since it does not play well with `cargo` installed through Nix
+        #rust-analyzer cargo # For Rust support; `rust-analyzer` is not installed by Mason since it does not play well with `cargo` installed through Nix # TODO: It is best installed through a nix shell using rust-overlay. See `~/Code/x3ro/git-age/`
     ];
 
     plugins = with pkgs.vimPlugins; [
