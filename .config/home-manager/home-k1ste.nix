@@ -1,4 +1,4 @@
-{ config, pkgs, mkUnstable, lib, vscode-extensions, ... }:
+{ config, pkgs, mkNixpkgs, mkUnstable, lib, vscode-extensions, inputs, ... }:
 
 let
   nixpkgs-config = {
@@ -14,6 +14,7 @@ let
     ];
   };
   unstable = mkUnstable { config = nixpkgs-config; };
+  FORK_gdtoolkit_4 = mkNixpkgs inputs.gdtoolkit_4_fork { config = nixpkgs-config; };
 
   godot-libraries = with pkgs; [
     stdenv.cc.cc.lib # For git support
@@ -146,7 +147,8 @@ in
     xournalpp
     xsecurelock
     xss-lock
-    godot_4-with-libs
+    godot-with-libs
+    FORK_gdtoolkit_4.gdtoolkit_4 # Godot toolkit, provides `gdformat`
 
   ]) ++ (with unstable; [
 

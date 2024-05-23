@@ -12,6 +12,8 @@
     };
 
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
+
+    gdtoolkit_4_fork.url = "github:squarepear/nixpkgs/gdtoolkit-4";
   };
 
   outputs = { nixpkgs, unstable, home-manager, nix-vscode-extensions, ... }@inputs:
@@ -19,12 +21,16 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
 
-      mkUnstable = config: import unstable ({ inherit system; } // config);
+      # Create Nixpkgs with config from a custom input
+      mkNixpkgs = custom_nixpkgs: config:
+        import custom_nixpkgs ({ inherit system; } // config);
+      mkUnstable = config: mkNixpkgs unstable config;
       vscode-extensions = nix-vscode-extensions.extensions.${system};
 
       extraSpecialArgs = {
         inherit inputs;
         inherit system;
+        inherit mkNixpkgs;
         inherit mkUnstable;
         inherit vscode-extensions;
       };
