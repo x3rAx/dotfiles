@@ -29,6 +29,7 @@
     tree = log --date=iso --graph --pretty=\"format:%C(yellow)%<(7)%h%C(reset)%x09%ad%C(reset)  %C(blue)%<(15)%an%C(reset)  %C(bold yellow)%d%C(reset) %C(green)%s%C(reset)\"
     tree-all = tree --exclude refs/stash --all
     tree-unreferenced = log --walk-reflogs
+    staged = diff --staged
     co = checkout
     st = status
     br = branch
@@ -93,3 +94,5 @@
     line-numbers = true
     navigate = true # Use 'n' and 'N' to move between diff sections
 
+[safe]
+	directory = /etc/nixos
