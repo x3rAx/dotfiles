@@ -1,6 +1,9 @@
 # .bashrc
 # =======
 
+# If not running interactively, don't do anything
+[[ "$-" != *i* ]] && return
+
 # --- START of .shellrc.d ---
 
     # Replace this with the shell specific file suffix
