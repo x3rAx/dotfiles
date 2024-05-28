@@ -1,36 +1,24 @@
 local M = {}
 
-local colorMap = {
-  Black = "#000000",
-  White = "#ffffff",
-  Red = "#ff0000",
-  Green = "#00ff00",
-  Blue = "#0000ff",
-  Yellow = "#ffff00",
-  Magenta = "#ff00ff",
-  Cyan = "#00ffff",
-  Gray = "#808080",
-  Grey = "#808080",
-  LightGray = "#d0d0d0",
-  LightGrey = "#d0d0d0",
-  DarkGray = "#a9a9a9",
-  DarkGrey = "#a9a9a9",
-  LightRed = "#ffBBBB",
-  LightGreen = "#90ee90",
-  LightBlue = "#add8e6",
-  LightYellow = "#ffffe0",
-  LightMagenta = "#ffBBff",
-  LightCyan = "#e0ffff",
-  DarkRed = "#8b0000",
-  DarkGreen = "#006400",
-  DarkBlue = "#00008b",
-  DarkYellow = "#bbbb00",
-  DarkMagenta = "#8b008b",
-  DarkCyan = "#008b8b",
-}
-
 local function hex2dec(hex)
   return tonumber(hex, 16)
+end
+
+local function dec2hex(dec, pad)
+  pad = pad or 0
+  return string.format("%0" .. pad .. "x", dec)
+end
+
+local function dec2hexColor(dec)
+  return "#" .. dec2hex(dec, 6)
+end
+
+local function rgb2hex(r, g, b)
+  return "#" .. dec2hex(r, 2) .. dec2hex(g, 2) .. dec2hex(b, 2)
+end
+
+local function rgb2dec(r, g, b)
+  return bit.lshift(r, 16) + bit.lshift(g, 8) + b
 end
 
 local function splitHexColor(color)
@@ -42,29 +30,40 @@ local function splitHexColor(color)
   return r, g, b
 end
 
-function M.color2hex(color)
-  if colorMap[color] then
-    color = colorMap[color]
+local function keyOf(tbl, value)
+  for k, v in pairs(tbl) do
+    if v == value then
+      return k
+    end
   end
-  return color
+  return nil
+end
+
+function M.color2hex(color)
+  if color:sub(1, 1) == "#" then
+    return color
+  end
+  local dec = vim.api.nvim_get_color_by_name(color)
+  if dec < 0 then
+    error("Invalid color name: " .. color)
+  end
+  return dec2hexColor(dec)
 end
 
 function M.color2rgb(color)
-  if colorMap[color] then
-    color = colorMap[color]
-  end
+  color = M.color2hex(color)
   local r, g, b = splitHexColor(color)
   return hex2dec(r), hex2dec(g), hex2dec(b)
 end
 
 function M.rgb2color(r, g, b)
-  local color = string.format("#%02x%02x%02x", r, g, b)
-  for k, v in pairs(colorMap) do
-    if v == color then
-      return k
-    end
+  local dec = rgb2dec(r, g, b)
+  local colorMap = vim.api.nvim_get_color_map()
+  local color = keyOf(colorMap, dec)
+  if color then
+    return color
   end
-  return color
+  return dec2hexColor(dec)
 end
 
 function M.rgb2hsv(r, g, b)
