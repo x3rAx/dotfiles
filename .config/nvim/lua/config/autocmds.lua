@@ -72,10 +72,16 @@ local function update_diagnostics_colors()
   for _, hl_group in ipairs(hlgroups) do
     local fg = colors.get_hl_color(hl_group, "fg")
     local bg = colors.get_hl_color(hl_group, "bg")
-    local new_fg = colors.dimmed(fg, 0.5)
-    local new_bg = colors.dimmed(bg, 0.8)
-    colors.set_hl_color(hl_group, "fg", new_fg)
-    colors.set_hl_color(hl_group, "bg", new_bg)
+
+    if fg then
+      local new_fg = colors.dimmed(fg, 0.5)
+      colors.set_hl_color(hl_group, "fg", new_fg)
+    end
+
+    if bg then
+      local new_bg = colors.dimmed(bg, 0.8)
+      colors.set_hl_color(hl_group, "bg", new_bg)
+    end
   end
 end
 if vim.v.vim_did_enter then
