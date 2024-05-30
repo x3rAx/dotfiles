@@ -103,5 +103,9 @@ autocmd("TermOpen", {
     vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>startinsert<CR>", { noremap = true, silent = true })
     vim.api.nvim_buf_set_keymap(buf, "n", "<Esc><Esc>", "<cmd>startinsert<CR>", { noremap = true, silent = true })
     vim.api.nvim_buf_set_keymap(buf, "n", "<C-c>", "<cmd>startinsert<CR>", { noremap = true, silent = true })
+
+    -- Set scrolloff for buffer to 0
+    vim.opt_local.scrolloff = 0
+    vim.opt_local.scrollback = 100000 -- Sadly, this seems to be the maximum
   end,
 })
