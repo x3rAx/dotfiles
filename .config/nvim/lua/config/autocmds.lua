@@ -102,5 +102,6 @@ autocmd("TermOpen", {
     local buf = event.buf
     vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>startinsert<CR>", { noremap = true, silent = true })
     vim.api.nvim_buf_set_keymap(buf, "n", "<Esc><Esc>", "<cmd>startinsert<CR>", { noremap = true, silent = true })
+    vim.api.nvim_buf_set_keymap(buf, "n", "<C-c>", "<cmd>startinsert<CR>", { noremap = true, silent = true })
   end,
 })
