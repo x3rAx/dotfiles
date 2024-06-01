@@ -29,6 +29,25 @@ map({ "n" }, "ZZ", "<leader>wd", { desc = "Delete Window", remap = true })
 map({ "n" }, "ZX", "<leader>bd", { desc = "Delete Buffer", remap = true })
 
 -------------------------------------------------------------------------------
+--- Mover Buffer
+---
+map({ "n" }, "<M-,>", ":BufferLineMovePrev<cr>", { desc = "Move Buffer Left", remap = true, silent = true })
+map(
+  { "n" },
+  "<leader>b<",
+  ":BufferLineMovePrev<cr>",
+  { desc = "Move Buffer Left (<M-,>)", remap = true, silent = true }
+)
+
+map({ "n" }, "<M-.>", ":BufferLineMoveNext<cr>", { desc = "Move Buffer Left", remap = true, silent = true })
+map(
+  { "n" },
+  "<leader>b>",
+  ":BufferLineMoveNext<cr>",
+  { desc = "Move Buffer Left (<M-.>)", remap = true, silent = true }
+)
+
+-------------------------------------------------------------------------------
 --- Comments
 ---
 map({ "n" }, "<c-/>", "gcc", { desc = "Comment line", remap = true })
