@@ -6,6 +6,24 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
+local function update_notify_every_x_minutes(minutes)
+  local last_update_notify = vim.fn.stdpath("data") .. "/.last-update-notify"
+
+  local stat = vim.loop.fs_stat(last_update_notify)
+  if not stat then
+    vim.fn.system({ "touch", last_update_notify })
+    return true
+  end
+
+  local last_modified = stat.mtime.sec
+  local now = os.time()
+  if now - last_modified > minutes then
+    vim.fn.system({ "touch", last_update_notify })
+    return true
+  end
+  return false
+end
+
 require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
@@ -30,6 +48,7 @@ require("lazy").setup({
   checker = {
     enabled = true, -- automatically check for plugin updates
     frequency = 24 * 60 * 60, -- check for updates once a day
+    notify = update_notify_every_x_minutes(60),
   },
   performance = {
     rtp = {
