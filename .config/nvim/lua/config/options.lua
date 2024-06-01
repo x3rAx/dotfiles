@@ -3,6 +3,7 @@
 -- Add any additional options here
 
 local opt = vim.opt
+local wo = vim.wo
 
 -- TODO: Maybe set this to "" (empty) to completely disable automatic clipboard sync
 opt.clipboard = "unnamed" -- Sync with 'primary' clipboard (selection / middle-mouse clipboard)
@@ -23,6 +24,12 @@ opt.scrolloff = 10
 
 --- Autocomplete to the longes common match, then cycle through each full match
 opt.wildmode = { "longest:full", "full" }
+
+--- Configure line wrapping ---
+wo.wrap = true
+wo.breakindent = true
+wo.breakindentopt = "shift:0,min:20"
+opt.showbreak = "↪ "
 
 -------------------------------------------------------------------------------
 --- Custom commands
