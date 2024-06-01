@@ -106,7 +106,7 @@ in
     inxi
     kitty
     kopia
-    lazygit
+    unstable.lazygit
     libreoffice
     lolcat
     lsd
