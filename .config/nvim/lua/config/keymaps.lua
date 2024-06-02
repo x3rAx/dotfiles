@@ -31,21 +31,11 @@ map({ "n" }, "ZX", "<leader>bd", { desc = "Delete Buffer", remap = true })
 -------------------------------------------------------------------------------
 --- Mover Buffer
 ---
-map({ "n" }, "<M-,>", ":BufferLineMovePrev<cr>", { desc = "Move Buffer Left", remap = true, silent = true })
-map(
-  { "n" },
-  "<leader>b<",
-  ":BufferLineMovePrev<cr>",
-  { desc = "Move Buffer Left (<M-,>)", remap = true, silent = true }
-)
+map({ "n" }, "<M-,>", "<cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left", remap = true })
+map({ "n" }, "<leader>b<", "<cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left (<M-,>)", remap = true })
 
-map({ "n" }, "<M-.>", ":BufferLineMoveNext<cr>", { desc = "Move Buffer Left", remap = true, silent = true })
-map(
-  { "n" },
-  "<leader>b>",
-  ":BufferLineMoveNext<cr>",
-  { desc = "Move Buffer Left (<M-.>)", remap = true, silent = true }
-)
+map({ "n" }, "<M-.>", "<cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Left", remap = true })
+map({ "n" }, "<leader>b>", "<cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Left (<M-.>)", remap = true })
 
 -------------------------------------------------------------------------------
 --- Comments
