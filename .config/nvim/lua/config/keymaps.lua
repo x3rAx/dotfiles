@@ -8,6 +8,14 @@ local Util = require("lazyvim.util")
 local map = vim.keymap.set
 
 -------------------------------------------------------------------------------
+--- Save / Save All
+---
+
+map({ "n" }, "<leader>fs", "<cmd>w<cr><esc>", { desc = "Save File" })
+map({ "n" }, "<leader>fS", "<cmd>wa<cr><esc>", { desc = "Save All (<C-s>)" })
+map({ "n" }, "<C-s>", "<cmd>wa<cr><esc>", { desc = "Save All" })
+
+-------------------------------------------------------------------------------
 --- Undo / Redo
 ---
 map({ "n", "i" }, "<C-z>", function()
