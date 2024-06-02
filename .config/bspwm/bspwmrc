@@ -8,6 +8,11 @@ BSPWM_DIR="${XDG_CONFIG_HOME}/bspwm"
 RUN_DIR="${BSPWM_DIR}/run"
 mkdir -p "$RUN_DIR"
 
+if [[ -f "${BSPWM_DIR}/.is-bspwm-restart" ]]; then
+	rm "${BSPWM_DIR}/.is-bspwm-restart"
+	is_restart="true"
+fi
+
 path_prepend() { [ -e $1 ] && PATH=":${PATH}" && PATH="${1}${PATH//:$1/}"; }
 
 path_prepend "${HOME}/.local/bin"
@@ -48,7 +53,9 @@ pkill udiskie; udiskie &
 pkill unclutter; unclutter & # install `unclutter-xfixes`
 
 # Other Autostart Apps
-( sleep 3 && "${BSPWM_DIR}/autostart.sh"; ) &
+if [[ "$is_restart" != true ]]; then
+	(sleep 3 && cd "${BSPWM_DIR}" && "./autostart.sh") &
+fi
 
 
 

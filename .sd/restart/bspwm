@@ -1,4 +1,14 @@
 #!/bin/sh
 
-touch ~/.config/bspwm/.skip-autostart
+if [[ -n $IN_NIX_SHELL ]] && [[ ${1:-} != '--nix-shell' ]]; then
+  echo >&2 'ERROR: Restarting within a Nix shell is not recommended.'
+  echo >&2 '       Use `--nix-shell` to allow it anyways.'
+  exit 1
+fi
+
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
+BSPWM_DIR="${XDG_CONFIG_HOME}/bspwm"
+
+touch "${BSPWM_DIR}/.is-bspwm-restart"
+
 bspc wm -r
