@@ -73,6 +73,8 @@ readonly _S_REBOOT='勒 Reboot'
 readonly _S_POWEROFF=' Power Off'
 readonly _S_HIBERNATE=' Hibernate'
 readonly _S_SUSPEND='鈴 Suspend (Sleep)'
+readonly _S_LOGOUT='- Logout'
+readonly _S_SEPARATOR='---------------------------'
 
 readonly _ROFI_THEME="${_SCRIPT}.theme"
 
@@ -123,10 +125,12 @@ ${_S_CANCEL}
 ${_S_SUSPEND}
 ${_S_HIBERNATE}
 ${_S_REBOOT}
-${_S_POWEROFF}" \
+${_S_POWEROFF}
+${_S_SEPARATOR}
+${_S_LOGOUT}" \
     | rofimenu -p '')"
 
-if [[ $selection == $_S_CANCEL ]] || [[ $selection == '' ]]; then
+if [[ $selection == $_S_CANCEL ]] || [[ $selection == $_S_SEPARATOR ]] || [[ $selection == '' ]]; then
     exit
 fi
 
@@ -141,6 +145,7 @@ case $selection in
     "$_S_POWEROFF")  systemctl poweroff; ;;
     "$_S_HIBERNATE") systemctl hibernate; ;;
     "$_S_SUSPEND")   systemctl suspend; ;;
+    "$_S_LOGOUT")    bspc quit && xfce4-session-logout --logout; ;;
     *)
         err "Invalid option: ${selection}";
         notify-send "rofimenu: Invalid option ${selection}";
