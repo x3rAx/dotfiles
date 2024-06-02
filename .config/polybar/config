@@ -70,7 +70,7 @@ font-1 = MonoLisa Nerd Font:size=8;2
 modules-left = bspwm
 modules-center = xwindow
 ;modules-right = filesystem xbacklight alsa xkeyboard memory cpu wlan eth battery temperature date powermenu
-modules-right = filesystem alsa xkeyboard netspeed memory cpu temperature date notification-center rofi-powermenu
+modules-right = online-check filesystem alsa xkeyboard netspeed memory cpu temperature date notification-center rofi-powermenu
 
 tray-position = right
 tray-padding = 2
@@ -510,6 +510,14 @@ menu-4-0 = 鈴 suspend
 menu-4-0-exec = systemctl suspend
 menu-4-1 = ﰸ cancel
 menu-4-1-exec = menu-open-0
+
+
+[module/online-check]
+type = custom/script
+
+exec = ping -c1 x3ro.net >/dev/null 2>&1 && echo '' || echo ''
+interval = 5
+
 
 [settings]
 screenchange-reload = true
