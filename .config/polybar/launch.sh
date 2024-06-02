@@ -18,7 +18,7 @@
 killall -q polybar
 
 
-if ! type "xrandr"; then
+if ! command -v xrandr >/dev/null; then
   polybar --reload primary &
   exit
 fi
