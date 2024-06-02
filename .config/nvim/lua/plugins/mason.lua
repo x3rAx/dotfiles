@@ -24,11 +24,19 @@ return {
   {
     "neovim/nvim-lspconfig",
     lazy = true,
-    opts = {
-      servers = {
-        rust_analyzer = { mason = false }, -- Installed through home-manager; Does not play well with `cargo` installed through Nix
-        clangd = { mason = false }, -- Installed through home-manager
-      },
-    },
+    opts = function(_, opts)
+      local mason_disabled = {
+        "rust_analyzer", -- Installed through home-manager; Does not play well with `cargo` installed through Nix
+        "clangd", -- Installed through home-manager
+      }
+
+      for _, server in ipairs(mason_disabled) do
+        if opts.servers[server] then
+          opts.servers[server].mason = false
+        end
+      end
+
+      return opts
+    end,
   },
 }
