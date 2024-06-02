@@ -70,7 +70,7 @@ font-1 = MonoLisa Nerd Font:size=8;2
 modules-left = bspwm
 modules-center = xwindow
 ;modules-right = filesystem xbacklight alsa xkeyboard memory cpu wlan eth battery temperature date powermenu
-modules-right = online-check filesystem alsa xkeyboard netspeed memory cpu temperature date notification-center rofi-powermenu
+modules-right = online-check filesystem pulseaudio xkeyboard netspeed memory cpu temperature date notification-center rofi-powermenu
 
 tray-position = right
 tray-padding = 2
@@ -346,11 +346,16 @@ scroll-down = pulseaudio-control --node-type input --volume-max 130 down
 [module/pulseaudio]
 type = internal/pulseaudio
 
-format-volume = <label-volume> <bar-volume>
+format-volume = <ramp-volume> <bar-volume>
 label-volume = VOL %percentage%%
 label-volume-foreground = ${root.foreground}
 
-label-muted = 🔇 ─────────
+ramp-volume-0 = ""
+ramp-volume-1 = ""
+ramp-volume-2 = ""
+
+#label-muted = 🔇 ─────────
+label-muted =  ──────────
 label-muted-foreground = #666
 
 bar-volume-width = 10
@@ -369,6 +374,10 @@ bar-volume-fill-font = 2
 bar-volume-empty = ─
 bar-volume-empty-font = 2
 bar-volume-empty-foreground = ${colors.foreground-alt}
+label-muted-font = 2
+
+click-middle = exec pavucontrol &
+click-right = ~/.config/polybar/scripts/rofi-audio-sink.sh &
 
 [module/alsa]
 type = internal/alsa
