@@ -3,17 +3,15 @@
 
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
-
-    gdtoolkit_4_fork.url = "github:squarepear/nixpkgs/gdtoolkit-4";
   };
 
   outputs = { nixpkgs, unstable, home-manager, nix-vscode-extensions, ... }@inputs:

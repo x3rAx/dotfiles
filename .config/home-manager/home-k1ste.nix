@@ -6,15 +6,37 @@ let
       "electron-24.8.6"
       "electron-25.9.0"
     ];
-    allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-      "cudatoolkit"
+    allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) ([
       "discord"
       "obsidian"
       "vscode"
-    ];
+    ] ++ [
+      # Stuff for `nvtop`
+      "cuda-merged"
+      "cuda_cccl"
+      "cuda_cudart"
+      "cuda_cuobjdump"
+      "cuda_cupti"
+      "cuda_cuxxfilt"
+      "cuda_gdb"
+      "cuda_nvcc"
+      "cuda_nvdisasm"
+      "cuda_nvml_dev"
+      "cuda_nvprune"
+      "cuda_nvrtc"
+      "cuda_nvtx"
+      "cuda_profiler_api"
+      "cuda_sanitizer_api"
+      "libcublas"
+      "libcufft"
+      "libcurand"
+      "libcusolver"
+      "libcusparse"
+      "libnpp"
+      "libnvjitlink"
+    ]);
   };
   unstable = mkUnstable { config = nixpkgs-config; };
-  FORK_gdtoolkit_4 = mkNixpkgs inputs.gdtoolkit_4_fork { config = nixpkgs-config; };
 
   godot-libraries = with pkgs; [
     stdenv.cc.cc.lib # For git support
@@ -84,7 +106,7 @@ in
     cinnamon.nemo
     cli-visualizer # CLI audio visualizer
     cryptomator
-    dbeaver
+    dbeaver-bin
     deadd-notification-center
     discord
     distrobox
@@ -118,7 +140,7 @@ in
     nerdfonts
     nix-direnv
     nmap
-    nvtop
+    nvtopPackages.full
     oh-my-posh
     openfortivpn
     parallel
@@ -149,7 +171,7 @@ in
     xsecurelock
     xss-lock
     godot-with-libs
-    FORK_gdtoolkit_4.gdtoolkit_4 # Godot toolkit, provides `gdformat`
+    unstable.gdtoolkit_4 # Godot toolkit, provides `gdformat`
 
   ]) ++ (with unstable; [
 
