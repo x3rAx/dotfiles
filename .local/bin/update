@@ -11,7 +11,7 @@ main() {
 
 	# Update system
 	run-if /etc/nixos/flake.nix \
-		sudo flake update /etc/nixos
+		sudo nix flake update /etc/nixos
 	run sudo nixos-rebuild switch
 
 	# Update home-manager
