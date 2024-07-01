@@ -1,42 +1,96 @@
 customCommands:
-  - description: 'Commit with Emoji-Log'
-    key: 'C'
-    context: 'files'
+  - description: "Commit with Emoji-Log"
+    key: "C"
+    context: "files"
     prompts:
-      - type: 'menu'
-        title: 'Emoji-Log'
+      - type: "menu"
+        title: "Emoji-Log"
         options:
-          - name: '📦 NEW: '
-            value: '📦 NEW: '
+          - name: "📦 NEW: "
+            value: "📦 NEW: "
             description: "Use when you add something entirely new."
-          - name: '👌 IMPROVE: '
-            value: '👌 IMPROVE: '
+          - name: "👌 IMPROVE: "
+            value: "👌 IMPROVE: "
             description: "Use when you improve/enhance piece of code like refactoring etc."
-          - name: '🐛 FIX: '
-            value: '🐛 FIX: '
+          - name: "🐛 FIX: "
+            value: "🐛 FIX: "
             description: "Use when you fix a bug — need I say more?"
-          - name: '📖 DOC: '
-            value: '📖 DOC: '
+          - name: "📖 DOC: "
+            value: "📖 DOC: "
             description: "Use when you add documentation like README.md, or even inline docs."
-          - name: '🚀 RELEASE: '
-            value: '🚀 RELEASE: '
+          - name: "🚀 RELEASE: "
+            value: "🚀 RELEASE: "
             description: "Use when you release a new version."
-          - name: '🤖 TEST: '
-            value: '🤖 TEST: '
+          - name: "🤖 TEST: "
+            value: "🤖 TEST: "
             description: "Use when it's related to testing."
-          - name: '‼️ BREAKING: '
-            value: '‼️ BREAKING: '
+          - name: "‼️ BREAKING: "
+            value: "‼️ BREAKING: "
             description: "Use when releasing a change that breaks previous versions."
-          - name: '<empty>'
-            description: 'Choose a custom message'
-            value: ''
+          - name: "<empty>"
+            description: "Choose a custom message"
+            value: ""
     command: "git commit -e -m '{{index .PromptResponses 0}}'"
-    loadingText: '...'
+    loadingText: "..."
     subprocess: true
     stream: true
 
-  - description: 'Unstage all changes'
-    key: 'U'
-    context: 'files'
-    command: 'git restore --staged .'
+  - description: "Prefix with Emoji-Log"
+    key: "E"
+    context: "commits"
+    prompts:
+      - type: "menu"
+        title: "Prefix with Emoji-Log"
+        options:
+          - name: "📦 NEW: "
+            value: "📦 NEW: "
+            description: "Use when you add something entirely new."
+          - name: "👌 IMPROVE: "
+            value: "👌 IMPROVE: "
+            description: "Use when you improve/enhance piece of code like refactoring etc."
+          - name: "🐛 FIX: "
+            value: "🐛 FIX: "
+            description: "Use when you fix a bug — need I say more?"
+          - name: "📖 DOC: "
+            value: "📖 DOC: "
+            description: "Use when you add documentation like README.md, or even inline docs."
+          - name: "🚀 RELEASE: "
+            value: "🚀 RELEASE: "
+            description: "Use when you release a new version."
+          - name: "🤖 TEST: "
+            value: "🤖 TEST: "
+            description: "Use when it's related to testing."
+          - name: "‼️ BREAKING: "
+            value: "‼️ BREAKING: "
+            description: "Use when releasing a change that breaks previous versions."
+    # command: "git commit -e -m '{{index .PromptResponses 0}}'"
+    command: |
+      #!/usr/bin/env bash
 
+      : ${XDG_CONFIG_HOME:="$HOME/.config"}
+
+      export X_LAZYGIT_CHANGE_TODO_ACTION=edit
+      export X_LAZYGIT_CHANGE_TODO_COMMITS={{.SelectedLocalCommit.Hash}}
+      export GIT_SEQUENCE_EDITOR="${XDG_CONFIG_HOME}/lazygit/scripts/change-todo-action.py"
+
+      parent=$(git rev-list {{.SelectedLocalCommit.Hash}} | head -n2 | tail -n1)
+
+      if [[ $parent == {{.SelectedLocalCommit.Hash}} ]]; then
+        parent="--root"
+      fi
+
+      git rebase --interactive --autostash --keep-empty --no-autosquash \
+          --rebase-merges "$parent"
+
+      msg="$(git log -n 1 --pretty=format:%B {{.SelectedLocalCommit.Hash}})"
+      git commit --allow-empty --amend --only -e -m '{{index .PromptResponses 0}}'"${msg}"
+      git rebase --continue
+
+    loadingText: "..."
+    subprocess: true
+    stream: true
+
+  - description: "Unstage all changes"
+    key: "U"
+    context: "files"
+    command: "git restore --staged ."
