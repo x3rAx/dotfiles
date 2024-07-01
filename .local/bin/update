@@ -12,7 +12,7 @@ main() {
 	# Update system
 	run-if /etc/nixos/flake.nix \
 		sudo nix flake update /etc/nixos
-	run sudo nixos-rebuild switch
+	run /etc/nixos/rebuild
 
 	# Update home-manager
 	run-if ~/.config/home-manager/flake.nix \
