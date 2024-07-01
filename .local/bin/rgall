@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+rg='rga'
+if ! command -v "$rg" &>/dev/null; then
+	echo >&2 "WARNING: \`${rg}\` is not installed. Falling back to \`rg\`."
+	rg='rg'
+fi
+
+exec "$rg" --hidden --no-ignore --binary "$@"
