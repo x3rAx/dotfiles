@@ -190,6 +190,9 @@ in
     telegram-desktop
     thunderbird-bin
     zoxide
+  ]) ++ (with pkgs; [
+      # Games
+      unstable.armagetronad
 
   ]);
 
