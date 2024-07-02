@@ -7,6 +7,7 @@ let
       "electron-25.9.0"
     ];
     allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) ([
+      "aseprite"
       "discord"
       "obsidian"
       "vscode"
@@ -99,9 +100,11 @@ in
     # '')
 
     android-tools
+    aseprite
     autorandr
     barrier
     binutils
+    btrfs-assistant # GUI for btrfs
     bvi # VI like hex editor
     cinnamon.nemo
     cli-visualizer # CLI audio visualizer
@@ -122,14 +125,16 @@ in
     gimp
     glxinfo
     gparted
+    gpick
     handlr
     htmlq
     httpie
     httrack
     inxi
-    kitty
+    jstest-gtk # Bluetooth controller tester
     kopia
     unstable.lazygit
+    ldns # drill - better(?) dig
     libreoffice
     lolcat
     lsd
@@ -147,6 +152,7 @@ in
     pavucontrol
     pcmanfm
     protonup-qt # Manage Steam games & ProtonGE versions
+    pulseaudio # For `pactl` and audio sink switching
     qpwgraph # Pipewire connection graph
     qutebrowser
     razer-battery-tray
@@ -161,6 +167,7 @@ in
     tldr # Simplified man pages
     udiskie
     unclutter-xfixes
+    unstable.kitty
     ventoy-bin-full # or `ventoy-bin`?
     whois
     wireguard-tools
