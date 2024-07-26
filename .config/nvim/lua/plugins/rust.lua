@@ -85,8 +85,8 @@ return {
   {
     "folke/which-key.nvim",
     opts = {
-      defaults = {
-        ["<leader>C"] = { name = "crates" },
+      spec = {
+        { "<leader>C", group = "crates", icon = "" },
       },
     },
   },
