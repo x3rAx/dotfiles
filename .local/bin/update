@@ -37,6 +37,7 @@ main() {
 	echo "|                                                                              |"
 	echo "|  Remember to commit ~/.config/home-manager/flake.lock                        |"
 	echo "|                                                                              |"
+	echo "|  $ yadm restore --staged .                                                   |"
 	echo "|  $ yadm add ~/.config/home-manager/flake.lock                                |"
 	echo "|  $ yadm cimp 'Update home-manager flake.lock'                                |"
 	echo "+------------------------------------------------------------------------------+"
