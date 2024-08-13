@@ -39,3 +39,6 @@ vim.cmd([[ command! -nargs=0 CD :cd %:p:h ]])
 
 vim.cmd([[ command! -nargs=* Chmod :!chmod <args> % ]])
 vim.cmd([[ command! -nargs=0 ChmodX :!chmod +x % ]])
+
+-- Use "Obsidian" command to write into the Obsidian directory in ~/Sync/Obsidian/
+vim.cmd([[ command! -nargs=1 Obsidian :w ~/Syncthing/Obsidian/Brain 🧠/<args>.md ]])
