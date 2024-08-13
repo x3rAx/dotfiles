@@ -36,3 +36,6 @@ opt.showbreak = "↪ "
 
 -- `CD` to change directory to current file
 vim.cmd([[ command! -nargs=0 CD :cd %:p:h ]])
+
+vim.cmd([[ command! -nargs=* Chmod :!chmod <args> % ]])
+vim.cmd([[ command! -nargs=0 ChmodX :!chmod +x % ]])
