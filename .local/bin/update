@@ -28,6 +28,7 @@ main() {
 	run-if - lug-helper-update
 	run-if - starship-update
 	run-if - youtube-dl-update
+	run-if - yt-dlp -U
 
 	run - ~/.local/opt/kopia/updater.sh
 
