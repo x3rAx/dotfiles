@@ -56,33 +56,34 @@ _teal=$(tput setaf 14)
 _green=$(tput setaf 10)
 
 run() {
-	local err=0
-	echo >&2 "${_bold}${_yellow}==> RUN: ${*}${_normal}"
+	local err
 
 	while :; do
 		err=0
+		echo >&2 "${_bold}${_yellow}==> RUN: ${*}${_normal}"
 		"$@" || err=$?
 
-		if [[ $err -ne 0 ]]; then
-			echo >&2 ""
-			echo >&2 "${_bold}${_red}ERROR: Command \`${*}\` exited with an exit code of ${err}.${_normal}"
-			echo >&2 "${_bold}       Do you want to continue, retry or quit? (C/r/q) ${_normal}"
-			read inp
-
-			if [[ ${inp,,} == 'r' ]]; then
-				continue
-			fi
-
-			if [[ -n $inp ]] && [[ ${inp,,} != 'c' ]]; then
-				exit $err
-			fi
+		if [[ $err -eq 0 ]]; then
+			break
 		fi
-		break
+
+		echo >&2 ""
+		echo >&2 "${_bold}${_red}ERROR: Command \`${*}\` exited with an exit code of ${err}.${_normal}"
+		echo >&2 "${_bold}       Do you want to continue or retry? [C/r/q]: ${_normal}"
+		read inp
+
+		if [[ ${inp,,} == 'r' ]]; then
+			continue
+		fi
+
+		if [[ -n $inp ]] && [[ ${inp,,} != 'c' ]]; then
+			exit $err
+		fi
 	done
 }
 
 # Usage:
-#   run-if command-to-check command-to-run arg1 arg2
+#   run-if command-or-path-to-check command-to-run arg1 arg2
 #   run-if - command-to-check-and-run arg1 arg2
 run-if() {
 	local check=$1
@@ -90,11 +91,21 @@ run-if() {
 	if [[ $check == '-' ]]; then
 		check=$1
 	fi
-	if ! command -v "$1" >/dev/null; then
+	if ! command-exists "$check" && ! path-exists "$check"; then
 		echo >&2 "${_bold}${_teal}==> SKIPPING (missing ${check}): ${@}${_normal}"
 		return
 	fi
 	run "$@"
+}
+
+path-exists() {
+	local path=$1
+	[[ -e "$path" ]]
+}
+
+command-exists() {
+	local cmd=$1
+	command -v "$cmd" >/dev/null
 }
 
 finish() {
