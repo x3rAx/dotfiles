@@ -29,6 +29,8 @@ main() {
 	run-if - starship-update
 	run-if - youtube-dl-update
 
+	run - ~/.local/opt/kopia/updater.sh
+
 	echo ""
 	echo ""
 	echo "+------------------------------------------------------------------------------+"
