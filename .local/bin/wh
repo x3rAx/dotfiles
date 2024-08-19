@@ -70,7 +70,7 @@ done
 # --- main program -------------------------------------------------------------
 
 if [[ $# -lt 1 ]]; then
-    echo $_USAGE
+    echo >&2 "$_USAGE"
     exit $_ERR_USAGE
 fi
 
