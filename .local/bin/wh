@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+# More safety by turning bugs into errors.
+# Use `${PIPESTATUS[n]}` to check for the `n`-th pipe command's exit status.
+# Make sure there are no uninitialized variables.
+# To allow a non-zero exit status or to allow a pipe to fail without exiting
+# the script, prefix the command with `!`.
+# Option `noclobber` makes sure piping into a file with `>` does not
+# override existing files. Use `>|` to overwrite files instead.
+# Environment variables are `UPPER_SNAKE_CASE`, global constants are
+# `_UNDERSCORE_PREFIXED` and global variables are `_underscore_prefixed`
+set -o errexit -o pipefail -o nounset -o noclobber
+IFS=$'\n\t' # Split on newlines and tabs (but not on spaces)
+
+: ${XDG_CONFIG_HOME:=$HOME/.config}
+: ${XDG_CACHE_HOME:=$HOME/.cache}
+
+readonly _SCRIPT="$(realpath "$0")"
+readonly _SCRIPT_NAME="${_SCRIPT##*/}"
+readonly _SCRIPT_DIR="${_SCRIPT%/*}"
+
+err() { echo >&2 "${_SCRIPT_NAME}: $@"; }
+
+readonly _ERR_USAGE=2
+readonly _ERR_PROGRAMMING=255
+
+readonly _USAGE="
+  Usage:
+    $_SCRIPT_NAME [options] [--] COMMAND ACTION [%]
+    $_SCRIPT_NAME -e [--] COMMAND
+
+  OPTIONS:
+    -h, --help  Show this help message.
+    -e, --edit  Open the result in \$EDITOR.
+"
+
+readonly _OPTIONS='h,e'
+readonly _LONGOPTS='help,edit'
+
+# Collect args until the ACTION is found
+args=()
+cmd_found=false
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        '-'*)  args+=("$1"); shift; ;;
+        '--')  shift; break; ;;
+        # Stop parsing at the 2dn non-option
+        *)     args+=("$1"); shift; [[ $cmd_found == true ]] && break; cmd_found=true; ;;
+    esac
+done
+# Insert the "stop parsing" argument before the COMMAND
+args+=('--' "$@")
+
+# Parse the args
+parsed="$(getopt -o "$_OPTIONS" -l "$_LONGOPTS" -n "$_SCRIPT_NAME" -- "${args[@]}")"
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then echo >&2 "$_USAGE"; exit $_ERR_USAGE; fi
+eval set -- "${parsed[@]}"; unset parsed
+unset args cmd_found
+
+_edit=false
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        '-h'|'--help')  echo "$_USAGE"; exit; ;;
+        '-e'|'--edit')  _edit=true; shift; ;;
+        '--')           shift; break; ;;
+        *)              err "Programming error"; exit $_ERR_PROGRAMMING; ;;
+    esac
+done
+
+# --- main program -------------------------------------------------------------
+
+if [[ $# -lt 1 ]]; then
+    echo $_USAGE
+    exit $_ERR_USAGE
+fi
+
+cmd="$1"
+shift
+action=("$@")
+
+file="$(which "$cmd")"
+
+if [[ $_edit == true ]]; then
+    exec -- "$EDITOR" "$file"
+fi
+
+if [[ ${#action[@]} -eq 0 ]]; then
+    echo "$file"
+    exit
+fi
+
+file_replaced=false
+for i in "${!action[@]}"; do
+    if [[ ${action[$i]} == '%' ]]; then
+        action[$i]="$file"
+        file_replaced=true
+        break
+    fi
+done
+
+if [[ $file_replaced == false ]]; then
+    action+=("$file")
+fi
+
+exec -- "${action[@]}"
