@@ -17,7 +17,7 @@ main() {
 	# Update home-manager
 	run-if ~/.config/home-manager/flake.nix \
 		nix flake update ~/.config/home-manager/
-	run-if - home-manager switch
+	run-if - nh home switch ~/.config/home-manager/
 
 	#run nix-env --upgrade
 
