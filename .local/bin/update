@@ -30,7 +30,7 @@ main() {
 	run-if - youtube-dl-update
 	run-if - yt-dlp -U
 
-	run - ~/.local/opt/kopia/updater.sh
+	run ~/.local/opt/kopia/updater.sh
 
 	echo ""
 	echo ""
