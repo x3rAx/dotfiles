@@ -28,7 +28,8 @@ main() {
 	run-if - lug-helper-update
 	run-if - starship-update -y
 	run-if - youtube-dl-update
-	run-if - yt-dlp -U
+	run-if ~/.local/bin/yt-dlp \
+        yt-dlp -U
 
 	run ~/.local/opt/kopia/updater.sh
 
