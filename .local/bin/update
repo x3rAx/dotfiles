@@ -74,13 +74,18 @@ run() {
 		echo >&2 "${_bold}       Do you want to continue or retry? [C/r/q]: ${_normal}"
 		read inp
 
+        # Continue
+		if [[ ${inp,,} == 'c' ]] || [[ -z $inp ]]; then
+			break
+		fi
+
+        # Retry
 		if [[ ${inp,,} == 'r' ]]; then
 			continue
 		fi
 
-		if [[ -n $inp ]] && [[ ${inp,,} != 'c' ]]; then
-			exit $err
-		fi
+        # Quit (or anything else)
+        exit $err
 	done
 }
 
