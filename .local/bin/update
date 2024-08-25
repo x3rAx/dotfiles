@@ -22,11 +22,11 @@ main() {
 	#run nix-env --upgrade
 
 	# Other package managers
-	run-if - flatpak update
+	run-if - flatpak update -y
 
 	# Single app updates
 	run-if - lug-helper-update
-	run-if - starship-update
+	run-if - starship-update -y
 	run-if - youtube-dl-update
 	run-if - yt-dlp -U
 
