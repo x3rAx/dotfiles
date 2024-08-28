@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Start KeePassXC
-keepassxc "$@" 2>/dev/null &
+nohup >/dev/null 2>&1 keepassxc "$@" &
 
 first_start=true
 
@@ -16,6 +16,10 @@ for i in {0..100}; do
 
     sleep 0.01
 done
+
+# Disown the background process so that it doesn't get killed when the shell
+# exits
+disown
 
 if [[ $first_start == true ]]; then
     # Ok, the first call to `keepassxc` really launched KeePassXC. Now activate
