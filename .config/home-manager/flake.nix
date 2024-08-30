@@ -44,7 +44,7 @@
         # to pass through arguments to home.nix
         inherit extraSpecialArgs;
       };
-      homeConfigurations."x3ro@jehuty" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."x3ro@Jehuty" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         inherit extraSpecialArgs;
 
