@@ -2,8 +2,12 @@
 super + Escape ; Return
     pkill -USR1 -x sxhkd && notify-send -t 1 "sxhkd reloaded"
 
-#: Open Alacritty
+#: Open Kitty
 super + Return
+    kitty
+#
+#: Open Alacritty
+super + shift + Return
     alacritty
 
 #: Focus windows in given direction
