@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly _SCRIPT="$(realpath "$0")"
+readonly _SCRIPT_NAME="${_SCRIPT##*/}"
+readonly _SCRIPT_DIR="${_SCRIPT%/*}"
+
+
+readonly _USAGE="
+  Usage:
+    $_SCRIPT_NAME [options] [ACTION]
+
+  OPTIONS:
+    -h, --help  Show this help message.
+
+  ACTIONS:
+    all         [default] Take a screenshot of all screens.
+                (Aliases: a, full, f, whole, everything)
+    display     Take a screenshot of the current display.
+                (Aliases: s, single, screen)
+    window      Take a screenshot of the active window.
+                (Aliases: w, win)
+    selection   Take a screenshot of the current selection.
+                (Aliases: s, sel, select)
+"
+
+action="${1:-all}"
+
+path="${HOME}/Pictures/[Screenshots]/$(date +'%F_%H-%M-%S').png"
+
+notify() {
+    echo >&2 "$1"
+    echo "$2"
+    notify-send -t 1 "$1" "$2"
+}
+
+case "$action" in
+    'full'|'f'|'a'|'all'|'whole'|'everything')
+        shotgun - \
+            | tee "$path" \
+            | xclip -selection clipboard -t image/png
+        notify "Screenshot taken: Everything" "$path"
+        ;;
+
+    'display'|'screen'|'single'|'s')
+        shotgun --single-screen - \
+            | tee "$path" \
+            | xclip -selection clipboard -t image/png
+        notify "Screenshot taken: Current screen" "$path"
+        ;;
+
+    'window'|'w'|'win')
+        shotgun --id $(xdotool getactivewindow) - \
+            | tee "$path" \
+            | xclip -selection clipboard -t image/png
+        notify "Screenshot taken: Active window" "$path"
+        ;;
+
+    'selection'|'s'|'sel'|'select')
+        flameshot gui --last-region --raw \
+            | tee "$path" \
+            | xclip -selection clipboard -t image/png
+        notify "Screenshot taken: Selection" "$path"
+        ;;
+
+    '-h'|'--help')
+        echo "$_USAGE"
+        exit
+        ;;
+
+    '-'*)
+        echo >&2 "ERROR: Unknown option: $action"
+        exit 1
+        ;;
+
+    *)
+        echo >&2 "ERROR: Unknown option: $action"
+        exit 1
+        ;;
+esac
