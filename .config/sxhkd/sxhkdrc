@@ -47,7 +47,7 @@ super + shift + {h,j,k,l}
 #    bspc node --to-node {west,south,north,east} --follow
 
 #: Close/Kill window
-super + shift + {_,shift + }q
+super + shift + {_,ctrl + }q
     bspc node --{close,kill}
 
 #: Select parent
