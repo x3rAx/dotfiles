@@ -237,6 +237,17 @@ in
       target = ".local/bin/xsecurelock-dimmer";
     };
 
+    #"proton-ge" =
+    #  let
+    #    version = "7-42";
+    #  in
+    #  {
+    #    source = pkgs.fetchzip {
+    #      url = "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton${version}/GE-Proton${version}.tar.gz";
+    #      sha256 = "sha256-lTd/NX/VtBQCO/feunBYNp+HqbQVB+8gRAszTb+Pktk=";
+    #    };
+    #    target = ".steam/root/compatibilitytools.d/GE-Proton${version}";
+    #  };
   };
 
   xdg.configFile = {
