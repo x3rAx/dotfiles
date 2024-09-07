@@ -154,3 +154,6 @@ super + alt + p
 super + alt + l
     xset s activate
 
+super + mod5 + m:
+    pkill pw-loopback || daemonize pw-loopback
+
