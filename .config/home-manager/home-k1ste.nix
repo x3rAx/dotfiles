@@ -129,6 +129,7 @@ in {
       eww # Status bar
       expect
       filezilla
+      inputs.firefox-nightly.packages.${pkgs.system}.firefox-nightly-bin
       fish
       flameshot # Screenshot tool
       nvtopPackages.full

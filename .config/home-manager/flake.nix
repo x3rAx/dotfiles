@@ -12,9 +12,10 @@
     };
 
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
+    firefox-nightly.url = "github:nix-community/flake-firefox-nightly/master";
   };
 
-  outputs = { nixpkgs, unstable, home-manager, nix-vscode-extensions, ... }@inputs:
+  outputs = { nixpkgs, unstable, home-manager, nix-vscode-extensions, firefox-nightly, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
