@@ -157,3 +157,18 @@ super + alt + l
 super + mod5 + m:
     pkill pw-loopback || daemonize pw-loopback
 
+#: Hide current window (stash)
+super + shift + s
+    bspc node --flag hidden=on
+
+#: List hidden windows in rofi (stash)
+super + s
+    id=$( (bspc query -N -n .hidden.window \
+            | while read -r id; do \
+                    echo -n "${id} | "; \
+                    xtitle "$id"; \
+                done \
+        ) \
+            | rofi -dmenu | cut -d' ' -f1) ;\
+    bspc node "$id" --to-desktop focused ;\
+    bspc node "$id" --flag hidden=off --focus 
