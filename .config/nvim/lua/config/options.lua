@@ -44,4 +44,4 @@ vim.cmd([[ command! -nargs=0 ChmodX :!chmod +x % ]])
 vim.cmd([[ command! -nargs=1 Obsidian :w ~/Syncthing/Obsidian/Brain 🧠/<args>.md ]])
 
 -- Sort packages in a Nix file
-vim.api.nvim_create_user_command('NixSortPackages', require('lib.nix-sort-packages'), { nargs = 0, range = true })
+vim.api.nvim_create_user_command('SortNixPackages', require('lib.nix-sort-packages'), { nargs = 0, range = true })
