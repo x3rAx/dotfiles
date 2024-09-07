@@ -150,3 +150,7 @@ ctrl + Print
 super + alt + p
     rofi-screenlayouts
 
+#: Lock Screen
+super + alt + l
+    xset s activate
+
