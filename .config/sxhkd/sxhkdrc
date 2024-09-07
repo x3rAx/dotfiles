@@ -145,3 +145,8 @@ shift + Print
 ctrl + Print
     screenshot selection
 
+
+#: Change Screen-Layout
+super + alt + p
+    rofi-screenlayouts
+
