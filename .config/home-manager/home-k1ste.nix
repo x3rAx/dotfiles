@@ -99,6 +99,7 @@ in
     #   echo "Hello, ${config.home.username}!"
     # '')
 
+    polybarFull
     android-tools
     aseprite
     autorandr
@@ -114,12 +115,14 @@ in
     discord
     distrobox
     duf
+    easyeffects
     element-desktop
     evcxr # Rust REPL
     eww # Status bar
     expect
     filezilla
     fish
+    flameshot # Screenshot tool
     fx # Terminal JSON viewer
     gamescope # Restrict mouse to game
     gimp
@@ -130,6 +133,7 @@ in
     htmlq
     httpie
     httrack
+    imhex
     inxi
     jstest-gtk # Bluetooth controller tester
     kopia
@@ -138,11 +142,13 @@ in
     libreoffice
     lolcat
     lsd
+    maim # Screenshot tool
     mangohud
     mimeo
     multitail
     neofetch
     nerdfonts
+    nextcloud-client
     nix-direnv
     nmap
     nvtopPackages.full
@@ -154,10 +160,13 @@ in
     protonup-qt # Manage Steam games & ProtonGE versions
     pulseaudio # For `pactl` and audio sink switching
     qpwgraph # Pipewire connection graph
+    quickemu
     qutebrowser
     razer-battery-tray
     remmina
     ripgrep-all
+    rmlint
+    shotgun # Screenshot tool
     shutter
     spectacle
     spice-gtk
@@ -168,7 +177,7 @@ in
     udiskie
     unclutter-xfixes
     unstable.kitty
-    ventoy-bin-full # or `ventoy-bin`?
+    unstable.ventoy-bin-full # or `ventoy-bin`?
     whois
     wireguard-tools
     xorg.xhost
@@ -179,14 +188,13 @@ in
     xss-lock
     godot-with-libs
     unstable.gdtoolkit_4 # Godot toolkit, provides `gdformat`
+    age
+    rustdesk-flutter
 
   ]) ++ (with unstable; [
-
-    easyeffects
     just
     nushell
     obsidian
-    quickemu
     telegram-desktop
     thunderbird-bin
     zoxide
