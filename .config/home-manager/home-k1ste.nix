@@ -107,15 +107,15 @@ in {
       #   echo "Hello, ${config.home.username}!"
       # '')
 
-      polybarFull
+      age
       android-tools
+      unstable.armagetronad # Game
       aseprite
       autorandr
       barrier
       binutils
       btrfs-assistant # GUI for btrfs
       bvi # VI like hex editor
-      cinnamon.nemo
       cli-visualizer # CLI audio visualizer
       cryptomator
       dbeaver-bin
@@ -131,10 +131,13 @@ in {
       filezilla
       fish
       flameshot # Screenshot tool
+      nvtopPackages.full
       fx # Terminal JSON viewer
       gamescope # Restrict mouse to game
+      unstable.gdtoolkit_4 # Godot toolkit, provides `gdformat`
       gimp
       glxinfo
+      godot-with-libs
       gparted
       gpick
       handlr
@@ -144,6 +147,8 @@ in {
       imhex
       inxi
       jstest-gtk # Bluetooth controller tester
+      unstable.just
+      unstable.kitty
       kopia
       unstable.lazygit
       ldns # drill - better(?) dig
@@ -154,17 +159,20 @@ in {
       mangohud
       mimeo
       multitail
+      cinnamon.nemo
       neofetch
       nerdfonts
       nextcloud-client
       nix-direnv
       nmap
-      nvtopPackages.full
+      unstable.nushell
+      unstable.obsidian
       oh-my-posh
       openfortivpn
       parallel
       pavucontrol
       pcmanfm
+      polybarFull
       protonup-qt # Manage Steam games & ProtonGE versions
       pulseaudio # For `pactl` and audio sink switching
       qpwgraph # Pipewire connection graph
@@ -174,42 +182,30 @@ in {
       remmina
       ripgrep-all
       rmlint
+      rustdesk-flutter
       shotgun # Screenshot tool
       shutter
       spectacle
       spice-gtk
       sshpass
       stalonetray # Used to hack tray icons into my eww bar
+      unstable.telegram-desktop
       tesseract5
+      unstable.thunderbird-bin
       tldr # Simplified man pages
       udiskie
       unclutter-xfixes
-      unstable.kitty
       unstable.ventoy-bin-full # or `ventoy-bin`?
       whois
       wireguard-tools
       xorg.xhost
       xorg.xkill
-      xorg.xwininfo
       xournalpp
       xsecurelock
       xss-lock
-      godot-with-libs
-      unstable.gdtoolkit_4 # Godot toolkit, provides `gdformat`
-      age
-      rustdesk-flutter
-    ])
-    ++ (with unstable; [
-      just
-      nushell
-      obsidian
-      telegram-desktop
-      thunderbird-bin
-      zoxide
-    ])
-    ++ (with pkgs; [
-      # Games
-      unstable.armagetronad
+      xorg.xwininfo
+      unstable.zoxide
+
     ]);
 
   # Home Manager can also manage your environment variables through
