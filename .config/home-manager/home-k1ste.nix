@@ -1,56 +1,64 @@
-{ config, pkgs, mkNixpkgs, mkUnstable, lib, vscode-extensions, inputs, ... }:
-
-let
+{
+  config,
+  pkgs,
+  mkNixpkgs,
+  mkUnstable,
+  lib,
+  vscode-extensions,
+  inputs,
+  ...
+}: let
   nixpkgs-config = {
     permittedInsecurePackages = [
       "electron-24.8.6"
       "electron-25.9.0"
     ];
-    allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) ([
-      "aseprite"
-      "discord"
-      "obsidian"
-      "vscode"
-    ] ++ [
-      # Stuff for `nvtop`
-      "cuda-merged"
-      "cuda_cccl"
-      "cuda_cudart"
-      "cuda_cuobjdump"
-      "cuda_cupti"
-      "cuda_cuxxfilt"
-      "cuda_gdb"
-      "cuda_nvcc"
-      "cuda_nvdisasm"
-      "cuda_nvml_dev"
-      "cuda_nvprune"
-      "cuda_nvrtc"
-      "cuda_nvtx"
-      "cuda_profiler_api"
-      "cuda_sanitizer_api"
-      "libcublas"
-      "libcufft"
-      "libcurand"
-      "libcusolver"
-      "libcusparse"
-      "libnpp"
-      "libnvjitlink"
-    ]);
+    allowUnfreePredicate = pkg:
+      builtins.elem (lib.getName pkg) ([
+          "aseprite"
+          "discord"
+          "obsidian"
+          "vscode"
+        ]
+        ++ [
+          # Stuff for `nvtop`
+          "cuda-merged"
+          "cuda_cccl"
+          "cuda_cudart"
+          "cuda_cuobjdump"
+          "cuda_cupti"
+          "cuda_cuxxfilt"
+          "cuda_gdb"
+          "cuda_nvcc"
+          "cuda_nvdisasm"
+          "cuda_nvml_dev"
+          "cuda_nvprune"
+          "cuda_nvrtc"
+          "cuda_nvtx"
+          "cuda_profiler_api"
+          "cuda_sanitizer_api"
+          "libcublas"
+          "libcufft"
+          "libcurand"
+          "libcusolver"
+          "libcusparse"
+          "libnpp"
+          "libnvjitlink"
+        ]);
   };
-  unstable = mkUnstable { config = nixpkgs-config; };
+  unstable = mkUnstable {config = nixpkgs-config;};
 
   godot-libraries = with pkgs; [
     stdenv.cc.cc.lib # For git support
   ];
-  godot-with-libs =
-    let
-        godot-package = unstable.godot_4;
-    in
-      pkgs.symlinkJoin {
-        name = godot-package.name + "-with-libs";
-        paths = [ godot-package ];
-        nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
-        postBuild = ''
+  godot-with-libs = let
+    godot-package = unstable.godot_4;
+  in
+    pkgs.symlinkJoin {
+      name = godot-package.name + "-with-libs";
+      paths = [godot-package];
+      nativeBuildInputs = [pkgs.makeBinaryWrapper];
+      postBuild = ''
         wrapProgram "$out/bin/godot4" \
           --set LD_LIBRARY_PATH '${lib.makeLibraryPath godot-libraries}'
 
@@ -61,10 +69,9 @@ let
           $out/share/applications/org.godotengine.Godot4.desktop
         sed -i "s|^Exec=[^[:space:]]*|Exec=$out/bin/godot4|g" \
           $out/share/applications/org.godotengine.Godot4.desktop
-        '';
-      };
-in
-{
+      '';
+    };
+in {
   imports = [
     ./modules/nvim.nix
     ./modules/vscode.nix
@@ -81,128 +88,129 @@ in
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = (with pkgs; [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
+  home.packages =
+    (with pkgs; [
+      # # Adds the 'hello' command to your environment. It prints a friendly
+      # # "Hello, world!" when run.
+      # pkgs.hello
 
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+      # # It is sometimes useful to fine-tune packages, for example, by applying
+      # # overrides. You can do that directly here, just don't forget the
+      # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
+      # # fonts?
+      # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
 
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
+      # # You can also create simple shell scripts directly inside your
+      # # configuration. For example, this adds a command 'my-hello' to your
+      # # environment:
+      # (pkgs.writeShellScriptBin "my-hello" ''
+      #   echo "Hello, ${config.home.username}!"
+      # '')
 
-    polybarFull
-    android-tools
-    aseprite
-    autorandr
-    barrier
-    binutils
-    btrfs-assistant # GUI for btrfs
-    bvi # VI like hex editor
-    cinnamon.nemo
-    cli-visualizer # CLI audio visualizer
-    cryptomator
-    dbeaver-bin
-    deadd-notification-center
-    discord
-    distrobox
-    duf
-    easyeffects
-    element-desktop
-    evcxr # Rust REPL
-    eww # Status bar
-    expect
-    filezilla
-    fish
-    flameshot # Screenshot tool
-    fx # Terminal JSON viewer
-    gamescope # Restrict mouse to game
-    gimp
-    glxinfo
-    gparted
-    gpick
-    handlr
-    htmlq
-    httpie
-    httrack
-    imhex
-    inxi
-    jstest-gtk # Bluetooth controller tester
-    kopia
-    unstable.lazygit
-    ldns # drill - better(?) dig
-    libreoffice
-    lolcat
-    lsd
-    maim # Screenshot tool
-    mangohud
-    mimeo
-    multitail
-    neofetch
-    nerdfonts
-    nextcloud-client
-    nix-direnv
-    nmap
-    nvtopPackages.full
-    oh-my-posh
-    openfortivpn
-    parallel
-    pavucontrol
-    pcmanfm
-    protonup-qt # Manage Steam games & ProtonGE versions
-    pulseaudio # For `pactl` and audio sink switching
-    qpwgraph # Pipewire connection graph
-    quickemu
-    qutebrowser
-    razer-battery-tray
-    remmina
-    ripgrep-all
-    rmlint
-    shotgun # Screenshot tool
-    shutter
-    spectacle
-    spice-gtk
-    sshpass
-    stalonetray # Used to hack tray icons into my eww bar
-    tesseract5
-    tldr # Simplified man pages
-    udiskie
-    unclutter-xfixes
-    unstable.kitty
-    unstable.ventoy-bin-full # or `ventoy-bin`?
-    whois
-    wireguard-tools
-    xorg.xhost
-    xorg.xkill
-    xorg.xwininfo
-    xournalpp
-    xsecurelock
-    xss-lock
-    godot-with-libs
-    unstable.gdtoolkit_4 # Godot toolkit, provides `gdformat`
-    age
-    rustdesk-flutter
-
-  ]) ++ (with unstable; [
-    just
-    nushell
-    obsidian
-    telegram-desktop
-    thunderbird-bin
-    zoxide
-  ]) ++ (with pkgs; [
+      polybarFull
+      android-tools
+      aseprite
+      autorandr
+      barrier
+      binutils
+      btrfs-assistant # GUI for btrfs
+      bvi # VI like hex editor
+      cinnamon.nemo
+      cli-visualizer # CLI audio visualizer
+      cryptomator
+      dbeaver-bin
+      deadd-notification-center
+      discord
+      distrobox
+      duf
+      easyeffects
+      element-desktop
+      evcxr # Rust REPL
+      eww # Status bar
+      expect
+      filezilla
+      fish
+      flameshot # Screenshot tool
+      fx # Terminal JSON viewer
+      gamescope # Restrict mouse to game
+      gimp
+      glxinfo
+      gparted
+      gpick
+      handlr
+      htmlq
+      httpie
+      httrack
+      imhex
+      inxi
+      jstest-gtk # Bluetooth controller tester
+      kopia
+      unstable.lazygit
+      ldns # drill - better(?) dig
+      libreoffice
+      lolcat
+      lsd
+      maim # Screenshot tool
+      mangohud
+      mimeo
+      multitail
+      neofetch
+      nerdfonts
+      nextcloud-client
+      nix-direnv
+      nmap
+      nvtopPackages.full
+      oh-my-posh
+      openfortivpn
+      parallel
+      pavucontrol
+      pcmanfm
+      protonup-qt # Manage Steam games & ProtonGE versions
+      pulseaudio # For `pactl` and audio sink switching
+      qpwgraph # Pipewire connection graph
+      quickemu
+      qutebrowser
+      razer-battery-tray
+      remmina
+      ripgrep-all
+      rmlint
+      shotgun # Screenshot tool
+      shutter
+      spectacle
+      spice-gtk
+      sshpass
+      stalonetray # Used to hack tray icons into my eww bar
+      tesseract5
+      tldr # Simplified man pages
+      udiskie
+      unclutter-xfixes
+      unstable.kitty
+      unstable.ventoy-bin-full # or `ventoy-bin`?
+      whois
+      wireguard-tools
+      xorg.xhost
+      xorg.xkill
+      xorg.xwininfo
+      xournalpp
+      xsecurelock
+      xss-lock
+      godot-with-libs
+      unstable.gdtoolkit_4 # Godot toolkit, provides `gdformat`
+      age
+      rustdesk-flutter
+    ])
+    ++ (with unstable; [
+      just
+      nushell
+      obsidian
+      telegram-desktop
+      thunderbird-bin
+      zoxide
+    ])
+    ++ (with pkgs; [
       # Games
       unstable.armagetronad
-
-  ]);
+    ]);
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. If you don't want to manage your shell through Home
