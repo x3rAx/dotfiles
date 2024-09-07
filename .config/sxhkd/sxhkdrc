@@ -32,7 +32,7 @@ ctrl + alt + shift + k
 
 #: Rofi
 super + d
-    rofi -show drun
+    rofi -combi-modi window,drun -show combi
 
 #: Move nodes using smart move
 super + shift + {h,j,k,l}
