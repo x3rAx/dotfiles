@@ -245,7 +245,9 @@ in
     enable = true;
     settings = {
       SD_ROOT = "${config.home.homeDirectory}/.sd";
-      SD_EDITOR = "${pkgs.neovim}/bin/nvim";
+      # TODO: neovim has been wrapped to allow NIX_LD stuff. Find a way to use it here => Maybe using an overlay that provides `nvim-ld` or even overrides `neovim` package?
+      #SD_EDITOR = "${pkgs.neovim}/bin/nvim";
+      SD_EDITOR = "nvim";
       SD_CAT = "${pkgs.bat}/bin/bat";
     };
   };
