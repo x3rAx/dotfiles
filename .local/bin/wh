@@ -32,10 +32,12 @@ readonly _USAGE="
   OPTIONS:
     -h, --help  Show this help message.
     -e, --edit  Open the result in \$EDITOR.
+    -r, --realpath
+                Resolve the realpath of the result.
 "
 
-readonly _OPTIONS='h,e'
-readonly _LONGOPTS='help,edit'
+readonly _OPTIONS='h,e,r'
+readonly _LONGOPTS='help,edit,realpath'
 
 # Collect args until the ACTION is found
 args=()
@@ -58,10 +60,13 @@ eval set -- "${parsed[@]}"; unset parsed
 unset args cmd_found
 
 _edit=false
+_realpath=false
 while [[ $# -gt 0 ]]; do
     case $1 in
         '-h'|'--help')  echo "$_USAGE"; exit; ;;
         '-e'|'--edit')  _edit=true; shift; ;;
+        '-r'|'--realpath')
+                        _realpath=true; shift; ;;
         '--')           shift; break; ;;
         *)              err "Programming error"; exit $_ERR_PROGRAMMING; ;;
     esac
@@ -78,17 +83,26 @@ cmd="$1"
 shift
 action=("$@")
 
+# --- Find the file ---
 file="$(which "$cmd")"
 
+# --- Resolve realpath ---
+if [[ $_realpath == true ]]; then
+    file="$(realpath "$file")"
+fi
+
+# --- Edit ---
 if [[ $_edit == true ]]; then
     exec -- "$EDITOR" "$file"
 fi
 
+# --- Run action ---
 if [[ ${#action[@]} -eq 0 ]]; then
     echo "$file"
     exit
 fi
 
+# --- Replace `%` with file path ---
 file_replaced=false
 for i in "${!action[@]}"; do
     if [[ ${action[$i]} == '%' ]]; then
@@ -98,8 +112,10 @@ for i in "${!action[@]}"; do
     fi
 done
 
+# --- Append file path if no `%` was present ---
 if [[ $file_replaced == false ]]; then
     action+=("$file")
 fi
 
+# --- Execute the action ---
 exec -- "${action[@]}"
