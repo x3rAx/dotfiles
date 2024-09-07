@@ -232,6 +232,11 @@ in
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
+    "xsecurelock-dimmer" = {
+      source = "${pkgs.xsecurelock}/libexec/xsecurelock/dimmer";
+      target = ".local/bin/xsecurelock-dimmer";
+    };
+
   };
 
   xdg.configFile = {
