@@ -128,3 +128,20 @@ super + x ; {_,shift +} e
 
 super + ctrl + shift + alt + q
     ~/.config/polybar/scripts/rofi-powermenu.sh
+
+#: Screenshot (full)
+Print
+    screenshot full
+
+#: Screenshot (window)
+alt + Print
+    screenshot window
+
+#: Screenshot (display)
+shift + Print
+    screenshot display
+
+#: Screenshot (selection)
+ctrl + Print
+    screenshot selection
+
