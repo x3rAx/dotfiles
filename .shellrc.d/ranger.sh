@@ -3,7 +3,8 @@ function ranger-cd {
     local tempfile="$(mktemp -t tmp.XXXXXX)"
 
     command ranger \
-        --cmd="map Q chain shell echo %d > \"$tempfile\"; quitall" \
+        --cmd="map q chain shell echo %d > \"$tempfile\"; quitall" \
+        --cmd="map Q quitall" \
         "$@"
 
     if [[ -f "$tempfile" ]] && [[ "$(cat -- "$tempfile")" != $(pwd) ]]; then
