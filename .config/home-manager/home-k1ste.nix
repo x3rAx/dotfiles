@@ -88,108 +88,114 @@ in {
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [
-    age
-    android-tools
-    unstable.armagetronad # Game
-    aseprite
-    autorandr
-    barrier
-    binutils
-    btrfs-assistant # GUI for btrfs
-    bvi # VI like hex editor
-    cli-visualizer # CLI audio visualizer
-    cryptomator
-    dbeaver-bin
-    deadd-notification-center
-    discord
-    distrobox
-    duf
-    easyeffects
-    element-desktop
-    evcxr # Rust REPL
-    eww # Status bar
-    expect
-    filezilla
-    inputs.firefox-nightly.packages.${pkgs.system}.firefox-nightly-bin
-    fish
-    flameshot # Screenshot tool
-    nvtopPackages.full
-    fx # Terminal JSON viewer
-    gamescope # Restrict mouse to game
-    unstable.gdtoolkit_4 # Godot toolkit, provides `gdformat`
-    gimp
-    glxinfo
-    godot-with-libs
-    gparted
-    gpick
-    handlr
-    htmlq
-    httpie
-    httrack
-    imhex
-    inxi
-    jstest-gtk # Bluetooth controller tester
-    unstable.just
-    unstable.kitty
-    kopia
-    unstable.lazygit
-    ldns # drill - better(?) dig
-    libreoffice
-    lolcat
-    lsd
-    maim # Screenshot tool
-    mangohud
-    mimeo
-    multitail
-    cinnamon.nemo
-    neofetch
-    nerdfonts
-    nextcloud-client
-    nix-direnv
-    nmap
-    unstable.nushell
-    unstable.obsidian
-    oh-my-posh
-    openfortivpn
-    parallel
-    pavucontrol
-    pcmanfm
-    polybarFull
-    protonup-qt # Manage Steam games & ProtonGE versions
-    pulseaudio # For `pactl` and audio sink switching
-    qpwgraph # Pipewire connection graph
-    quickemu
-    qutebrowser
-    razer-battery-tray
-    remmina
-    ripgrep-all
-    rmlint
-    rustdesk-flutter
-    shotgun # Screenshot tool
-    shutter
-    spectacle
-    spice-gtk
-    sshpass
-    stalonetray # Used to hack tray icons into my eww bar
-    unstable.telegram-desktop
-    tesseract5
-    unstable.thunderbird-bin
-    tldr # Simplified man pages
-    udiskie
-    unclutter-xfixes
-    unstable.ventoy-bin-full # or `ventoy-bin`?
-    whois
-    wireguard-tools
-    xorg.xhost
-    xorg.xkill
-    xournalpp
-    xsecurelock
-    xss-lock
-    xorg.xwininfo
-    yazi
-    unstable.zoxide
-  ];
+  home.packages = let
+    external = {
+      firefox-nightly = inputs.firefox-nightly.packages.${pkgs.system}.firefox-nightly-bin;
+    };
+  in
+    with pkgs; [
+      age
+      android-tools
+      unstable.armagetronad # Game
+      aseprite
+      autorandr
+      barrier
+      binutils
+      btrfs-assistant # GUI for btrfs
+      bvi # VI like hex editor
+      cli-visualizer # CLI audio visualizer
+      cryptomator
+      dbeaver-bin
+      deadd-notification-center
+      discord
+      distrobox
+      duf
+      easyeffects
+      element-desktop
+      evcxr # Rust REPL
+      eww # Status bar
+      expect
+      filezilla
+      external.firefox-nightly
+      fish
+      flameshot # Screenshot tool
+      nvtopPackages.full
+      fx # Terminal JSON viewer
+      gamescope # Restrict mouse to game
+      unstable.gdtoolkit_4 # Godot toolkit, provides `gdformat`
+      gimp
+      glxinfo
+      godot-with-libs
+      gparted
+      gpick
+      handlr
+      htmlq
+      httpie
+      httrack
+      imhex
+      inxi
+      jstest-gtk # Bluetooth controller tester
+      unstable.just
+      unstable.kitty
+      kopia
+      unstable.lazygit
+      ldns # drill - better(?) dig
+      libreoffice
+      lolcat
+      lsd
+      maim # Screenshot tool
+      mangohud
+      mimeo
+      multitail
+      cinnamon.nemo
+      neofetch
+      nerdfonts
+      nextcloud-client
+      nix-direnv
+      nmap
+      unstable.nushell
+      unstable.obsidian
+      oh-my-posh
+      openfortivpn
+      parallel
+      pavucontrol
+      pcmanfm
+      polybarFull
+      protonup-qt # Manage Steam games & ProtonGE versions
+      pulseaudio # For `pactl` and audio sink switching
+      qpwgraph # Pipewire connection graph
+      quickemu
+      qutebrowser
+      razer-battery-tray
+      remmina
+      ripdrag # Drag and drop from terminal
+      ripgrep-all
+      rmlint
+      rustdesk-flutter
+      shotgun # Screenshot tool
+      shutter
+      spectacle
+      spice-gtk
+      sshpass
+      stalonetray # Used to hack tray icons into my eww bar
+      unstable.telegram-desktop
+      tesseract5
+      unstable.thunderbird-bin
+      tldr # Simplified man pages
+      udiskie
+      unclutter-xfixes
+      unstable.ventoy-bin-full # or `ventoy-bin`?
+      whois
+      wireguard-tools
+      xorg.xhost
+      xorg.xkill
+      xournalpp
+      xsecurelock
+      xss-lock
+      xorg.xwininfo
+      yazi
+      unstable.zoxide
+    ];
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. If you don't want to manage your shell through Home
