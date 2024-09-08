@@ -1,8 +1,12 @@
-{ config, pkgs, lib, mkUnstable, ... }:
-
-let
-  nixpkgs-config = { };
-  unstable = mkUnstable { config = nixpkgs-config; };
+{
+  config,
+  pkgs,
+  lib,
+  mkUnstable,
+  ...
+}: let
+  nixpkgs-config = {};
+  unstable = mkUnstable {config = nixpkgs-config;};
 
   nvim-ld-libraries = with pkgs; [
     #icu
@@ -11,8 +15,8 @@ let
   ];
   vscode-ld = pkgs.symlinkJoin {
     name = "vscode-ld";
-    paths = [ pkgs.vscode ];
-    nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+    paths = [pkgs.vscode];
+    nativeBuildInputs = [pkgs.makeBinaryWrapper];
     #postBuild = ''
     #  wrapProgram "$out/bin/code" \
     #    --set NIX_LD `cat '${pkgs.stdenv.cc}/nix-support/dynamic-linker'` \
@@ -64,7 +68,7 @@ in {
   #    #        sha256 = "sha256-n2fCfrI0wzwXeaDr7zkehIOJBrWUMtJdBRwOwUb5RsY=";
   #    #      };
   #    #      postInstall =
-  #    #        let 
+  #    #        let
   #    #          serverName = "language_server_linux_x64";
   #    #          lspOutDir = "$out/share/vscode/extensions/Codeium.codeium/dist/b43caa7661bde4411c6c11d3b938890bc1ea0d08";
   #    #        in ''

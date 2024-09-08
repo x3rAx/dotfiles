@@ -1,14 +1,16 @@
-{ lib, pkgs, stdenv
-, fetchFromGitHub
-, buildPythonPackage
-, python3
-, dejavu_fonts
-, libappindicator
-, python3Packages
-, wrapGAppsHook
-, gobject-introspection
+{
+  lib,
+  pkgs,
+  stdenv,
+  fetchFromGitHub,
+  buildPythonPackage,
+  python3,
+  dejavu_fonts,
+  libappindicator,
+  python3Packages,
+  wrapGAppsHook,
+  gobject-introspection,
 }:
-
 buildPythonPackage {
   format = "other";
 
@@ -31,11 +33,12 @@ buildPythonPackage {
   # Programs and libraries used by the new derivation at *run*-time on the target host
   buildInputs = [
     libappindicator
-    (python3.withPackages (pythonPackages: with python3Packages; [
-      openrazer
-      pillow
-      pystray
-    ]))
+    (python3.withPackages (pythonPackages:
+      with python3Packages; [
+        openrazer
+        pillow
+        pystray
+      ]))
     wrapGAppsHook
     gobject-introspection
   ];
@@ -62,5 +65,3 @@ buildPythonPackage {
     cp -R ./icons $out/
   '';
 }
-
-
