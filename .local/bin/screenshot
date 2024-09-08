@@ -17,7 +17,7 @@ readonly _USAGE="
     all         [default] Take a screenshot of all screens.
                 (Aliases: a, full, f, whole, everything)
     display     Take a screenshot of the current display.
-                (Aliases: s, single, screen)
+                (Aliases: d, single, screen)
     window      Take a screenshot of the active window.
                 (Aliases: w, win)
     selection   Take a screenshot of the current selection.
@@ -42,7 +42,7 @@ case "$action" in
         notify "Screenshot taken: Everything" "$path"
         ;;
 
-    'display'|'screen'|'single'|'s')
+    'display'|'d'|'screen'|'single')
         shotgun --single-screen - \
             | tee "$path" \
             | xclip -selection clipboard -t image/png
