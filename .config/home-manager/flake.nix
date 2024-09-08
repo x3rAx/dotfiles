@@ -1,6 +1,15 @@
 {
   description = "Home Manager configuration of x3ro";
 
+  nixConfig = {
+    extra-substituters = [
+      "https://yazi.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
+    ];
+  };
+
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
@@ -13,6 +22,7 @@
 
     nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     firefox-nightly.url = "github:nix-community/flake-firefox-nightly/master";
+    yazi.url = "github:sxyazi/yazi";
   };
 
   outputs = {
