@@ -26,7 +26,7 @@ readonly _USAGE="
 
 action="${1:-all}"
 
-path="${HOME}/Pictures/[Screenshots]/$(date +'%F_%H-%M-%S').png"
+path="${HOME}/Pictures/[Screenshots]/$(date +'%F__%H-%M-%S').png"
 
 notify() {
     echo >&2 "$1"
