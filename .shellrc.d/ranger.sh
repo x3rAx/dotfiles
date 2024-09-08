@@ -14,4 +14,8 @@ function ranger-cd {
 }
 
 alias ranger=ranger-cd
-alias r=ranger
+#alias r=ranger-cd
+function r() {
+    echo >&2 $'How \'bout using `x` instead?'
+    return 1
+}
