@@ -187,6 +187,7 @@ in {
     xsecurelock
     xss-lock
     xorg.xwininfo
+    yazi
     unstable.zoxide
   ];
 
