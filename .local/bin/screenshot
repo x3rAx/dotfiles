@@ -57,9 +57,18 @@ case "$action" in
         ;;
 
     'selection'|'s'|'sel'|'select')
+        tmpfile="$(mktemp)"
         flameshot gui --last-region --raw \
-            | tee "$path" \
+            | tee "$tmpfile" \
             | xclip -selection clipboard -t image/png
+
+        filesize="$(stat -c'%s' "$tmpfile")"
+        if [[ $filesize -eq 0 ]]; then
+            # Screenshot was aborted
+            rm "$tmpfile"
+            exit 1
+        fi
+        mv "$tmpfile" "$path"
         notify "Screenshot taken: Selection" "$path"
         ;;
 
