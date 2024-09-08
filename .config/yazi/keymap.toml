@@ -149,6 +149,11 @@ keymap = [
 	# Help
 	{ on = "~",    run = "help", desc = "Open help" },
 	{ on = "<F1>", run = "help", desc = "Open help" },
+
+    # Custom: Drag-and-drop
+    { on = [ "R" ], run = '''
+        shell 'ripdrag "$@" -x 2>/dev/null &' --confirm
+    ''' },
 ]
 
 [tasks]
