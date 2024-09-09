@@ -113,14 +113,6 @@ in {
     pipectl
     wireplumber
     #carla # Audio plugin host
-
-    (copyq.overrideAttrs (oldAttrs: {
-      buildInputs = oldAttrs.buildInputs or [] ++ [ ydotool grim slurp ];
-      postInstall = oldAttrs.postInstall or "" + ''
-        wrapProgram $out/bin/copyq \
-          --set QT_QPA_PLATFORM xcb
-      '';
-    }))
   ];
 
   # Home Manager can also manage your environment variables through
@@ -239,7 +231,8 @@ in {
 
   # TODO: Do I need this?
   #fonts.fontconfig.enable = true; # For nerdfonts?
-  #services.copyq.enable = true;
+
+  services.copyq.enable = true;
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
