@@ -7,10 +7,10 @@ let
       #"electron-25.9.0" # For obsidian
     ];
     allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-      "teamspeak-client"
-      "phpstorm"
       "burpsuite" "burpsuite-2023.5.3"
       "obsidian"
+      "phpstorm"
+      "teamspeak-client"
       # "electron-25.9.0" # For Obsidian
     ];
   };
