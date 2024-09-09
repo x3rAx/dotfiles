@@ -3,8 +3,8 @@
 let
   nixpkgs-config = {
     permittedInsecurePackages = [
-      "electron-23.3.13" # For super-productivity
-      "electron-25.9.0" # For obsidian
+      #"electron-23.3.13" # For super-productivity
+      #"electron-25.9.0" # For obsidian
     ];
     allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
       "teamspeak-client"
