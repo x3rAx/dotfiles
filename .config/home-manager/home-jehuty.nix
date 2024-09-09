@@ -10,6 +10,7 @@ let
       "burpsuite" "burpsuite-2023.5.3"
       "obsidian"
       "phpstorm"
+      "rambox"
       "teamspeak-client"
       # "electron-25.9.0" # For Obsidian
     ];
@@ -76,6 +77,7 @@ in {
     inkscape
     insomnia # Postman alternative
     unstable.just
+    kopia
     unstable.lazygit
     libappindicator
     lolcat
@@ -92,9 +94,14 @@ in {
     unstable.jetbrains.phpstorm
     python3Packages.pillow
     python3Packages.pystray
+    unstable.rambox
     remmina
+    rmlint
+    rye
     super-productivity-with-fix-for-wayland
+    teams-for-linux
     teamspeak_client
+    telegram-desktop
     unstable.thunderbird-bin
     udiskie
     #ungoogled-chromium
