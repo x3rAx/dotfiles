@@ -1,5 +1,20 @@
 
 
+--- Show Symlink Target in Status Bar ---
+function Status:name()
+	local h = self._tab.current.hovered
+	if not h then
+		return ui.Line {}
+	end
+
+	local linked = ""
+	if h.link_to ~= nil then
+		linked = " -> " .. tostring(h.link_to)
+	end
+	return ui.Line(" " .. h.name .. linked)
+end
+
+
 --- Show User/Group in Status Bar ---
 Status:children_add(function()
 	local h = cx.active.current.hovered
