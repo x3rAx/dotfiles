@@ -1,38 +1,43 @@
-{ config, pkgs, lib, mkUnstable, inputs, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  mkUnstable,
+  inputs,
+  ...
+}: let
   nixpkgs-config = {
     permittedInsecurePackages = [
       #"electron-23.3.13" # For super-productivity
       #"electron-25.9.0" # For obsidian
     ];
-    allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-      "burpsuite" "burpsuite-2023.5.3"
-      "obsidian"
-      "phpstorm"
-      "rambox"
-      "teamspeak-client"
-      # "electron-25.9.0" # For Obsidian
-    ];
+    allowUnfreePredicate = pkg:
+      builtins.elem (lib.getName pkg) [
+        "burpsuite"
+        "burpsuite-2023.5.3"
+        "obsidian"
+        "phpstorm"
+        "rambox"
+        "teamspeak-client"
+        # "electron-25.9.0" # For Obsidian
+      ];
   };
-  unstable = mkUnstable { config = nixpkgs-config; };
+  unstable = mkUnstable {config = nixpkgs-config;};
 
   super-productivity-with-fix-for-wayland = pkgs.symlinkJoin {
     name = "super-productivity";
-    paths = [ pkgs.super-productivity ];
-    nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+    paths = [pkgs.super-productivity];
+    nativeBuildInputs = [pkgs.makeBinaryWrapper];
     postBuild = ''
       wrapProgram "$out/bin/super-productivity" \
         --append-flags '--enable-features=UseOzonePlatform --ozone-platform=wayland'
     '';
   };
-
 in {
   imports = [
     #./home-env-packages.nix
     ./modules/nvim.nix
   ];
-
 
   nixpkgs.config = nixpkgs-config;
 
@@ -49,78 +54,78 @@ in {
     };
   in
     with pkgs; [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
+      # # Adds the 'hello' command to your environment. It prints a friendly
+      # # "Hello, world!" when run.
+      # pkgs.hello
 
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+      # # It is sometimes useful to fine-tune packages, for example, by applying
+      # # overrides. You can do that directly here, just don't forget the
+      # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
+      # # fonts?
+      # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
 
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
+      # # You can also create simple shell scripts directly inside your
+      # # configuration. For example, this adds a command 'my-hello' to your
+      # # environment:
+      # (pkgs.writeShellScriptBin "my-hello" ''
+      #   echo "Hello, ${config.home.username}!"
+      # '')
 
-    anki
-    bat-extras.batman
-    brave
-    unstable.bruno # Postman alternative (plain text request files)
-    burpsuite
-    cpulimit
-    curlie
-    distrobox
-    duf
-    eww
-    fx
-    handlr
-    hurl
-    inkscape
-    insomnia # Postman alternative
-    unstable.just
-    kopia
-    unstable.lazygit
-    libappindicator
-    lolcat
-    unstable.minio-client
-    neovide
-    nerdfonts
-    nerdfonts
-    #netavark
-    unstable.nushell
-    unstable.obsidian
-    python3Packages.openrazer
-    #(pkgs.nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
-    p7zip
-    unstable.jetbrains.phpstorm
-    python3Packages.pillow
-    python3Packages.pystray
-    unstable.rambox
-    remmina
-    ripdrag
-    rmlint
-    rye
-    super-productivity-with-fix-for-wayland
-    teams-for-linux
-    teamspeak_client
-    telegram-desktop
-    unstable.thunderbird-bin
-    udiskie
-    #ungoogled-chromium
-    external.yazi
-    yq-go # `jq` for Yaml
-    zoxide
+      anki
+      bat-extras.batman
+      brave
+      unstable.bruno # Postman alternative (plain text request files)
+      burpsuite
+      cpulimit
+      curlie
+      distrobox
+      duf
+      eww
+      fx
+      handlr
+      hurl
+      inkscape
+      insomnia # Postman alternative
+      unstable.just
+      kopia
+      unstable.lazygit
+      libappindicator
+      lolcat
+      unstable.minio-client
+      neovide
+      nerdfonts
+      nerdfonts
+      #netavark
+      unstable.nushell
+      unstable.obsidian
+      python3Packages.openrazer
+      #(pkgs.nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+      p7zip
+      unstable.jetbrains.phpstorm
+      python3Packages.pillow
+      python3Packages.pystray
+      unstable.rambox
+      remmina
+      ripdrag
+      rmlint
+      rye
+      super-productivity-with-fix-for-wayland
+      teams-for-linux
+      teamspeak_client
+      telegram-desktop
+      unstable.thunderbird-bin
+      udiskie
+      #ungoogled-chromium
+      external.yazi
+      yq-go # `jq` for Yaml
+      zoxide
 
-    ## Pipewire
-    pipecontrol
-    pipectl
-    wireplumber
-    #carla # Audio plugin host
-  ];
+      ## Pipewire
+      pipecontrol
+      pipectl
+      wireplumber
+      #carla # Audio plugin host
+    ];
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. If you don't want to manage your shell through Home
@@ -190,49 +195,49 @@ in {
       speed = 0.2; # [-1; 1]
     };
     "org/gnome/desktop/wm/keybindings" = {
-      switch-windows               = mkArray type.string [ "<Alt>Tab" ];
-      switch-windows-backward      = mkArray type.string [ "<Shift><Alt>Tab" ];
-      switch-applications          = mkArray type.string [ "<Super>Tab" ];
-      switch-applications-backward = mkArray type.string [ "<Shift><Super>Tab" ];
-      switch-group                 = mkArray type.string [ "<Super>Escape" ];
-      switch-group-backward        = mkArray type.string [ "<Super><Alt>Escape" ];
+      switch-windows = mkArray type.string ["<Alt>Tab"];
+      switch-windows-backward = mkArray type.string ["<Shift><Alt>Tab"];
+      switch-applications = mkArray type.string ["<Super>Tab"];
+      switch-applications-backward = mkArray type.string ["<Shift><Super>Tab"];
+      switch-group = mkArray type.string ["<Super>Escape"];
+      switch-group-backward = mkArray type.string ["<Super><Alt>Escape"];
 
-      switch-to-workspace-1  = mkArray type.string [ "<Super>1" ];
-      switch-to-workspace-2  = mkArray type.string [ "<Super>2" ];
-      switch-to-workspace-3  = mkArray type.string [ "<Super>3" ];
-      switch-to-workspace-4  = mkArray type.string [ "<Super>4" ];
-      switch-to-workspace-5  = mkArray type.string [ "<Super>5" ];
-      switch-to-workspace-6  = mkArray type.string [ "<Super>6" ];
-      switch-to-workspace-7  = mkArray type.string [ "<Super>7" ];
-      switch-to-workspace-8  = mkArray type.string [ "<Super>8" ];
-      switch-to-workspace-9  = mkArray type.string [ "<Super>9" ];
-      switch-to-workspace-10 = mkArray type.string [ "<Super>0" ];
+      switch-to-workspace-1 = mkArray type.string ["<Super>1"];
+      switch-to-workspace-2 = mkArray type.string ["<Super>2"];
+      switch-to-workspace-3 = mkArray type.string ["<Super>3"];
+      switch-to-workspace-4 = mkArray type.string ["<Super>4"];
+      switch-to-workspace-5 = mkArray type.string ["<Super>5"];
+      switch-to-workspace-6 = mkArray type.string ["<Super>6"];
+      switch-to-workspace-7 = mkArray type.string ["<Super>7"];
+      switch-to-workspace-8 = mkArray type.string ["<Super>8"];
+      switch-to-workspace-9 = mkArray type.string ["<Super>9"];
+      switch-to-workspace-10 = mkArray type.string ["<Super>0"];
 
-      move-to-workspace-1 = mkArray type.string [ "<Shift><Super>1" ];
-      move-to-workspace-2 = mkArray type.string [ "<Shift><Super>2" ];
-      move-to-workspace-3 = mkArray type.string [ "<Shift><Super>3" ];
-      move-to-workspace-4 = mkArray type.string [ "<Shift><Super>4" ];
-      move-to-workspace-5 = mkArray type.string [ "<Shift><Super>5" ];
-      move-to-workspace-6 = mkArray type.string [ "<Shift><Super>6" ];
-      move-to-workspace-7 = mkArray type.string [ "<Shift><Super>7" ];
-      move-to-workspace-8 = mkArray type.string [ "<Shift><Super>8" ];
-      move-to-workspace-9 = mkArray type.string [ "<Shift><Super>9" ];
-      move-to-workspace-10 = mkArray type.string [ "<Shift><Super>0" ];
+      move-to-workspace-1 = mkArray type.string ["<Shift><Super>1"];
+      move-to-workspace-2 = mkArray type.string ["<Shift><Super>2"];
+      move-to-workspace-3 = mkArray type.string ["<Shift><Super>3"];
+      move-to-workspace-4 = mkArray type.string ["<Shift><Super>4"];
+      move-to-workspace-5 = mkArray type.string ["<Shift><Super>5"];
+      move-to-workspace-6 = mkArray type.string ["<Shift><Super>6"];
+      move-to-workspace-7 = mkArray type.string ["<Shift><Super>7"];
+      move-to-workspace-8 = mkArray type.string ["<Shift><Super>8"];
+      move-to-workspace-9 = mkArray type.string ["<Shift><Super>9"];
+      move-to-workspace-10 = mkArray type.string ["<Shift><Super>0"];
     };
     "org/gnome/shell/keybindings" = {
-      switch-to-application-1 = mkArray type.string [ ];
-      switch-to-application-2 = mkArray type.string [ ];
-      switch-to-application-3 = mkArray type.string [ ];
-      switch-to-application-4 = mkArray type.string [ ];
-      switch-to-application-5 = mkArray type.string [ ];
-      switch-to-application-6 = mkArray type.string [ ];
-      switch-to-application-7 = mkArray type.string [ ];
-      switch-to-application-8 = mkArray type.string [ ];
-      switch-to-application-9 = mkArray type.string [ ];
-      switch-to-application-10 = mkArray type.string [ ];
+      switch-to-application-1 = mkArray type.string [];
+      switch-to-application-2 = mkArray type.string [];
+      switch-to-application-3 = mkArray type.string [];
+      switch-to-application-4 = mkArray type.string [];
+      switch-to-application-5 = mkArray type.string [];
+      switch-to-application-6 = mkArray type.string [];
+      switch-to-application-7 = mkArray type.string [];
+      switch-to-application-8 = mkArray type.string [];
+      switch-to-application-9 = mkArray type.string [];
+      switch-to-application-10 = mkArray type.string [];
     };
     "org/gnome/mutter/keybindings" = {
-      switch-monitor = mkArray type.string [ "<Alt><Super>p" ];
+      switch-monitor = mkArray type.string ["<Alt><Super>p"];
     };
   };
 
