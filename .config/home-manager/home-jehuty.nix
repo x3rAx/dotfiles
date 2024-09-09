@@ -16,6 +16,16 @@ let
   };
   unstable = mkUnstable { config = nixpkgs-config; };
 
+  super-productivity-with-fix-for-wayland = pkgs.symlinkJoin {
+    name = "super-productivity";
+    paths = [ pkgs.super-productivity ];
+    nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+    postBuild = ''
+      wrapProgram "$out/bin/super-productivity" \
+        --append-flags '--enable-features=UseOzonePlatform --ozone-platform=wayland'
+    '';
+  };
+
 in {
   imports = [
     #./home-env-packages.nix
@@ -23,14 +33,7 @@ in {
   ];
 
 
-  nixpkgs.config = nixpkgs-config; nixpkgs.overlays = [
-    # TODO: Remove when super-productivity works again
-    (self: super: {
-      super-productivity = super.super-productivity.override {
-        electron = pkgs.electron_23;
-      };
-    })
-  ];
+  nixpkgs.config = nixpkgs-config;
 
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
