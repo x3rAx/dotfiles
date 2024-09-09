@@ -96,6 +96,7 @@ in {
     python3Packages.pystray
     unstable.rambox
     remmina
+    ripdrag
     rmlint
     rye
     super-productivity-with-fix-for-wayland
@@ -105,6 +106,7 @@ in {
     unstable.thunderbird-bin
     udiskie
     #ungoogled-chromium
+    yazi
     yq-go # `jq` for Yaml
     zoxide
 
