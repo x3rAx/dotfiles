@@ -4,6 +4,11 @@
 
 [manager]
 
+prepend_keymap = [
+    # Smart Enter
+    { on = "<Enter>", run = "plugin --sync smart-enter", desc = "Enter the child directory, or open the file" },
+]
+
 append_keymap = [
     # Drag-and-Drop
     { on = "R", run = ''' shell 'ripdrag "$@" -x 2>/dev/null &' --confirm ''', desc = "Open RipDrag with the selected items to allow Drag-and-Drop" },
