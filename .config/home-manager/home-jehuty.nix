@@ -60,46 +60,46 @@ in {
     #   echo "Hello, ${config.home.username}!"
     # '')
 
-    python3Packages.openrazer
-    python3Packages.pystray
-    python3Packages.pillow
+    anki
+    bat-extras.batman
+    brave
+    unstable.bruno # Postman alternative (plain text request files)
+    burpsuite
+    cpulimit
+    curlie
+    distrobox
+    duf
+    eww
+    fx
+    handlr
+    hurl
+    inkscape
+    insomnia # Postman alternative
+    unstable.just
+    unstable.lazygit
     libappindicator
     lolcat
-    teamspeak_client
-    p7zip
-    nerdfonts
-    zoxide
-    unstable.just
-    neovide
-    unstable.jetbrains.phpstorm
-    #ungoogled-chromium
-    duf
-    udiskie
-    handlr
-    fx
-    burpsuite
-    curlie
-    inkscape
-    unstable.nushell
-    eww-wayland
-    nerdfonts
-    hurl
     unstable.minio-client
-    #(pkgs.nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+    neovide
+    nerdfonts
+    nerdfonts
     #netavark
-    unstable.thunderbird-bin
-    super-productivity
-    yq-go # `jq` for Yaml
-    anki
-    brave
-    cpulimit
-    lazygit
-    remmina
+    unstable.nushell
     unstable.obsidian
-    insomnia # Postman alternative
-    bruno # Postman alternative (plain text request files)
-    distrobox
-    bat-extras.batman
+    python3Packages.openrazer
+    #(pkgs.nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+    p7zip
+    unstable.jetbrains.phpstorm
+    python3Packages.pillow
+    python3Packages.pystray
+    remmina
+    super-productivity-with-fix-for-wayland
+    teamspeak_client
+    unstable.thunderbird-bin
+    udiskie
+    #ungoogled-chromium
+    yq-go # `jq` for Yaml
+    zoxide
 
     ## Pipewire
     pipecontrol
