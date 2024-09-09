@@ -1,4 +1,4 @@
-{ config, pkgs, lib, mkUnstable, ... }:
+{ config, pkgs, lib, mkUnstable, inputs, ... }:
 
 let
   nixpkgs-config = {
@@ -43,7 +43,12 @@ in {
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [
+  home.packages = let
+    external = {
+      yazi = inputs.yazi.packages.${pkgs.system}.default;
+    };
+  in
+    with pkgs; [
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -106,7 +111,7 @@ in {
     unstable.thunderbird-bin
     udiskie
     #ungoogled-chromium
-    yazi
+    external.yazi
     yq-go # `jq` for Yaml
     zoxide
 
