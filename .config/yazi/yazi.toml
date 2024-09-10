@@ -14,7 +14,7 @@ play = [
 ]
 
 reveal = [
-    { run = 'xdg-open "$(dirname "$1")"', desc = "Reveal", for = "linux" }
+    { run = 'reveal "$1"', desc = "Reveal", for = "linux" },
 ]
 
 exif = [

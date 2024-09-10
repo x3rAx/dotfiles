@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+path="${1:-}"
+
+if [[ -z $path ]]; then
+    exec handlr open "."
+fi
+
+dir_handler="$(handlr get inode/directory)"
+
+case "$dir_handler" in
+    'org.gnome.Nautilus.desktop')
+        exec nohup >/dev/null 2>&1 nautilus --new-window -s "$path" & disown
+        ;;
+
+    *)
+        exec handlr open "$path"
+        ;;
+esac
+
