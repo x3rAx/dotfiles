@@ -1,3 +1,10 @@
+[open]
+
+prepend_rules = [
+    { mime = "text/csv", use = [ "open", "edit", "reveal" ] },
+]
+
+
 [opener]
 
 play = [
@@ -5,4 +12,7 @@ play = [
     { run = 'mpv "$@"', desc = 'mpv' },
 ]
 
-open = [{ run = 'handlr open "$@"', desc = 'Open (handlr)' }]
+open = [
+    { run = 'handlr open "$@"', desc = 'Open (handlr)' },
+]
+
