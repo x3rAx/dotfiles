@@ -1,0 +1,8 @@
+[opener]
+
+play = [
+    { run = 'handlr open "$@"', desc = 'Open (handlr)' },
+    { run = 'mpv "$@"', desc = 'mpv' },
+]
+
+open = [{ run = 'handlr open "$@"', desc = 'Open (handlr)' }]
