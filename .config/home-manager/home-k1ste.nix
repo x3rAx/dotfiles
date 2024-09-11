@@ -104,6 +104,7 @@ in {
       binutils
       btrfs-assistant # GUI for btrfs
       bvi # VI like hex editor
+      chafa
       cli-visualizer # CLI audio visualizer
       cryptomator
       dbeaver-bin
