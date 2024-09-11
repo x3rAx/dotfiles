@@ -90,7 +90,7 @@ in {
   # environment.
   home.packages = let
     external = {
-      yazi = yazi.packages.${pkgs.system}.default;
+      yazi = inputs.yazi.packages.${pkgs.system}.default;
       firefox-nightly = inputs.firefox-nightly.packages.${pkgs.system}.firefox-nightly-bin;
     };
   in
