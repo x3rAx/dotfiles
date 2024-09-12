@@ -65,3 +65,10 @@ let mapleader = ' '
     "vnoremap  gc  :action CommentByLineComment<CR>
     "nnoremap  gC  :action CommentByBlockComment<CR>
     "vnoremap  gC  :action CommentByBlockComment<CR>
+
+
+" [PHP] Map ",," to "->"
+    inoremap ,, ->
+    inoremap ,. =>
+    inoremap ,<space> ,<space>
+    inoremap ,<CR> ,<CR>
