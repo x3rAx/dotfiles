@@ -101,3 +101,17 @@ let mapleader = ' '
 
 " Setup Editor Action Mappings (use `:actionlist <pattern>` to find available actions)
     nmap <S-k> <action>(ShowHoverInfo)
+
+
+" Past into new line
+    nnoremap gp o<Esc>p
+    nnoremap gP O<Esc>p
+
+    "function! PasteTrimmed()
+    "    let l:yanked = call getreg('"')
+    "    "let l:trimmed = substitute(l:yanked, '^\s*\(.\{-}\)\s*$', '\1', '')
+    "    "let l:trimmed = l:yanked
+    "    execute "normal! i" . l:yanked . "aaaaaaaaa"
+    "endfunction
+    "
+    "nnoremap Gp :call PasteTrimmed()
