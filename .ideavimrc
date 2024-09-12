@@ -93,3 +93,7 @@ let mapleader = ' '
     nmap gww :action com.andrewbrookins.idea.wrap.WrapAction<CR>
     vmap gq :action com.andrewbrookins.idea.wrap.WrapAction<CR>
     vmap gw :action com.andrewbrookins.idea.wrap.WrapAction<CR>
+
+
+" Search for selected text
+    vnoremap g/ y/\V<C-R>=escape(@",'/\')
