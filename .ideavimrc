@@ -97,3 +97,7 @@ let mapleader = ' '
 
 " Search for selected text
     vnoremap g/ y/\V<C-R>=escape(@",'/\')
+
+
+" Setup Editor Action Mappings (use `:actionlist <pattern>` to find available actions)
+    nmap <S-k> <action>(ShowHoverInfo)
