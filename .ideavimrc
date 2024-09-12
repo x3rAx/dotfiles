@@ -86,3 +86,10 @@ let mapleader = ' '
 
 " Scrolloff
     set scrolloff=5
+
+
+" Wrap line
+    nmap gqq :action com.andrewbrookins.idea.wrap.WrapAction<CR>
+    nmap gww :action com.andrewbrookins.idea.wrap.WrapAction<CR>
+    vmap gq :action com.andrewbrookins.idea.wrap.WrapAction<CR>
+    vmap gw :action com.andrewbrookins.idea.wrap.WrapAction<CR>
