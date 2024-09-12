@@ -3,7 +3,7 @@
 "
 """""""""""""
 
-let mapleader = "<Space>"
+let mapleader = ' '
 
 " IdeaVim plugins
 set surround
