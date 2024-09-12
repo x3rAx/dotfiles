@@ -6,12 +6,13 @@
 let mapleader = ' '
 
 " IdeaVim plugins
-set surround
-set multiple-cursors
+    set surround
+    set multiple-cursors
 
+    " Enable IDEA to improve line joining with `shift+j`. For example when joining two comment lines, IDEA will remote
+    " the comment symbol (`//` or `#`) so it must not be deleted manually.
+    set ideajoin
 
-" Other plugins
-"source '~/.vim/bundle/targets.vim/plugin/targets.vim'
 
 " Relative line nubers
 set number
