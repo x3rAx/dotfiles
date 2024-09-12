@@ -49,6 +49,7 @@ let mapleader = ' '
 
 " Reload .ideavimrc
     nnoremap <Space>vs :source ~/.ideavimrc<CR>
+    command! RR source ~/.ideavimrc
 
     " Command to (write and) reload .ideavimrc
     "command! RR
