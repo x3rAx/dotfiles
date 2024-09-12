@@ -72,3 +72,7 @@ let mapleader = ' '
     inoremap ,. =>
     inoremap ,<space> ,<space>
     inoremap ,<CR> ,<CR>
+
+
+" Scrolloff
+    set scrolloff=5
