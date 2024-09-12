@@ -13,6 +13,16 @@ let mapleader = ' '
     " the comment symbol (`//` or `#`) so it must not be deleted manually.
     set ideajoin
 
+    " Enable vim-sneak (https://github.com/justinmk/vim-sneak)
+    " Type `s` + two characters to jump to the next location where these
+    " characters appear. (Like `f` but more precise)
+    set sneak
+
+    " EasyMotion
+    Plug 'easymotion/vim-easymotion'
+    set easymotion
+    map <Leader> <Plug>(easymotion-prefix)
+
 
 " Disable error bell on <Esc> press
     set visualbell
