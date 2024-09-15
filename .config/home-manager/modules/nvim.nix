@@ -2,12 +2,8 @@
   config,
   pkgs,
   lib,
-  mkUnstable,
   ...
 }: let
-  nixpkgs-config = {};
-  unstable = mkUnstable {config = nixpkgs-config;};
-
   nvim-ld-libraries = with pkgs; [
     icu
     stdenv.cc.cc.lib
@@ -15,7 +11,7 @@
   ];
   nvim-ld = pkgs.symlinkJoin {
     name = "nvim-ld";
-    paths = [unstable.neovim-unwrapped];
+    paths = [pkgs.unstable.neovim-unwrapped];
     nativeBuildInputs = [pkgs.makeBinaryWrapper];
     postBuild = ''
       wrapProgram "$out/bin/nvim" \
@@ -32,7 +28,7 @@ in {
     vimdiffAlias = true;
 
     # Use latest neovim
-    #package = unstable.neovim-unwrapped;
+    #package = pkgs.unstable.neovim-unwrapped;
     package = nvim-ld;
 
     extraPackages = with pkgs; [

@@ -2,12 +2,8 @@
   config,
   pkgs,
   lib,
-  mkUnstable,
   ...
 }: let
-  nixpkgs-config = {};
-  unstable = mkUnstable {config = nixpkgs-config;};
-
   nvim-ld-libraries = with pkgs; [
     #icu
     #stdenv.cc.cc.lib
@@ -35,7 +31,7 @@ in {
   #  enable = true;
   #
   #  # Use latest VSCode
-  #  #package = unstable.vscode;
+  #  #package = pkgs.unstable.vscode;
   #
   #  # Do not allow VSCode to manage extensions
   #  mutableExtensionsDir = false;

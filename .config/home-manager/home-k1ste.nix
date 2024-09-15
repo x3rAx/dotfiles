@@ -1,8 +1,6 @@
 {
   config,
   pkgs,
-  mkNixpkgs,
-  mkUnstable,
   lib,
   vscode-extensions,
   inputs,
@@ -46,13 +44,12 @@
           "libnvjitlink"
         ]);
   };
-  unstable = mkUnstable {config = nixpkgs-config;};
 
   godot-libraries = with pkgs; [
     stdenv.cc.cc.lib # For git support
   ];
   godot-with-libs = let
-    godot-package = unstable.godot_4;
+    godot-package = pkgs.unstable.godot_4;
   in
     pkgs.symlinkJoin {
       name = godot-package.name + "-with-libs";

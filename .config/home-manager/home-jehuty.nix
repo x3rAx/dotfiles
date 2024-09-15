@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  mkUnstable,
   inputs,
   ...
 }: let
@@ -22,7 +21,6 @@
         # "electron-25.9.0" # For Obsidian
       ];
   };
-  unstable = mkUnstable {config = nixpkgs-config;};
 
   super-productivity-with-fix-for-wayland = pkgs.symlinkJoin {
     name = "super-productivity";

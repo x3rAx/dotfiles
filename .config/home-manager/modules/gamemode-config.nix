@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  mkUnstable,
   ...
 }: let
   start-hook = pkgs.writeShellScript "gamemode-hook-start.sh" ''
