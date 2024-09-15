@@ -117,6 +117,7 @@ in {
       filezilla
       external.firefox-nightly
       fish
+      flakify
       flameshot # Screenshot tool
       nvtopPackages.full
       fx # Terminal JSON viewer

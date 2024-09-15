@@ -15,6 +15,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    flakify = {
+      url = "github:x3rAx/flakify";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -29,6 +34,7 @@
     nixpkgs,
     nixpkgs-unstable,
     home-manager,
+    flakify,
     nix-vscode-extensions,
     firefox-nightly,
     ...
@@ -43,7 +49,9 @@
 
     overlays = [
       nixpkgs-unstable-overlay
+      flakify.overlays.default
     ];
+
     vscode-extensions = nix-vscode-extensions.extensions.${system};
 
     mkHome = home-module:
