@@ -48,7 +48,6 @@ in {
   # environment.
   home.packages = let
     external = {
-      yazi = inputs.yazi.packages.${pkgs.system}.default;
     };
   in
     with pkgs; [
@@ -97,7 +96,7 @@ in {
       unstable.thunderbird-bin
       udiskie
       #ungoogled-chromium
-      external.yazi
+      yazi
       yq-go # `jq` for Yaml
       zoxide
 

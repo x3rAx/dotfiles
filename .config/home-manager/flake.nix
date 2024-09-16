@@ -35,6 +35,7 @@
     nixpkgs-unstable,
     home-manager,
     flakify,
+    yazi,
     nix-vscode-extensions,
     firefox-nightly,
     ...
@@ -62,6 +63,8 @@
     overlays = [
       nixpkgs-unstable-overlay
       flakify.overlays.default
+
+      (overlayExtract yazi.overlays.default ["yazi"])
     ];
 
     vscode-extensions = nix-vscode-extensions.extensions.${system};

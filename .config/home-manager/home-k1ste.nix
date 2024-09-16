@@ -87,7 +87,6 @@ in {
   # environment.
   home.packages = let
     external = {
-      yazi = inputs.yazi.packages.${pkgs.system}.default;
       firefox-nightly = inputs.firefox-nightly.packages.${pkgs.system}.firefox-nightly-bin;
     };
   in
@@ -193,7 +192,7 @@ in {
       xsecurelock
       xss-lock
       xorg.xwininfo
-      external.yazi
+      yazi
       unstable.zoxide
     ];
 
