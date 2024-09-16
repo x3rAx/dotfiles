@@ -47,6 +47,18 @@
       };
     };
 
+    overlayExtract = overlay: package-names: let
+      lib = nixpkgs.lib;
+      extractKeys = keys: attrs:
+        lib.foldl' (
+          acc: key:
+            if attrs ? "${key}"
+            then acc // {"${key}" = attrs."${key}";}
+            else builtins.throw "Key '${key}' not found in overlay."
+        ) {}
+        keys;
+    in (final: prev: extractKeys package-names (overlay final prev));
+
     overlays = [
       nixpkgs-unstable-overlay
       flakify.overlays.default
