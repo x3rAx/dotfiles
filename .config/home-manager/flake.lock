@@ -153,11 +153,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1726612595,
-        "narHash": "sha256-xLztLcCxrQ3rr2Fwsj3PeK06WCigNTpSLazFKWO4cOU=",
+        "lastModified": 1727129892,
+        "narHash": "sha256-H6DVciINv73XcAvTyUU7IGRVZ6sJ0Qzw7yafEEATTGs=",
         "owner": "x3rAx",
         "repo": "flakify",
-        "rev": "be38639f8d0ecbe2a7d62bc5f8747d325c143eaa",
+        "rev": "94b560673ee01c5ae00c82f615321657bc1e8ff7",
         "type": "github"
       },
       "original": {
