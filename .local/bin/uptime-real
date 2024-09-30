@@ -15,4 +15,13 @@ sec = sec % 60
 
 sec = round(sec, 2)
 
-print(f"Real uptime: {days} days, {hours} hours, {minutes} minutes, {sec} seconds")
+# Run the uptime command and directly print the output
+import subprocess
+
+print("Uptime:")
+subprocess.run("uptime")
+
+print("")
+
+print("Real uptime (without sleep):")
+print(f" {days} days, {hours} hours, {minutes} minutes, {sec} seconds")
