@@ -33,6 +33,8 @@ main() {
 
 	run ~/.local/opt/kopia/updater.sh
 
+    run-if - deno upgrade
+
 	echo ""
 	echo ""
 	echo "+------------------------------------------------------------------------------+"
