@@ -13,7 +13,8 @@ return {
         "<leader>uu",
         function()
           vim.cmd.UndotreeToggle()
-        end
+        end,
+        desc = "Show/hide undo tree",
       },
     },
   },
