@@ -44,4 +44,31 @@ vim.cmd([[ command! -nargs=0 ChmodX :!chmod +x % ]])
 vim.cmd([[ command! -nargs=1 Obsidian :w ~/Syncthing/Obsidian/Brain 🧠/<args>.md ]])
 
 -- Sort packages in a Nix file
-vim.api.nvim_create_user_command('SortNixPackages', require('lib.nix-sort-packages'), { nargs = 0, range = true })
+vim.api.nvim_create_user_command("SortNixPackages", require("lib.nix-sort-packages"), { nargs = 0, range = true })
+
+-- vim.cmd([[ command! -nargs=* Shebang :normal ggO#!/usr/bin/env <args><Esc> ]])
+vim.api.nvim_create_user_command("Shebang", function(args)
+  vim.api.nvim_buf_set_text(0, 0, 0, 0, 0, { "#!/usr/bin/env " .. args.args, "", "" })
+
+  local interpreter = args.fargs[1] == "-S" and args.fargs[2] or args.fargs[1]
+
+  local interpreters = {
+    "bash",
+    "python",
+    "sh",
+    ["deno"] = "typescript",
+    ["python3"] = "python",
+  }
+
+  vim.notify(interpreter or "nil")
+  if vim.tbl_contains(interpreters, interpreter) then
+    vim.o.filetype = interpreter
+  elseif interpreters[interpreter] ~= nil then
+    vim.o.filetype = interpreters[interpreter]
+  end
+end, { nargs = "*" })
+
+vim.api.nvim_create_user_command("ShebangDeno", function()
+  vim.cmd("Shebang -S deno run")
+  vim.api.nvim_buf_set_text(0, 1, 0, 1, 0, { "// vi: ft=typescript", "" })
+end, { nargs = 0 })
