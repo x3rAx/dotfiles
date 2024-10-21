@@ -1,121 +1,134 @@
-#!/usr/bin/env bash
+#!/usr/bin/env -S deno run --allow-all
+// vi: ft=typescript
 
-# More safety by turning bugs into errors.
-# Use `${PIPESTATUS[n]}` to check for the `n`-th pipe command's exit status.
-# Make sure there are no uninitialized variables.
-# To allow a non-zero exit status or to allow a pipe to fail without exiting
-# the script, prefix the command with `!`.
-# Option `noclobber` makes sure piping into a file with `>` does not
-# override existing files. Use `>|` to overwrite files instead.
-# Environment variables are `UPPER_SNAKE_CASE`, global constants are
-# `_UNDERSCORE_PREFIXED` and global variables are `_underscore_prefixed`
-set -o errexit -o pipefail -o nounset -o noclobber
-IFS=$'\n\t' # Split on newlines and tabs (but not on spaces)
+import { $ } from "jsr:@david/dax";
+import { parseArgs } from "jsr:@std/cli";
 
-: ${XDG_CONFIG_HOME:=$HOME/.config}
-: ${XDG_CACHE_HOME:=$HOME/.cache}
+const _SCRIPT_NAME = "wh";
 
-readonly _SCRIPT="$(realpath "$0")"
-readonly _SCRIPT_NAME="${_SCRIPT##*/}"
-readonly _SCRIPT_DIR="${_SCRIPT%/*}"
+const _HELP = $.dedent({
+    trimLeadingNewline: false,
+    trimTrailingNewline: false,
+})`
+    Usage:
+        ${_SCRIPT_NAME} [options] [--] COMMAND ACTION [%]
+        ${_SCRIPT_NAME} -e [--] COMMAND
 
-err() { echo >&2 "${_SCRIPT_NAME}: $@"; }
+    OPTIONS:
+        -h, --help      Show this help message.
+        -e, --edit      Open the result in $EDITOR.
+        -r, --realpath  Resolve the realpath of the result.
+`;
 
-readonly _ERR_USAGE=2
-readonly _ERR_PROGRAMMING=255
+function print_help({ stderr = true } = {}) {
+    if (stderr) {
+        console.error(_HELP);
+        return;
+    }
+    console.log(_HELP);
+}
 
-readonly _USAGE="
-  Usage:
-    $_SCRIPT_NAME [options] [--] COMMAND ACTION [%]
-    $_SCRIPT_NAME -e [--] COMMAND
+function unknown_argument(arg: string, key?: string, _value?: unknown) {
+    if (key === undefined) {
+        return;
+    }
+    const dashes = arg.startsWith("--") ? "--" : "-";
+    $.logError(`ERROR: Unknown option: ${dashes}${key}`);
+    print_help({ stderr: true });
+    Deno.exit(1);
+}
 
-  OPTIONS:
-    -h, --help  Show this help message.
-    -e, --edit  Open the result in \$EDITOR.
-    -r, --realpath
-                Resolve the realpath of the result.
-"
+async function spawn(args: string[]): Promise<never> {
+    let child;
+    try {
+        child = new Deno.Command(args[0], { args: args.slice(1) })
+            .spawn();
+    } catch (err: Error | unknown) {
+        if (err instanceof Error) {
+            $.logError(`ERROR: ${err.message}`);
+        } else {
+            $.logError(`ERROR: ${err}`);
+        }
+        Deno.exit(1);
+    }
+    const status = await child.status;
+    Deno.exit(status.code);
+}
 
-readonly _OPTIONS='h,e,r'
-readonly _LONGOPTS='help,edit,realpath'
+async function main() {
+    const args = parseArgs(Deno.args, {
+        boolean: ["help", "edit", "realpath"],
+        string: ["exec"],
+        alias: { "h": "help", "e": "edit", "r": "realpath" },
+        unknown: unknown_argument,
+    });
 
-# Collect args until the ACTION is found
-args=()
-cmd_found=false
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        '-'*)  args+=("$1"); shift; ;;
-        '--')  shift; break; ;;
-        # Stop parsing at the 2dn non-option
-        *)     args+=("$1"); shift; [[ $cmd_found == true ]] && break; cmd_found=true; ;;
-    esac
-done
-# Insert the "stop parsing" argument before the COMMAND
-args+=('--' "$@")
+    if (args.help) {
+        print_help();
+        Deno.exit(0);
+    }
 
-# Parse the args
-parsed="$(getopt -o "$_OPTIONS" -l "$_LONGOPTS" -n "$_SCRIPT_NAME" -- "${args[@]}")"
-if [[ ${PIPESTATUS[0]} -ne 0 ]]; then echo >&2 "$_USAGE"; exit $_ERR_USAGE; fi
-eval set -- "${parsed[@]}"; unset parsed
-unset args cmd_found
+    if (args._.length < 1) {
+        $.logError(`ERROR: Missing argument "COMMAND".`);
+        print_help({ stderr: true });
+        Deno.exit(1);
+    }
 
-_edit=false
-_realpath=false
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        '-h'|'--help')  echo "$_USAGE"; exit; ;;
-        '-e'|'--edit')  _edit=true; shift; ;;
-        '-r'|'--realpath')
-                        _realpath=true; shift; ;;
-        '--')           shift; break; ;;
-        *)              err "Programming error"; exit $_ERR_PROGRAMMING; ;;
-    esac
-done
+    const command = args._[0] as string;
+    const action = args._.slice(1) as string[];
 
-# --- main program -------------------------------------------------------------
+    // --- Find the file ---
+    let file = await $.which(command);
+    if (file === undefined) {
+        $.logError(`ERROR: Command "${command}" can not be found`);
+        Deno.exit(1);
+    }
 
-if [[ $# -lt 1 ]]; then
-    echo >&2 "$_USAGE"
-    exit $_ERR_USAGE
-fi
+    // --- Resolve realpath ---
+    if (args.realpath) {
+        file = await $`realpath ${file}`.text();
+    }
 
-cmd="$1"
-shift
-action=("$@")
+    // --- Edit ---
+    if (args.edit) {
+        const editor = Deno.env.get("EDITOR");
+        if (editor === undefined) {
+            $.logError(`ERROR: "$EDITOR" is not set.`);
+            Deno.exit(1);
+        }
+        if (await $.which(editor) === undefined) {
+            $.logWarn(
+                `WARNING: "$EDITOR" is set to "${editor}" which could not be found in path.`,
+            );
+        }
+        await spawn([editor, file]);
+    }
 
-# --- Find the file ---
-file="$(which "$cmd")"
+    // --- Print file path if no action is given ---
+    if (!action.length) {
+        console.log(file);
+        Deno.exit(0);
+    }
 
-# --- Resolve realpath ---
-if [[ $_realpath == true ]]; then
-    file="$(realpath "$file")"
-fi
+    // --- Replace `%` with file path ---
+    let file_replaced = false;
+    for (const [i, arg] of action.entries()) {
+        if (arg == "%") {
+            action[i] = file;
+            file_replaced = true;
+            break;
+        }
+    }
 
-# --- Edit ---
-if [[ $_edit == true ]]; then
-    exec -- "$EDITOR" "$file"
-fi
+    // --- Append file path if no `%` was present ---
+    if (!file_replaced) {
+        action.push(file);
+    }
 
-# --- Run action ---
-if [[ ${#action[@]} -eq 0 ]]; then
-    echo "$file"
-    exit
-fi
+    // --- Execute the action ---
+    await spawn(action);
+}
 
-# --- Replace `%` with file path ---
-file_replaced=false
-for i in "${!action[@]}"; do
-    if [[ ${action[$i]} == '%' ]]; then
-        action[$i]="$file"
-        file_replaced=true
-        break
-    fi
-done
-
-# --- Append file path if no `%` was present ---
-if [[ $file_replaced == false ]]; then
-    action+=("$file")
-fi
-
-# --- Execute the action ---
-exec -- "${action[@]}"
+if (import.meta.main) {
+    await main();
+}
