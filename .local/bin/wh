@@ -38,7 +38,7 @@ function unknown_argument(arg: string, key?: string, _value?: unknown) {
     Deno.exit(1);
 }
 
-async function spawn(args: string[]): Promise<never> {
+async function run(args: string[]): Promise<never> {
     let child;
     try {
         child = new Deno.Command(args[0], { args: args.slice(1) })
@@ -101,7 +101,7 @@ async function main() {
                 `WARNING: "$EDITOR" is set to "${editor}" which could not be found in path.`,
             );
         }
-        await spawn([editor, file]);
+        await run([editor, file]);
     }
 
     // --- Print file path if no action is given ---
@@ -126,7 +126,7 @@ async function main() {
     }
 
     // --- Execute the action ---
-    await spawn(action);
+    await run(action);
 }
 
 if (import.meta.main) {
