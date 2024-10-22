@@ -56,7 +56,27 @@ async function run(args: string[]): Promise<never> {
 }
 
 async function main() {
-    const args = parseArgs(Deno.args, {
+    const args_to_parse = [];
+    const args_for_action = [];
+    let counter_non_option = 0;
+
+    // Collect arguments until two non-option arguments are found. All other
+    // options and arguments are collected for the action and will not be
+    // parsed.
+    for (const arg of Deno.args) {
+        if (counter_non_option >= 2) {
+            args_for_action.push(arg);
+            continue;
+        }
+
+        if (!arg.startsWith("-")) {
+            counter_non_option++;
+        }
+
+        args_to_parse.push(arg);
+    }
+
+    const args = parseArgs(args_to_parse, {
         boolean: ["help", "edit", "realpath"],
         string: ["exec"],
         alias: { "h": "help", "e": "edit", "r": "realpath" },
@@ -75,7 +95,7 @@ async function main() {
     }
 
     const command = args._[0] as string;
-    const action = args._.slice(1) as string[];
+    const action = [...args._.slice(1), ...args_for_action] as string[];
 
     // --- Find the file ---
     let file = await $.which(command);
