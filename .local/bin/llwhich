@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-if command -v exa >/dev/null; then
-    exec exa -l --icons "$(which "$1")"
-fi
-
-exec ls -l "$(which "$1")"
-
