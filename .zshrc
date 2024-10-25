@@ -5,4 +5,5 @@ ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 source "${ZINIT_HOME}/zinit.zsh"
 
 
-
+# Prompt
+eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/config.toml)"
