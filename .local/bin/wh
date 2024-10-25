@@ -11,14 +11,21 @@ const _HELP = $.dedent({
     trimTrailingNewline: false,
 })`
     Usage:
-        ${_SCRIPT_NAME} [options] [--] COMMAND ACTION [%]
+        ${_SCRIPT_NAME} [options] [--] <command> <action> [[action-arg | %]...]
         ${_SCRIPT_NAME} -e [--] COMMAND
 
+    Get the path to the executable of the given <command> (similar to \`which\`) and optionally
+    execute an <action> on it. The resulting path will be passed to the action as the last argument
+    unless \`%\` is provided as argument, in which case \`%\` will be replaced with the executable
+    path.
+
     OPTIONS:
-        -h, --help      Show this help message.
-        -e, --edit      Open the result in $EDITOR.
-        -r, --realpath  Resolve the realpath of the result.
-        -x, --exec      Execute the given command with the result as argument.
+        -h, --help      - Show this help message.
+        -e, --edit      - Open the result in $EDITOR.
+        -r, --realpath  - Resolve the realpath of the result.
+        -x, --exec      - Execute the given command with the result as argument. The command will
+                          be executed in a bash subshell.
+                          Example: ${_SCRIPT_NAME} -x $'nvim $(dirname "$@")' 
 `;
 
 function print_help({ stderr = true } = {}) {
