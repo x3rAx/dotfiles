@@ -18,6 +18,7 @@ const _HELP = $.dedent({
         -h, --help      Show this help message.
         -e, --edit      Open the result in $EDITOR.
         -r, --realpath  Resolve the realpath of the result.
+        -x, --exec      Execute the given command with the result as argument.
 `;
 
 function print_help({ stderr = true } = {}) {
@@ -79,7 +80,7 @@ async function main() {
     const args = parseArgs(args_to_parse, {
         boolean: ["help", "edit", "realpath"],
         string: ["exec"],
-        alias: { "h": "help", "e": "edit", "r": "realpath" },
+        alias: { "h": "help", "e": "edit", "r": "realpath", "x": "exec" },
         unknown: unknown_argument,
     });
 
@@ -122,6 +123,12 @@ async function main() {
             );
         }
         await run([editor, file]);
+    }
+
+    // --- Execute ---
+    if (args.exec) {
+        const result = await $`bash -c ${args.exec} -s ${file}`;
+        Deno.exit(result.code);
     }
 
     // --- Print file path if no action is given ---
