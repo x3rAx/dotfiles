@@ -90,6 +90,6 @@
       };
   in {
     homeConfigurations."x3ro@K1STE" = mkHome ./home-k1ste.nix;
-    homeConfigurations."x3ro@Jehuty" = mkHome ./home-jehuty.nix;
+    homeConfigurations."x3ro@jehuty" = mkHome ./home-jehuty.nix;
   };
 }
