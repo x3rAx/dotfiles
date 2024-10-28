@@ -20,10 +20,10 @@ enable_cursor_positioning = false
   [[blocks.segments]]
     type = "battery"
     style = "diamond"
-    trailing_diamond = ''
-    foreground = "p:white"
+    trailing_diamond = ' '
+    foreground = "p:_surface0"
     background = "p:red"
-    template = "{{ if lt .Percentage 20 }} {{ .Icon }}{{ .Percentage }} {{ end }}"
+    template = "{{ if le .Percentage 20 }} <b>{{ .Icon }}{{ .Percentage }} </b>{{ end }}"
 
     [blocks.segments.properties]
       discharging_icon = "󰁺 "
