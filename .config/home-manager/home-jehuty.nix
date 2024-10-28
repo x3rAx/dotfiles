@@ -93,18 +93,16 @@ in {
       python3Packages.openrazer
       #(pkgs.nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
       p7zip
-      unstable.jetbrains.phpstorm
       python3Packages.pillow
       python3Packages.pystray
       python3
-      unstable.rambox
       remmina
       ripdrag
       ripgrep
       rmlint
       rye
       spotify
-      super-productivity-with-fix-for-wayland
+      super-productivity
       teams-for-linux
       teamspeak_client
       telegram-desktop
