@@ -73,6 +73,9 @@ else
     alias la='ls  --color --hyperlink=auto --group-directories-first -la'
 fi
 
+alias ,zsh='nvim ~/.zshrc'
+alias doc='docker  compose'
+
 
 # File manager (using Yazi)
 function x() {
