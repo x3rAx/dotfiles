@@ -119,6 +119,10 @@ alias rt-empty=__empty-trash
 alias rt-rm=trash-rm
 
 
+# Additional PATH entries
+PATH="${HOME}/.local/bin:${PATH}"
+
+
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
