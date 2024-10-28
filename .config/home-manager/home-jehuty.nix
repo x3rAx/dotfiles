@@ -52,7 +52,7 @@ in {
   in
     with pkgs; [
       anki
-      bat-extras.batman
+      unstable.bat-extras.batman
       brave
       unstable.bruno # Postman alternative (plain text request files)
       burpsuite

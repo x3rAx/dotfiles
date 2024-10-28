@@ -131,3 +131,4 @@ eval "$(just --completions zsh)"
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
+eval "$(batman --export-env)"
