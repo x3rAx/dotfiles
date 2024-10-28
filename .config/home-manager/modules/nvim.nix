@@ -14,7 +14,14 @@
     paths = [pkgs.unstable.neovim-unwrapped];
     nativeBuildInputs = [pkgs.makeBinaryWrapper];
     postBuild = ''
-      wrapProgram "$out/bin/nvim" \
+      mkdir -p "$out/bin/.wrapped"
+      mv "$out/bin/nvim" "$out/bin/.wrapped/nvim"
+
+      # NOTE: Do not use `wrapProgram` here. It results in the actual binary
+      # being renamed to `.nvim-wrapped`. This causes a problem where
+      # `vim-tmux-navigator` does not detect that the nvim process is running
+      # inside a pane.
+      makeWrapper "$out/bin/.wrapped/nvim" "$out/bin/nvim" \
         --set NIX_LD `cat '${pkgs.stdenv.cc}/nix-support/dynamic-linker'` \
         --set NIX_LD_LIBRARY_PATH '${lib.makeLibraryPath nvim-ld-libraries}'
     '';
