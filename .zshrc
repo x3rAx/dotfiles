@@ -77,6 +77,10 @@ alias ,zsh='nvim ~/.zshrc'
 alias doc='docker  compose'
 
 
+# Editor
+export EDITOR="nvim"
+
+
 # File manager (using Yazi)
 function x() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
