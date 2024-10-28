@@ -10,6 +10,7 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab # Fzf for completions
+zinit light nix-community/nix-zsh-completions
 
 # Add in snippets fom Oh-My-Zsh
 #zinit snippet OMZP::git # Git aliases
@@ -121,6 +122,10 @@ alias rt-rm=trash-rm
 
 # Additional PATH entries
 PATH="${HOME}/.local/bin:${PATH}"
+
+
+# Extra completions
+eval "$(just --completions zsh)"
 
 
 # Shell integrations
