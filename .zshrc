@@ -118,6 +118,7 @@ alias rt=trash-put
 alias rt-ls=trash-list
 alias rt-empty=__empty-trash
 alias rt-rm=trash-rm
+alias cat=bat
 
 
 # Additional PATH entries
