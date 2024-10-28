@@ -151,6 +151,19 @@ if [[ -f ~/.mozilla/firefox/profiles.ini ]]; then
 fi
 task --done
 
+task --print "Install Temx Plugin Manager"
+if [[ ! -d ~/.config/tmux/plugins/tpm ]]; then
+    git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
+    if [[ -n ${TMUX:-} ]]; then
+        tmux source ~/.config/tmux/tmux.conf
+    fi
+    ~/.config/tmux/plugins/tpm/bin/install_plugins
+    if [[ -n ${TMUX:-} ]]; then
+        tmux source ~/.config/tmux/tmux.conf
+    fi
+fi
+task --done
+
 
 task --print "Check installed programs"
 x3ro.check
