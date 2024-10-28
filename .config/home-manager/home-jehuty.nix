@@ -17,6 +17,7 @@
         "obsidian"
         "phpstorm"
         "rambox"
+        "spotify"
         "teamspeak-client"
         # "electron-25.9.0" # For Obsidian
       ];
@@ -52,52 +53,69 @@ in {
   in
     with pkgs; [
       anki
+      bat
       unstable.bat-extras.batman
       brave
       unstable.bruno # Postman alternative (plain text request files)
       burpsuite
       cpulimit
       curlie
+      unstable.deno
       distrobox
       duf
       eww
+      fd
+      firefox
       fx
+      fzf
+      gdu
       handlr
+      htop
       hurl
       inkscape
       insomnia # Postman alternative
       unstable.just
+      kanata
+      keepassxc
       kopia
       unstable.lazygit
       libappindicator
       lolcat
+      lsd
       unstable.minio-client
       neovide
       nerdfonts
-      nerdfonts
       #netavark
+      nodejs
       unstable.nushell
       unstable.obsidian
+      oh-my-posh
       python3Packages.openrazer
       #(pkgs.nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
       p7zip
       unstable.jetbrains.phpstorm
       python3Packages.pillow
       python3Packages.pystray
+      python3
       unstable.rambox
       remmina
       ripdrag
+      ripgrep
       rmlint
       rye
+      spotify
       super-productivity-with-fix-for-wayland
       teams-for-linux
       teamspeak_client
       telegram-desktop
       unstable.thunderbird-bin
+      tmux
+      trash-cli
       udiskie
       #ungoogled-chromium
       yazi
       yq-go # `jq` for Yaml
+      zoxide
       zoxide
 
       ## Pipewire
