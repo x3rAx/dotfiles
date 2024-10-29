@@ -133,3 +133,25 @@ eval "$(just --completions zsh)"
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
 eval "$(batman --export-env)"
+
+
+# Refresh ENV from tmux
+function _refresh_tmux_env() {
+    [ -z "$TMUX" ] && return
+
+    allowed_vars=(
+        "DISPLAY"
+        "SSH_CONNECTION"
+        "SSH_AUTH_SOCK"
+    )
+
+    for var in $allowed_vars; do
+        eval $(tmux show-environment -s "$var" 2>/dev/null)
+    done
+}
+
+
+# Hook into preexec
+function preexec() {
+    _refresh_tmux_env
+}
