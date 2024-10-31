@@ -82,6 +82,7 @@ fi
 
 alias ,zsh='nvim ~/.zshrc'
 alias doc='docker  compose'
+alias o='handlr open'
 
 
 # Editor
@@ -161,3 +162,4 @@ function _refresh_tmux_env() {
 function preexec() {
     _refresh_tmux_env
 }
+
