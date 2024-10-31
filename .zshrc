@@ -32,6 +32,10 @@ eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/config.toml)"
 echo '' # HACK: Oh-My-Posh ships the first newline, so we add one one ourselves
 
 
+# Disable "sroll-lock" (= Freeze terminal on Ctrl+s)
+stty ixoff -ixon
+
+
 # Keybindings
 bindkey -e # Use Emacs mode
 bindkey '^p' history-search-backward
