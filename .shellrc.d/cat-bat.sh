@@ -9,9 +9,4 @@ elif [ "$(command -v batcat)" ]; then
     alias bat="batcat"
 fi
 
-if [[ -n $_bat_cmd ]]; then
-    # Use bat to colorize man pages 🤩
-    export MANPAGER="sh -c 'col -bx | ${_bat_cmd} -l man -p'"
-fi
-
 unset _bat_cmd
