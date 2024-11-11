@@ -23,6 +23,7 @@ enable_cursor_positioning = false
     trailing_diamond = ' '
     foreground = "p:_surface0"
     background = "p:red"
+    background_templates = ['{{ if eq .State.String "Charging" }}p:yellow{{ end }}']
     template = "{{ if le .Percentage 20 }} <b>{{ .Icon }}{{ .Percentage }} </b>{{ end }}"
 
     [blocks.segments.properties]
@@ -198,9 +199,10 @@ enable_cursor_positioning = false
   _crust     = "#11111b"
 
   # --- Regular colors ---
-  white = 'p:_text'
-  red   = 'p:_red'
-  green = 'p:_green'
+  white  = 'p:_text'
+  red    = 'p:_red'
+  yellow = 'p:_yellow'
+  green  = 'p:_green'
 
   # --- Segment colors ---
   fg_host = 'p:_text'
