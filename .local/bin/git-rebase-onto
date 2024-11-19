@@ -1,0 +1,63 @@
+#!/usr/bin/env -S deno run --allow-all
+// vi: ft=typescript
+
+import $ from "jsr:@david/dax@0.42.0";
+
+async function main() {
+    // Where to rebase to
+    const target = Deno.args[0];
+    // The base of the branch to rebase. Read like "from where to rebase"
+    // - either a commit hash (e.g. `HEAD^10`) -> Rebases all AFTER this commit
+    // - or the name of the branch this branch is based on (e.g. `main`)
+    // if left empty, the target branch is used as base -> acts like a regular rebase
+    let base = Deno.args[1];
+    // The branch to rebase. Defaults to the current branch, ie. `HEAD`
+    let branch = Deno.args[2];
+
+    if (target === undefined) {
+        $.logError("ERROR: Missing argument <target>");
+        Deno.exit(1);
+    }
+
+    if (base === undefined) {
+        base = target;
+    }
+
+    if (branch === undefined) {
+        branch = await getCurrentBranch();
+    }
+
+    const base_commit = await getBaseCommit(base, branch);
+
+    // git rebase -i --onto target-branch `git merge-base HEAD base-branch` `git rev-parse --abbrev-ref HEAD`
+    const { code } =
+        await $`git rebase -i --onto ${target} ${base_commit} ${branch}`
+            .printCommand()
+            .noThrow();
+    Deno.exit(code);
+}
+
+async function getCurrentBranch() {
+    const { code, stdout: branch } = await $`git rev-parse --abbrev-ref HEAD`
+        .stdout("piped")
+        .noThrow();
+    if (code > 0) {
+        Deno.exit(code);
+    }
+    return branch.trim();
+}
+
+async function getBaseCommit(base: string, branch: string) {
+    const { code, stdout: base_commit } =
+        await $`git merge-base ${base} ${branch}`
+            .stdout("piped")
+            .noThrow();
+    if (code > 0) {
+        Deno.exit(code);
+    }
+    return base_commit.trim();
+}
+
+if (import.meta.main) {
+    await main();
+}
