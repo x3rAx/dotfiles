@@ -42,4 +42,9 @@ alias ,flatpak-aliases=",edit ~/.shellrc.d/flatpak-aliases.sh"
 alias ,nixos="sudo $_editor -c 'cd /etc/nixos/' /etc/nixos/current-host/configuration.nix"
 alias ,autostart=",edit ~/.local/scripts autostart.sh"
 
+# Others
+alias ,nvim="$_editor -c 'cd ~/.config/nvim' ~/.config/nvim"
+alias ,home-manager="$_editor -c 'cd ~/.config/home-manager/' ~/.config/home-manager/flake.nix"
+alias ,yazi="$_editor -c 'cd ~/.config/yazi/' ~/.config/yazi/yazi.toml"
+
 unset _editor
