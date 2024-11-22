@@ -56,8 +56,9 @@ in {
       bat
       unstable.bat-extras.batman
       brave
-      unstable.bruno # Postman alternative (plain text request files)
-      burpsuite
+      #unstable.bruno # Postman alternative (plain text request files)
+      #burpsuite
+      #carla # Audio plugin host (Pipewire)
       cpulimit
       curlie
       unstable.deno
@@ -66,9 +67,11 @@ in {
       eww
       fd
       firefox
+      flakify
       fx
       fzf
       gdu
+      grc
       handlr
       htop
       hurl
@@ -80,12 +83,15 @@ in {
       kopia
       unstable.lazygit
       libappindicator
+      libqalculate
       lolcat
       lsd
       unstable.minio-client
       neovide
       nerdfonts
       #netavark
+      nh
+      nix-direnv
       nodejs
       unstable.nushell
       unstable.obsidian
@@ -94,6 +100,8 @@ in {
       #(pkgs.nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
       p7zip
       python3Packages.pillow
+      pipecontrol # Pipewire
+      pipectl # Pipewire
       python3Packages.pystray
       python3
       remmina
@@ -111,16 +119,11 @@ in {
       trash-cli
       udiskie
       #ungoogled-chromium
+      wireplumber # Pipewire
       yazi
       yq-go # `jq` for Yaml
       zoxide
       zoxide
-
-      ## Pipewire
-      pipecontrol
-      pipectl
-      wireplumber
-      #carla # Audio plugin host
     ];
 
   # Home Manager can also manage your environment variables through
