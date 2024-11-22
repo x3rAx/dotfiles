@@ -15,6 +15,8 @@ zinit light nix-community/nix-zsh-completions
 # Add in snippets fom Oh-My-Zsh
 #zinit snippet OMZP::git # Git aliases
 
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/home/x3ro/.zsh/completions:"* ]]; then export FPATH="/home/x3ro/.zsh/completions:$FPATH"; fi
 
 # Load completions
 # autoload -Uz compinit && compinit
@@ -130,6 +132,7 @@ alias cat=bat
 
 # Additional PATH entries
 PATH="${HOME}/.local/bin:${PATH}"
+. "/home/x3ro/.deno/env"
 
 
 # Extra completions
