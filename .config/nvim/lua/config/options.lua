@@ -72,3 +72,25 @@ vim.api.nvim_create_user_command("ShebangDeno", function()
   vim.cmd("Shebang -S deno run")
   vim.api.nvim_buf_set_text(0, 1, 0, 1, 0, { "// vi: ft=typescript", "" })
 end, { nargs = 0 })
+
+vim.api.nvim_create_user_command("DenoImportDax", function()
+  local resp = io.popen("wget -qO- https://jsr.io/@david/dax/meta.json")
+  if resp == nil then
+    vim.notify("Failed to fetch dax metadata", vim.log.levels.ERROR)
+    return
+  end
+
+  local data = resp:read("all")
+  resp:close()
+
+  data = vim.json.decode(data)
+  local version = data.latest
+
+  -- Insert text in line above cursor
+  local line = vim.api.nvim_get_current_line()
+  -- local indent = line:match("^[ %t]*")
+  local indent = ""
+  local line_num = vim.api.nvim_win_get_cursor(0)[1]
+  vim.api.nvim_buf_set_text(0, line_num - 1, 0, line_num - 1, 0,
+    { indent .. 'import $ from "jsr:@david/dax@' .. version .. '";', '' })
+end, { nargs = 0 })
