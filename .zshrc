@@ -83,8 +83,11 @@ else
 fi
 
 alias ,zsh='nvim ~/.zshrc'
+alias ,tmux='nvim ~/.config/tmux/tmux.conf'
 alias doc='docker  compose'
 alias o='handlr open'
+alias cat=bat
+alias gg=lazygit
 
 
 # Editor
@@ -127,7 +130,6 @@ alias rt=trash-put
 alias rt-ls=trash-list
 alias rt-empty=__empty-trash
 alias rt-rm=trash-rm
-alias cat=bat
 
 
 # Additional PATH entries
