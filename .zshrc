@@ -145,6 +145,7 @@ eval "$(just --completions zsh)"
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
 eval "$(batman --export-env)"
+eval "$(direnv hook zsh)"
 
 
 # Refresh ENV from tmux
