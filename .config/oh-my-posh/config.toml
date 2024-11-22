@@ -18,6 +18,14 @@ enable_cursor_positioning = false
   newline = true
 
   [[blocks.segments]]
+    alias = "distrobox"
+    type = "text"
+    style = "diamond"
+    trailing_diamond = ' '
+    background = "#0B59E7"
+    template = "{{ if not (empty .Env.DISTROBOX_ENTER_PATH) }}  {{ if not (empty .Env.CONTAINER_ID) }}{{ .Env.CONTAINER_ID }} {{ end }}{{ end }}"
+
+  [[blocks.segments]]
     type = "battery"
     style = "diamond"
     trailing_diamond = ' '
@@ -203,6 +211,7 @@ enable_cursor_positioning = false
   red    = 'p:_red'
   yellow = 'p:_yellow'
   green  = 'p:_green'
+  blue   = 'p:_blue'
 
   # --- Segment colors ---
   fg_host = 'p:_text'
