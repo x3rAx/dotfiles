@@ -138,7 +138,7 @@ in {
   #  /etc/profiles/per-user/x3ro/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
-    # EDITOR = "emacs";
+    EDITOR = "neovim";
   };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
