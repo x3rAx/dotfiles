@@ -2,17 +2,49 @@
 // vi: ft=typescript
 
 import $ from "jsr:@david/dax@0.42.0";
+import { parseArgs } from "jsr:@std/cli/parse-args";
+
+const USAGE = `
+  Usage:
+    git rebase-onto <target> [base] [branch]
+
+  ARGUMENTS:
+    <target>    The target commit on which should be rebased
+    [base]      The base of the branch to be rebased. The base commit is the
+                PARENT of the first commit to be rebased. Can be either a
+                branch name or a commit hash. If the base is not a commit of
+                the branch to be rebased, the base commit is determined as the
+                last commit both branches have in common (before they branch
+                off of each other).
+                -> "rebase-onto other-branch from-base-commit-or-branch"
+    [branch]    The branch to be rebased. Defaults to the current branch.
+`;
 
 async function main() {
+    const flags = parseArgs(Deno.args, {
+        boolean: ["help"],
+        alias: {
+            help: ["h"],
+        },
+    });
+
+    if (flags.help) {
+        console.log(USAGE);
+        Deno.exit(0);
+    }
+
+    const args = flags._;
+
     // Where to rebase to
-    const target = Deno.args[0];
-    // The base of the branch to rebase. Read like "from where to rebase"
+    const target = args[0];
+    // The base of the branch to rebase
     // - either a commit hash (e.g. `HEAD^10`) -> Rebases all AFTER this commit
     // - or the name of the branch this branch is based on (e.g. `main`)
+    //   -> "rebase-onto other-branch from-base-commit-or-branch"
     // if left empty, the target branch is used as base -> acts like a regular rebase
-    let base = Deno.args[1];
+    let base = args[1];
     // The branch to rebase. Defaults to the current branch, ie. `HEAD`
-    let branch = Deno.args[2];
+    let branch = args[2];
 
     if (target === undefined) {
         $.logError("ERROR: Missing argument <target>");
@@ -31,7 +63,7 @@ async function main() {
 
     // git rebase -i --onto target-branch `git merge-base HEAD base-branch` `git rev-parse --abbrev-ref HEAD`
     const { code } =
-        await $`git rebase -i --onto ${target} ${base_commit} ${branch}`
+        await $`git rebase -i --onto -- ${target} ${base_commit} ${branch}`
             .printCommand()
             .noThrow();
     Deno.exit(code);
@@ -49,7 +81,7 @@ async function getCurrentBranch() {
 
 async function getBaseCommit(base: string, branch: string) {
     const { code, stdout: base_commit } =
-        await $`git merge-base ${base} ${branch}`
+        await $`git merge-base -- ${base} ${branch}`
             .stdout("piped")
             .noThrow();
     if (code > 0) {
