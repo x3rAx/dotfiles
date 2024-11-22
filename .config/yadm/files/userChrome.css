@@ -32,32 +32,32 @@
  */
 
 
-#sidebar-box {
-  min-width: 3em !important;
-  /** max-width: 1em; **/
-  /** width: 1em; **/
-}
-
-#sidebar-box[sidebarcommand="_f9a7bfdd-59d9-4740-82e4-26232256236d_-sidebar-action"] #sidebar-header {
-  display: none !important;
-}
-
-#sidebar-box[sidebarcommand="_f9a7bfdd-59d9-4740-82e4-26232256236d_-sidebar-action"] + #sidebar-splitter {
-  #width: 1px !important;
-  width: 3px !important;
-  border: 0 !important;
-}
-
-#sidebar-box[sidebarcommand="_f9a7bfdd-59d9-4740-82e4-26232256236d_-sidebar-action"] #sidebar {
-  min-width: 0em !important;
-}
-
-/**
- * In `about:config` set `layout.css.has-selector.enabled = true` to make `:has()` work
- */
-.tabbrowser-tab[pinned=true]:not([titlechanged="true"], :has([soundplaying="true"])) {
-  display: none;
-}
+/* #sidebar-box { */
+/*   min-width: 3em !important; */
+/*   /** max-width: 1em; **/ */
+/*   /** width: 1em; **/ */
+/* } */
+/**/
+/* #sidebar-box[sidebarcommand="_f9a7bfdd-59d9-4740-82e4-26232256236d_-sidebar-action"] #sidebar-header { */
+/*   display: none !important; */
+/* } */
+/**/
+/* #sidebar-box[sidebarcommand="_f9a7bfdd-59d9-4740-82e4-26232256236d_-sidebar-action"] + #sidebar-splitter { */
+/*   #width: 1px !important; */
+/*   width: 3px !important; */
+/*   border: 0 !important; */
+/* } */
+/**/
+/* #sidebar-box[sidebarcommand="_f9a7bfdd-59d9-4740-82e4-26232256236d_-sidebar-action"] #sidebar { */
+/*   min-width: 0em !important; */
+/* } */
+/**/
+/* /** */
+/*  * In `about:config` set `layout.css.has-selector.enabled = true` to make `:has()` work */
+/*  */ */
+/* .tabbrowser-tab[pinned=true]:not([titlechanged="true"], :has([soundplaying="true"])) { */
+/*   display: none; */
+/* } */
 
 /****************
  * }} Pinstripe ****************************************************************
