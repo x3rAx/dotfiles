@@ -10,6 +10,10 @@ super + {Return, x ; super + x}
 super + shift + Return
     alacritty
 
+#: Open Xterm
+super + alt + Return
+    xterm
+
 #: Focus windows in given direction
 super + {h,j,k,l}
     bspc node --focus {west,south,north,east}
