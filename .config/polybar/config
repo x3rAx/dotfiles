@@ -534,12 +534,12 @@ interval = 5
 [module/kopia-check]
 type = custom/script
 label =  %output%
-exec = kopia maintenance info 2>&1 | (! grep -q 'ERROR') && echo '' || echo 'KOPIA'
+exec = kopia maintenance info 2>&1 | (! grep -qi 'ERROR') && echo '' || echo 'KOPIA'
 label-padding = 1
 format-background = ${colors.alert}
 interval = 15
 cursor-click = pointer
-click-left = `which kitty || which xterm` -e bash -c 'kopia maintenance info | less'
+click-left = `which kitty || which xterm` -e bash -c $'kopia maintenance info | grep --color=always -Ei \'error|$\' | less'
 
 [module/home-dirty-check]
 type = custom/script
