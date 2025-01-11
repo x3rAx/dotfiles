@@ -26,6 +26,7 @@ foreground-alt = #555
 primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
+warn = #d6d60d
 
 [bar/primary]
 enable-ipc = true
@@ -72,7 +73,7 @@ font-1 = Fira Code Nerd Font:size=8;2
 modules-left = bspwm
 modules-center = xwindow
 ;modules-right = filesystem xbacklight alsa xkeyboard memory cpu wlan eth battery temperature date powermenu
-modules-right = kopia-check online-check filesystem pulseaudio xkeyboard netspeed memory cpu temperature date notification-center rofi-powermenu
+modules-right = kopia-check home-dirty-check online-check filesystem pulseaudio xkeyboard netspeed memory cpu temperature date notification-center rofi-powermenu
 
 tray-position = right
 tray-padding = 2
@@ -539,6 +540,15 @@ format-background = ${colors.alert}
 interval = 15
 cursor-click = pointer
 click-left = `which kitty || which xterm` -e bash -c 'kopia maintenance info | less'
+
+[module/home-dirty-check]
+type = custom/script
+label = "󱂶 %output%"
+exec = yadm diff --quiet && echo '' || echo '!'
+label-padding = 1
+format-background = ${colors.warn}
+format-foreground = ${colors.background}
+interval = 15
 
 [settings]
 screenchange-reload = true
