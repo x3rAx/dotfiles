@@ -3,9 +3,9 @@ super + Escape ; Return
     pkill -USR1 -x sxhkd && notify-send -t 1 "sxhkd reloaded"
 
 #: Open Kitty
-super + Return
+super + {Return, x ; super + x}
     kitty
-#
+
 #: Open Alacritty
 super + shift + Return
     alacritty
