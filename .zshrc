@@ -93,6 +93,7 @@ alias doc='docker  compose'
 alias o='handlr open'
 alias cat=bat
 alias gg=lazygit
+alias typescript-recorder='script'
 
 
 # Editor
