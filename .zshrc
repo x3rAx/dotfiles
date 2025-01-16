@@ -4,6 +4,9 @@ ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 source "${ZINIT_HOME}/zinit.zsh"
 
+# "If you do not plan on having Home Manager manage your shell configuration then you must source the [following] file in your shell configuration."
+source $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
+
 
 # Add zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
@@ -18,6 +21,7 @@ zinit light nix-community/nix-zsh-completions
 # Add deno completions to search path
 if [[ ":$FPATH:" != *":/home/x3ro/.zsh/completions:"* ]]; then export FPATH="/home/x3ro/.zsh/completions:$FPATH"; fi
 
+
 # Load completions
 # autoload -Uz compinit && compinit
 autoload -Uz compinit
@@ -31,7 +35,7 @@ zinit cdreplay -q
 
 # Prompt
 eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/config.toml)"
-echo '' # HACK: Oh-My-Posh ships the first newline, so we add one one ourselves
+echo '' # HACK: Oh-My-Posh skips the first newline, so we add one ourselves
 
 
 # Disable "sroll-lock" (= Freeze terminal on Ctrl+s)
