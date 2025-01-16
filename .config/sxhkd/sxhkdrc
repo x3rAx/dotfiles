@@ -109,12 +109,17 @@ super + ctrl + {h,j,k,l}
     bspc node --resize $d1 $dx $dy || bspc node --resize $d2 $((-$dx)) $((-$dy))
 
 #: Volume control
+#
+#    pactl set-sink-volume @DEFAULT_SINK@ {-,+}2% \
+#    pamixer -{i,d} 2 \
+#    amixer -D pipewire sset Master 2%{-,+}
 XF86Audio{Lower,Raise}Volume
-    pactl set-sink-volume @DEFAULT_SINK@ {-,+}2%
+    amixer sset Master 2%{-,+}
 
 #: Mute audio
+#    pactl set-sink-mute @DEFAULT_SINK@ toggle
 XF86AudioMute
-    pactl set-sink-mute @DEFAULT_SINK@ toggle
+    amixer sset Master toggle
 
 #: Media player controls
 XF86Audio{Play,Prev,Next,Stop}
