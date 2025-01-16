@@ -150,10 +150,6 @@ super + shift + {p,n}
 super + period
     rofimoji
 
-#: Lock screen
-super + shift + x
-    xsecurelock
-
 #: Launch Browser
 super + x ; {_,shift +} b
     firefox{_, --private-window}
