@@ -25,7 +25,8 @@ program_options:
   #terminal:         'termite -d'
     # [string] Set terminal command line to open directories. It will be
     # invoked with thefolder path as its last command line argument.
-  terminal:         'alacritty --working-directory'
+  #terminal:         'alacritty --working-directory'
+  terminal:         'kitty -d'
 
   #password_prompt: ["gnome-keyring-query", "get", "{id_uuid}"]
     # [string|list] Set command to retrieve passwords. If specified
@@ -98,7 +99,7 @@ quickmenu_actions:
   - mount
   - unmount
   - unlock
-  #- detach
+  - detach
   - delete
 
 #notification_actions:
