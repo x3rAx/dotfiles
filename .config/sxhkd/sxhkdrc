@@ -38,9 +38,19 @@ ctrl + alt + shift + k
 super + d
     rofi -combi-modi window,drun -show combi
 
-#: Move nodes using smart move
+#: Move (swap) nodes
 super + shift + {h,j,k,l}
+    bspc node --swap {west,south,north,east} --follow
+
+#: Move nodes using smart move
+super + shift + alt + {h,j,k,l}
     ~/.local/bin/bspwm-smart-move {west,south,north,east}
+
+#: Swap current node with biggest window
+super + g:
+    bspc node --focus biggest.local.tiled.window \
+        && bspc node --focus last.local.tiled.window \
+        && bspc node --swap last.local.tiled.window
 
 ##: Move: Swap nodes
 #super + shift + ctrl {h,j,k,l}
@@ -58,8 +68,12 @@ super + shift + {_,ctrl + }q
 super + a
     bspc node --focus @parent
 
-#: Focus last window (undo "select parent")
+#: Focus last window (current desktop)
 super + Tab
+    bspc node -f last.local.window
+
+#: Focus last window (all desktops)
+super + shift + Tab
     bspc node --focus last.window
 
 #: Rotate all children
