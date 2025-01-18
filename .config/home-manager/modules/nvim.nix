@@ -9,9 +9,11 @@
     stdenv.cc.cc.lib
     zlib
   ];
-  nvim-ld = pkgs.symlinkJoin {
+  nvim-ld = let
+    neovim-pkg = pkgs.unstable.neovim-unwrapped;
+  in pkgs.symlinkJoin {
     name = "nvim-ld";
-    paths = [pkgs.unstable.neovim-unwrapped];
+    paths = [neovim-pkg];
     nativeBuildInputs = [pkgs.makeBinaryWrapper];
     postBuild = ''
       mkdir -p "$out/bin/.wrapped"
@@ -25,6 +27,19 @@
         --set NIX_LD `cat '${pkgs.stdenv.cc}/nix-support/dynamic-linker'` \
         --set NIX_LD_LIBRARY_PATH '${lib.makeLibraryPath nvim-ld-libraries}'
     '';
+    # Inherit interpreter from neovim
+    lua = neovim-pkg.lua;
+    # Inherit meta from neovim
+    meta = {
+      inherit (neovim-pkg.meta)
+        description
+        longDescription
+        homepage
+        mainProgram
+        license
+        maintainers
+        platforms;
+    };
   };
 in {
   programs.neovim = {
