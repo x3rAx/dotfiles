@@ -9,7 +9,7 @@ enable_cursor_positioning = false
 [var]
   # When copying this config to an ssh target, the username is only shown if
   # it does not match the MainUser name.
-  MainUser = "^x3ro$"
+  MainUser = '^x3ro$'
 
 
 [[blocks]]
@@ -18,40 +18,40 @@ enable_cursor_positioning = false
   newline = true
 
   [[blocks.segments]]
-    alias = "distrobox"
-    type = "text"
-    style = "diamond"
+    alias = 'distrobox'
+    type = 'text'
+    style = 'diamond'
     trailing_diamond = ' '
-    background = "#0B59E7"
-    template = "{{ if not (empty .Env.DISTROBOX_ENTER_PATH) }}  {{ if not (empty .Env.CONTAINER_ID) }}{{ .Env.CONTAINER_ID }} {{ end }}{{ end }}"
+    background = '#0B59E7'
+    template = '{{ if not (empty .Env.DISTROBOX_ENTER_PATH) }}  {{ if not (empty .Env.CONTAINER_ID) }}{{ .Env.CONTAINER_ID }} {{ end }}{{ end }}'
 
     [blocks.segments.properties]
       cache_duration = 'none'
 
   [[blocks.segments]]
-    type = "battery"
-    style = "diamond"
+    type = 'battery'
+    style = 'diamond'
     trailing_diamond = ' '
-    foreground = "p:_surface0"
-    background = "p:red"
+    foreground = 'p:_surface0'
+    background = 'p:red'
     background_templates = ['{{ if eq .State.String "Charging" }}p:yellow{{ end }}']
-    template = "{{ if le .Percentage 20 }} <b>{{ .Icon }}{{ .Percentage }} </b>{{ end }}"
+    template = '{{ if le .Percentage 20 }} <b>{{ .Icon }}{{ .Percentage }} </b>{{ end }}'
 
     [blocks.segments.properties]
-      discharging_icon = "󰁺 "
-      charging_icon = "󰢜 "
-      charged_icon = "󰁹 "
+      discharging_icon = '󰁺 '
+      charging_icon = '󰢜 '
+      charged_icon = '󰁹 '
       display_error = true
-      cache_duration = "none"
+      cache_duration = 'none'
 
   [[blocks.segments]]
-    type = "os"
-    style = "diamond"
+    type = 'os'
+    style = 'diamond'
     foreground = 'p:fg_host'
     background = 'p:bg_host'
     leading_diamond = ''
     trailing_diamond = ''
-    template = "{{.Icon}} "
+    template = '{{.Icon}} '
 
     [blocks.segments.properties]
       cache_duration = 'none'
@@ -108,31 +108,31 @@ enable_cursor_positioning = false
       cache_duration = '5000'
 
   [[blocks.segments]]
-    type = "text"
-    style = "accordion"
+    type = 'text'
+    style = 'accordion'
     powerline_symbol = ''
-    background = "p:_yellow"
-    template = ""
+    background = 'p:_yellow'
+    template = ''
 
     [blocks.segments.properties]
       cache_duration = 'none'
 
   [[blocks.segments]]
-    type = "text"
-    style = "accordion"
+    type = 'text'
+    style = 'accordion'
     powerline_symbol = ''
-    background = "p:_peach"
-    template = ""
+    background = 'p:_peach'
+    template = ''
 
     [blocks.segments.properties]
       cache_duration = 'none'
 
   [[blocks.segments]]
-    type = "text"
-    style = "accordion"
+    type = 'text'
+    style = 'accordion'
     powerline_symbol = ''
-    background = "p:_red"
-    template = ""
+    background = 'p:_red'
+    template = ''
 
     [blocks.segments.properties]
       cache_duration = 'none'
@@ -142,29 +142,29 @@ enable_cursor_positioning = false
   alignment = 'left'
 
   [[blocks.segments]]
-    type = "time"
-    style = "diamond"
+    type = 'time'
+    style = 'diamond'
     leading_diamond = ''
     trailing_diamond = ''
-    foreground = "p:fg_time"
-    background = "p:bg_time"
-    template = "  {{ .CurrentDate | date .Format }} "
+    foreground = 'p:fg_time'
+    background = 'p:bg_time'
+    template = '  {{ .CurrentDate | date .Format }} '
 
     [blocks.segments.properties]
-      time_format = "15:04:05"
+      time_format = '15:04:05'
       cache_duration = 'none'
 
   [[blocks.segments]]
-    type = "executiontime"
-    style = "diamond"
+    type = 'executiontime'
+    style = 'diamond'
     trailing_diamond = ''
-    foreground = "p:white"
-    background = "p:_surface0"
-    template = "  {{ .FormattedMs }} "
+    foreground = 'p:white'
+    background = 'p:_surface0'
+    template = '  {{ .FormattedMs }} '
 
     [blocks.segments.properties]
       threshold = 500
-      style = "austin"
+      style = 'austin'
       cache_duration = 'none'
 
 
@@ -204,32 +204,32 @@ enable_cursor_positioning = false
 
 [palette]
   # --- Catppuccin Mocha ---
-  _rosewater = "#f5e0dc"
-  _flamingo  = "#f2cdcd"
-  _pink      = "#f5c2e7"
-  _mauve     = "#cba6f7"
-  _red       = "#f38ba8"
-  _maroon    = "#eba0ac"
-  _peach     = "#fab387"
-  _yellow    = "#f9e2af"
-  _green     = "#a6e3a1"
-  _teal      = "#94e2d5"
-  _sky       = "#89dceb"
-  _sapphire  = "#74c7ec"
-  _blue      = "#89b4fa"
-  _lavender  = "#b4befe"
-  _text      = "#cdd6f4"
-  _subtext1  = "#bac2de"
-  _subtext0  = "#a6adc8"
-  _overlay2  = "#9399b2"
-  _overlay1  = "#7f849c"
-  _overlay0  = "#6c7086"
-  _surface2  = "#585b70"
-  _surface1  = "#45475a"
-  _surface0  = "#313244"
-  _base      = "#1e1e2e"
-  _mantle    = "#181825"
-  _crust     = "#11111b"
+  _rosewater = '#f5e0dc'
+  _flamingo  = '#f2cdcd'
+  _pink      = '#f5c2e7'
+  _mauve     = '#cba6f7'
+  _red       = '#f38ba8'
+  _maroon    = '#eba0ac'
+  _peach     = '#fab387'
+  _yellow    = '#f9e2af'
+  _green     = '#a6e3a1'
+  _teal      = '#94e2d5'
+  _sky       = '#89dceb'
+  _sapphire  = '#74c7ec'
+  _blue      = '#89b4fa'
+  _lavender  = '#b4befe'
+  _text      = '#cdd6f4'
+  _subtext1  = '#bac2de'
+  _subtext0  = '#a6adc8'
+  _overlay2  = '#9399b2'
+  _overlay1  = '#7f849c'
+  _overlay0  = '#6c7086'
+  _surface2  = '#585b70'
+  _surface1  = '#45475a'
+  _surface0  = '#313244'
+  _base      = '#1e1e2e'
+  _mantle    = '#181825'
+  _crust     = '#11111b'
 
   # --- Regular colors ---
   white  = 'p:_text'
