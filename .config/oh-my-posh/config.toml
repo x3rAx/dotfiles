@@ -65,11 +65,7 @@ enable_cursor_positioning = false
     powerline_symbol = ''
     # leading_diamond = ''
     trailing_diamond = ''
-    templates = [
-      '{{ if .SSHSession }} {{ end }}',
-      '{{ if not (matchP .Var.MainUser .UserName) }}{{ .UserName }}{{ end }}',
-      '{{ if .SSHSession }}@{{ .HostName }}{{ end }} '
-    ]
+    template = '{{ if .SSHSession }} {{ end }} {{ if not (matchP .Var.MainUser .UserName) }}{{ .UserName }}{{ end }}{{ if .SSHSession }}@{{ .HostName }}{{ end }} '
 
     [blocks.segments.properties]
       cache_duration = 'none'
