@@ -94,6 +94,7 @@ alias o='handlr open'
 alias cat=bat
 alias gg=lazygit
 alias typescript-recorder='script'
+alias duff='duf -only-mp "/,/data/*,/mnt/*"'
 
 
 # Editor
