@@ -1,0 +1,256 @@
+#!/usr/bin/env -S deno run --allow-all
+// vi: ft=typescript
+
+import { $ } from "jsr:@david/dax";
+import { parseArgs } from "jsr:@std/cli";
+import * as path from "jsr:@std/path";
+
+const _SCRIPT_NAME = path.basename(import.meta.filename ?? "UNKNOWN");
+const _BIN_DIR = path.join(Deno.env.get("HOME")!, ".local/bin");
+
+const _HELP = $.dedent({
+    trimLeadingNewline: false,
+    trimTrailingNewline: false,
+})`
+  ${$.dedent}
+    Usage:
+        ${_SCRIPT_NAME} [--] <FILE>
+
+    Create an executable file with a stub for a deno script. When FILE contains
+    a directory separatpr (\`/\`), the argument will be interpreted as a path.
+    When it does not contain a directory separator, a file with the given name
+    will be created in \`~/.local/bin/\`.
+
+    To create a file in the current directory, prefix the name with
+    \`./\` -> \`./FILE\`.
+
+    OPTIONS:
+        -h, --help      - Show this help message.
+        -e, --edit      - Edit the file if it already exists.
+`;
+const _CLI_OPTIONS = {
+    boolean: ["help", "edit"],
+    string: [],
+    alias: {
+        "h": "help",
+        "e": "edit",
+    },
+};
+
+function print_help({ stderr = true } = {}) {
+    if (stderr) {
+        console.error(_HELP);
+        return;
+    }
+    console.log(_HELP);
+}
+
+function parse_args(cli_args: string[]) {
+    const args = parseArgs(cli_args, {
+        ..._CLI_OPTIONS,
+        unknown: (arg: string, key?: string, _value?: unknown) => {
+            if (key === undefined) {
+                return;
+            }
+            const dashes = arg.startsWith("--") ? "--" : "-";
+            $.logError(`ERROR: Unknown option: ${dashes}${key}`);
+            print_help({ stderr: true });
+            Deno.exit(1);
+        },
+    });
+
+    if (args.help) {
+        print_help();
+        Deno.exit(0);
+    }
+
+    if (args._.length < 1) {
+        $.logError(`ERROR: Missing argument "FILE".`);
+        print_help({ stderr: true });
+        Deno.exit(1);
+    }
+
+    if (args._.length > 1) {
+        $.logError(
+            `ERROR: Too many arguments. Expected 1, got ${args._.length}.`,
+        );
+        print_help({ stderr: true });
+        Deno.exit(1);
+    }
+
+    return {
+        _: args._,
+        _file: args._.splice(0, 1)[0] as string,
+        edit: args.edit,
+    };
+}
+
+async function main() {
+    const args = parse_args(Deno.args);
+
+    let file = args._file;
+
+    if (!is_path(file)) {
+        file = path.join(_BIN_DIR, file);
+    }
+
+    if (!await file_exists(file)) {
+        await create_deno_bin(file);
+        await $`chmod +x ${file}`;
+    } else {
+        if (!args.edit) {
+            $.logError(
+                `ERROR: File \`${file}\` already exists. Use \`-e\` to edit it.`,
+            );
+            Deno.exit(1);
+        }
+    }
+
+    await exec_editor(file);
+}
+
+async function file_exists(file: string) {
+    try {
+        await Deno.stat(file);
+        return true;
+    } catch (err) {
+        if (err instanceof Deno.errors.NotFound) {
+            return false;
+        } else {
+            // Unexpected error, maybe permissions, pass it along
+            throw err;
+        }
+    }
+}
+
+async function exec_editor(file: string): Promise<never> {
+    const editor = Deno.env.get("EDITOR") ?? "nvim";
+
+    let child;
+    try {
+        child = new Deno.Command(editor, { args: [file] })
+            .spawn();
+    } catch (err: Error | unknown) {
+        if (err instanceof Error) {
+            $.logError(`ERROR: ${err.message}`);
+        } else {
+            $.logError(`ERROR: ${err}`);
+        }
+        Deno.exit(1);
+    }
+    const status = await child.status;
+    Deno.exit(status.code);
+}
+
+function is_path(path: string) {
+    return path.includes("/");
+}
+
+async function create_deno_bin(file: string) {
+    await Deno.writeTextFile(
+        file,
+        $.dedent`
+            #!/usr/bin/env -S deno run --allow-all
+            // vi: ft=typescript
+
+            import { $ } from "jsr:@david/dax";
+            import { parseArgs } from "jsr:@std/cli";
+            import * as path from "jsr:@std/path";
+
+            const _SCRIPT_NAME = path.basename(import.meta.filename ?? "UNKNOWN");
+
+            const _HELP = $.dedent({
+                trimLeadingNewline: false,
+                trimTrailingNewline: false,
+            })\`
+              \${$.dedent}
+                Usage:
+                    \${_SCRIPT_NAME} [--] <FILE>
+
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+                nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+                erat, sed diam voluptua.
+
+                OPTIONS:
+                    -h, --help      - Show this help message.
+            \`;
+            const _CLI_OPTIONS = {
+                boolean: ["help"],
+                string: [],
+                alias: {
+                    "h": "help",
+                },
+            };
+
+            function print_help({ stderr = true } = {}) {
+                if (stderr) {
+                    console.error(_HELP);
+                    return;
+                }
+                console.log(_HELP);
+            }
+
+            function parse_args(cli_args: string[]) {
+                const args = parseArgs(cli_args, {
+                    ..._CLI_OPTIONS,
+                    unknown: (arg: string, key?: string, _value?: unknown) => {
+                        if (key === undefined) {
+                            return;
+                        }
+                        const dashes = arg.startsWith("--") ? "--" : "-";
+                        $.logError(\`ERROR: Unknown option: \${dashes}\${key}\`);
+                        print_help({ stderr: true });
+                        Deno.exit(1);
+                    },
+                });
+
+                if (args.help) {
+                    print_help();
+                    Deno.exit(0);
+                }
+
+                if (args._.length < 1) {
+                    $.logError(\`ERROR: Missing argument "FILE".\`);
+                    print_help({ stderr: true });
+                    Deno.exit(1);
+                }
+
+                if (args._.length > 1) {
+                    $.logError(
+                        \`ERROR: Too many arguments. Expected 1, got \${args._.length}.\`,
+                    );
+                    print_help({ stderr: true });
+                    Deno.exit(1);
+                }
+
+                return {
+                    ...args,
+                    _file: args._.splice(0, 1)[0] as string,
+                };
+            }
+
+            function main() {
+                const args = parse_args(Deno.args);
+
+                $.logLight(args);
+            }
+
+            if (import.meta.main) {
+                main();
+            }
+        `,
+    );
+}
+
+if (import.meta.main) {
+    try {
+        await main();
+    } catch (err: Error | unknown) {
+        if (err instanceof Error) {
+            $.logError(`ERROR: ${err.message}`);
+        } else {
+            $.logError("UNKNOWN ERROR:", err);
+        }
+        Deno.exit(1);
+    }
+}
