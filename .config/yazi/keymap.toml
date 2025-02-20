@@ -6,7 +6,7 @@
 
 prepend_keymap = [
     # Smart Enter
-    { on = "<Enter>", run = "plugin --sync smart-enter", desc = "Enter the child directory, or open the file" },
+    { on = "<Enter>", run = "plugin smart-enter", desc = "Enter the child directory, or open the file" },
 ]
 
 append_keymap = [
