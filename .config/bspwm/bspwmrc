@@ -41,29 +41,41 @@ fi
 kill -- -$(pgrep -f "${BSPWM_DIR}/scripts/autorandr-daemon.sh\$")
 setsid "${BSPWM_DIR}/scripts/autorandr-daemon.sh" &
 
+# PipeWire EasyEffects
+pkill -x easyeffects || pkill -x '.easyeffects-wr'
+easyeffects --gapplication-service &
+
 # Bar
 $HOME/.config/polybar/launch.sh &
 
 # Notification Center
+pkill -x deadd-notification-center || pkill -x '.deadd-notifica'
 deadd-notification-center &
 
 # Shorcuts
-pkill sxhkd; sxhkd & # sxhkd is started by nix package of bspwm but with wrong PATH
+pkill -x sxhkd
+sxhkd & # sxhkd is started by nix package of bspwm but with wrong PATH
 
 # Compositor
+pkill -x picom
+sleep 0.2
 "${BSPWM_DIR}/scripts/start-picom.sh" &
 
 # Desktop Background
-feh --bg-fill ~/Pictures/\[Wallpapers\]/1920x1080/tree-on-a-hill.jpg &
+#feh --bg-fill ~/Pictures/\[Wallpapers\]/1920x1080/tree-on-a-hill.jpg &
+~/.fehbg &
 
 # Solaar Key Daemon
+pkill -f "^python3 $HOME/.local/scripts/solaar-keys/solaar-key-daemon\$"
 ~/.local/scripts/solaar-keys/solaar-key-daemon &
 
 # Playerctl Daemon (keeps track of last active player)
-pkill playerctld; playerctld &
+pkill -x playerctld
+playerctld &
 
 # Manage Removable Media
-pkill udiskie; udiskie &
+pkill -x udiskie || pkill -x '.udiskie-wrappe'
+udiskie &
 
 # Auto-Hide Cursor
 pkill unclutter; unclutter & # install `unclutter-xfixes`
@@ -78,14 +90,13 @@ fi
 
 # --- Restart user services that need access to the X server ---
 systemctl --user restart \
-    gamemoded
-
+	gamemoded
 
 
 # --- Setup ---
 
 # Workspaces
-bspc monitor -d {1..10}
+bspc monitor primary -d {1..10}
 
 # Config
 bspc config window_gap              20
