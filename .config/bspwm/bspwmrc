@@ -19,11 +19,27 @@ path_prepend "${HOME}/.local/bin"
 export PATH
 
 
-
 # --- Autostart ---
 
-# Default monitor layout
-$HOME/.screenlayout/default.sh &
+# Monitor layout
+#$HOME/.screenlayout/default.sh &
+if [[ $(autorandr --current) != "" ]]; then
+	: # Do nothing
+elif [[ $(autorandr --detected | wc -l) -gt 0 ]]; then
+	# Automatic
+	autorandr --change
+else
+	# Fallback
+	autorandr horizontal
+fi
+
+# Trigger `autorandr` on display (un)plug
+# NOTE: The `kill -- -$(pgrep ...)` (using the negative of the PID) kills the
+#       whole process group of the process. To ensure that only the processes
+#       get killed that we want to kill we have to also call the program using
+#       `setsid`.
+kill -- -$(pgrep -f "${BSPWM_DIR}/scripts/autorandr-daemon.sh\$")
+setsid "${BSPWM_DIR}/scripts/autorandr-daemon.sh" &
 
 # Bar
 $HOME/.config/polybar/launch.sh &
