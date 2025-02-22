@@ -99,7 +99,7 @@ systemctl --user restart \
 bspc monitor primary -d {1..10}
 
 # Config
-bspc config window_gap              20
+bspc config window_gap              15
 bspc config border_width            1
 bspc config pointer_follows_monitor false
 bspc config focus_follows_pointer   true
@@ -108,7 +108,6 @@ bspc config removal_adjustment      "false"
 bspc config gapless_monocle         true
 bspc config automatic_scheme        alternate
 bspc config split_ratio             0.6
-
 
 
 # --- Rules ---
