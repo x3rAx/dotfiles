@@ -85,8 +85,19 @@ if [[ "$is_restart" != true ]]; then
 	(sleep 3 && cd "${BSPWM_DIR}" && "./autostart.sh") &
 fi
 
+# Automatic screen lock
+LOCK_AFTER_MINUTES=15
+LOCK_FADE_OUT_SECONDS=15
 
-
+#xset s 0 0 # Disable screen locking
+pkill -x xss-lock
+xset s $((LOCK_AFTER_MINUTES * 60)) $LOCK_FADE_OUT_SECONDS
+env XSECURELOCK_DIM_TIME_MS=$((LOCK_FADE_OUT_SECONDS * 1000)) \
+    XSECURELOCK_BLANK_TIMEOUT=10 \
+    XSECURELOCK_BLANK_DPMS_STATE=standby \
+    XSECURELOCK_AUTH_TIMEOUT=10 \
+    XSECURELOCK_BURNIN_MITIGATION=100 \
+        xss-lock -n `which xsecurelock-dimmer` -l -- xsecurelock &
 
 # --- Restart user services that need access to the X server ---
 systemctl --user restart \
