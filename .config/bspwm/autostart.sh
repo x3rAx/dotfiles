@@ -30,5 +30,8 @@ start barrier # mouse / keyboard sharing
 #start discord
 #start steam -silent
 start flatpak run com.valvesoftware.Steam -silent
+start razer_battery_tray "Razer Viper Ultimate"
+start kdeconnect-indicator
+start blueman-applet # Bluetooth UI
 
 start_delayed 2 syncthingtray
