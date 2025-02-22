@@ -15,11 +15,10 @@ bspc rule --add "Ferdi"           desktop=10
 bspc rule --add "Signal"          desktop=10
 bspc rule --add "TelegramDesktop" desktop=10
 
-
-start anydesk
-start birdtray
+#start anydesk
+#start birdtray
 start copyq
-start ferdi
+#start ferdi
 start keepassxc
 start kopia-ui-crashsafe
 #start rustdesk
@@ -28,7 +27,7 @@ start solaar --battery-icons solaar --window hide
 start telegram-desktop
 start thunderbird
 start barrier # mouse / keyboard sharing
-start discord
+#start discord
 start steam -silent
 
 start_delayed 2 syncthingtray
