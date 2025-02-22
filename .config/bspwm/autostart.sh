@@ -28,6 +28,7 @@ start telegram-desktop
 start thunderbird
 start barrier # mouse / keyboard sharing
 #start discord
-start steam -silent
+#start steam -silent
+start flatpak run com.valvesoftware.Steam -silent
 
 start_delayed 2 syncthingtray
