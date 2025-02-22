@@ -1,7 +1,11 @@
 #!/bin/sh
 
 start() { "$@" & }
-
+start_delayed() { (
+	sleep $1
+	shift
+	start "$@"
+) & }
 
 bspc rule --add "Anydesk"         desktop=8
 #bspc rule --add "Rustdesk"        desktop=8  state=tiled
@@ -21,9 +25,10 @@ start kopia-ui-crashsafe
 #start rustdesk
 start signal-desktop --use-tray-icon # --start-in-tray
 start solaar --battery-icons solaar --window hide
-start syncthingtray
 start telegram-desktop
 start thunderbird
 start barrier # mouse / keyboard sharing
 start discord
 start steam -silent
+
+start_delayed 2 syncthingtray
