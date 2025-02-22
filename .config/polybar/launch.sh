@@ -76,5 +76,4 @@ while true; do
         start_polybar
         wait -n
     )
-    echo 'AAAAAAAAAAA'
 done
