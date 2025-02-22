@@ -14,13 +14,13 @@
 #
 ####################################
 
-# Terminate already running bar instances
-killall -q polybar
-
-
-if ! command -v xrandr >/dev/null; then
-  polybar --reload primary &
-  exit
+# Kill other instances
+script_path=$(readlink -f "$0")
+current_pid=$$
+other_pids=$(pgrep -f "$script_path" | grep -v "^${current_pid}$")
+if [ -n "$other_pids" ]; then
+  echo "Killing other instances: $other_pids"
+  kill $other_pids
 fi
 
 
@@ -34,23 +34,47 @@ get_primary() {
 }
 
 
-# Primary
-primary="$(get_primary)"
+start_polybar() {
+    # Terminate already running bar instances
+    pkill -x polybar || pkill -x '.polybar-wrappe'
+    sleep 1
+    wait
 
-log_tpl="/tmp/polybar-%s.$(date +%s).log"
 
-for monitor in $(get_connected); do
-    log="$(printf "$log_tpl" "$monitor")"
-
-    # If there is no primary monitor, fall back to using first one as primary
-    if [[ -z $primary ]]; then primary="$monitor"; fi
-
-    # Primary
-    if [[ $monitor == $primary ]]; then
-        MONITOR=$monitor polybar --reload primary >"$log" &
-        continue
+    if ! command -v xrandr >/dev/null; then
+        polybar --reload primary &
+        return
     fi
 
-    # Secondaries
-    MONITOR=$monitor polybar --reload secondary >"$log" &
+
+    # Primary
+    primary="$(get_primary)"
+
+    log_tpl="/tmp/polybar-%s.$(date +%s).log"
+
+    for monitor in $(get_connected); do
+        log="$(printf "$log_tpl" "$monitor")"
+
+        # If there is no primary monitor, fall back to using first one as primary
+        if [[ -z $primary ]]; then primary="$monitor"; fi
+
+        # Primary
+        if [[ $monitor == $primary ]]; then
+            MONITOR=$monitor polybar --reload primary >"$log" &
+            continue
+        fi
+
+        # Secondaries
+        MONITOR=$monitor polybar --reload secondary >"$log" &
+    done
+}
+
+while true; do
+    # Run in subshell so `wait -n` will not continue when old subprocesses exit
+    # due to the force kill at the beginning
+    (
+        start_polybar
+        wait -n
+    )
+    echo 'AAAAAAAAAAA'
 done

@@ -95,6 +95,7 @@ alias cat=bat
 alias gg=lazygit
 alias typescript-recorder='script'
 alias duff='duf -only-mp "/,/data/*,/mnt/*"'
+alias RR='. ~/.zshrc'
 
 
 # Editor
@@ -161,6 +162,7 @@ function _refresh_tmux_env() {
 
     allowed_vars=(
         "DISPLAY"
+        "XAUTHORITY"
         "SSH_CONNECTION"
         "SSH_AUTH_SOCK"
     )
@@ -176,3 +178,6 @@ function preexec() {
     _refresh_tmux_env
 }
 
+
+# TODO: int tmux, alt+h is bound to switching panes. In zsh alt+h is bound to "open man for current command". Find alternative mapping in zsh
+# TODO: config aliases
