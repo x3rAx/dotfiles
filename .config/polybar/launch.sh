@@ -25,12 +25,19 @@ fi
 
 
 get_connected() {
-    xrandr --query | grep " connected" | cut -d' ' -f1
+    # WARN: Filtering xrandr for "connected" is not sufficient. If a monitor is
+    #       connected but not in use, polybar will crash when trying to start
+    #       on that monitor. A solution might be to filter for "connected" AND
+    #       the current resolution (in the same line as "connected"). Monitors
+    #       not in use seem to have no resolution in this line.
+    #xrandr --query | grep " connected" | cut -d' ' -f1
+    bspc query -M --names
 }
 
 
 get_primary() {
-    xrandr --query | grep " connected" | grep " primary" | head -n1 | cut -d' ' -f1
+    #xrandr --query | grep " connected" | grep " primary" | head -n1 | cut -d' ' -f1
+    bspc query -M -m primary --names
 }
 
 
@@ -38,13 +45,12 @@ start_polybar() {
     # Terminate already running bar instances
     pkill -x polybar || pkill -x '.polybar-wrappe'
     sleep 1
-    wait
 
 
-    if ! command -v xrandr >/dev/null; then
-        polybar --reload primary &
-        return
-    fi
+    # if ! command -v xrandr >/dev/null; then
+    #     polybar --reload primary &
+    #     return
+    # fi
 
 
     # Primary
