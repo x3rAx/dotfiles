@@ -1,0 +1,81 @@
+#!/usr/bin/env -S deno run --allow-all
+// vi: ft=typescript
+
+// This script uses pgrep with the provided arguments to find matching PIDs,
+// sends a kill signal to each, and then waits until all original processes have terminated.
+
+import $ from "jsr:@david/dax@0.42.0";
+
+const pgrepArgs = Deno.args;
+
+// Get the list of matching process IDs from pgrep.
+const pids = (await $`pgrep ${pgrepArgs} || true`.lines())
+    .filter((x) => x != "")
+    .map((x) => Number.parseInt(x))
+    .filter((x) => x !== Deno.pid);
+
+if (pids.length == 0) {
+    $.logError(`ERROR: No matching processes found`);
+    Deno.exit(1);
+}
+
+async function get_start_time(pid: number): Promise<string | undefined> {
+    return (await $`awk '{print $22}' /proc/"${pid}"/stat 2>/dev/null || echo ''`
+        .lines())
+        .filter((x) => x != "")
+        .at(0);
+}
+
+const start_times = new Map<number, string>();
+
+// Record the start time for each process so we can verify we're tracking the correct instance.
+for (const pid of pids) {
+    if ($.path(`/proc/${pid}`).isDirSync()) {
+        const start_time = await get_start_time(pid);
+        if (start_time === undefined) {
+            $.logWarn("WARN: Unable to get start time for $pid. SKIPPING");
+            continue;
+        }
+        start_times.set(pid, start_time);
+    }
+}
+
+const progress = $.progress("Waiting for processes to terminate...", {
+    length: start_times.size,
+});
+
+await progress.with(async () => {
+    // Send the kill signal to each identified process.
+    for (const pid of pids) {
+        $.logLight(`Killing ${pid}...`);
+        await $`kill ${pid} || true`.quiet();
+    }
+
+    $.logGroup("Waiting for processes to terminate...");
+
+    // Loop until all original processes are gone.
+    while (start_times.size > 0) {
+        for (const [pid, start_time] of start_times) {
+            if (!$.path(`/proc/${pid}`).isDirSync()) {
+                // Process directory no longer exists; the process has terminated.
+                start_times.delete(pid);
+                $.logStep(`OK: ${pid} has terminated.`);
+                progress.increment();
+            } else {
+                // Check the process's start time; if it's different, a new process is using this PID.
+                const current_start = await get_start_time(pid);
+                if (current_start != start_time) {
+                    start_times.delete(pid);
+                    $.logStep(`OK: ${pid} has terminated.`);
+                    progress.increment();
+                }
+            }
+        }
+
+        await $.sleep(0.1);
+    }
+
+    $.logGroupEnd();
+});
+
+$.logStep("DONE: All processes have terminated.");
