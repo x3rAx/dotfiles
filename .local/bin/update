@@ -12,7 +12,7 @@ main() {
 
 	# Update Nixos systems
 	run-if /etc/nixos/flake.nix \
-		sudo nix flake update /etc/nixos
+		sudo nix flake update --flake /etc/nixos
 	run-if /etc/nixos/rebuild
 
     # Update Debian/Ubuntu systems
