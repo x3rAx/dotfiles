@@ -42,19 +42,25 @@ main() {
 
     run-if - deno upgrade
 
-	echo ""
-	echo ""
-	echo "+------------------------------------------------------------------------------+"
-	echo "|  NOTE                                                                        |"
-	echo "|  ====                                                                        |"
-	echo "|                                                                              |"
-	echo "|  Remember to commit ~/.config/home-manager/flake.lock                        |"
-	echo "|                                                                              |"
-	echo "|  $ yadm restore --staged .                                                   |"
-	echo "|  $ yadm add ~/.config/home-manager/flake.lock                                |"
-	echo "|  $ yadm cimp 'Update home-manager flake.lock'                                |"
-	echo "+------------------------------------------------------------------------------+"
-	echo ""
+    echo >&2 ""
+    echo >&2 ""
+    read -p "${_bold}${_yellow}Do you want to auto-commit the home-manager flake.lock in your dotfiles? [Yn] " inp
+    if [[ ${inp^^} == 'Y' ]] || [[ $inp == '' ]]; then
+        pushd ~/ >/dev/null
+        run yadm restore --staged .
+        run yadm add ~/.config/home-manager/flake.lock
+        run yadm cimp 'Update home-manager flake.lock'
+        popd >/dev/null
+    fi
+
+    echo >&2 ""
+    echo >&2 ""
+    read -p "${_bold}${_yellow}Do you want to push your dotfiles? [Yn] " inp
+    if [[ ${inp^^} == 'Y' ]] || [[ $inp == '' ]]; then
+        pushd ~/ >/dev/null
+        run yadm push
+        popd >/dev/null
+    fi
 }
 
 ################################################################################
