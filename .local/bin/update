@@ -4,19 +4,26 @@ set -eu
 
 main() {
 	# Update channels (legacy)
-	run sudo nix-channel --update
+	run-if /etc/nixos/flake.nix \
+	       sudo nix-channel --update
 	run nix-channel --update
 
 	# TODO: Commit flake.lock after update
 
-	# Update system
+	# Update Nixos systems
 	run-if /etc/nixos/flake.nix \
 		sudo nix flake update /etc/nixos
-	run /etc/nixos/rebuild
+	run-if /etc/nixos/rebuild
+
+    # Update Debian/Ubuntu systems
+    run-if apt \
+        sudo apt update
+    run-if apt \
+        sudo apt upgrade -y
 
 	# Update home-manager
 	run-if ~/.config/home-manager/flake.nix \
-		nix flake update ~/.config/home-manager/
+		nix flake update --flake ~/.config/home-manager/
 	run-if - nh home switch ~/.config/home-manager/
 
 	#run nix-env --upgrade
