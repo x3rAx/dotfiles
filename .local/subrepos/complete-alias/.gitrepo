@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/cykerway/complete-alias
 	branch = master
-	commit = 7525b8f35796afda17ddba620a0c6edf246902b8
-	parent = 6df2b1987ed54fd2892c5a1456d43daca8d1e655
+	commit = 7f2555c2fe7a1f248ed2d4301e46c8eebcbbc4e2
+	parent = e5e93b6a0a64facf3c4c03b9c6de182401133712
 	method = merge
 	cmdver = 0.4.3
