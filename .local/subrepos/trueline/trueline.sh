@@ -1,4 +1,4 @@
-# shellcheck disable=SC2155
+# shellcheck disable=SC2155,SC2148
 #---------+
 # Helpers |
 #---------+
@@ -56,6 +56,16 @@ _trueline_separator() {
     fi
 }
 
+_trueline_record_colors() {
+    local force="$4"
+    if [[ -z "$_first_color_fg" ]] || [[ -n "$force" ]]; then
+        _first_color_fg="$1"
+        _first_color_bg="$2"
+        _first_font_style="$3"
+    fi
+    _last_color="$2"
+}
+
 #----------+
 # Segments |
 #----------+
@@ -86,13 +96,15 @@ _trueline_user_segment() {
         bg_color=${TRUELINE_USER_ROOT_COLORS[1]}
     fi
     local has_ssh="$(_trueline_has_ssh)"
-    if [[ -n "$has_ssh" ]]; then 
+    if [[ -n "$has_ssh" ]]; then
         user="${TRUELINE_SYMBOLS[ssh]} $user"
     fi
     if [[ -n "$has_ssh" ]] || [[ "$TRUELINE_USER_ALWAYS_SHOW_HOSTNAME" = true ]]; then
         user+="@"
         if [ "$TRUELINE_USER_SHOW_IP_SSH" = true ]; then
             user+="$(_trueline_ip_address)"
+        elif [ "$TRUELINE_USER_SHORTEN_HOSTNAME" = true ]; then
+            user+="$(hostname -s)"
         else
             user+="$HOSTNAME"
         fi
@@ -100,7 +112,7 @@ _trueline_user_segment() {
     local segment="$(_trueline_separator)"
     segment+="$(_trueline_content "$fg_color" "$bg_color" "$font_style" " $user ")"
     PS1+="$segment"
-    _last_color=$bg_color
+    _trueline_record_colors "$fg_color" "$bg_color" "$font_style"
 }
 
 _trueline_has_venv() {
@@ -115,7 +127,7 @@ _trueline_venv_segment() {
         local segment="$(_trueline_separator)"
         segment+="$(_trueline_content "$fg_color" "$bg_color" "$font_style" " ${TRUELINE_SYMBOLS[venv]} $venv ")"
         PS1+="$segment"
-        _last_color=$bg_color
+        _trueline_record_colors "$fg_color" "$bg_color" "$font_style"
     fi
 }
 
@@ -131,7 +143,7 @@ _trueline_conda_env_segment() {
         local segment="$(_trueline_separator)"
         segment+="$(_trueline_content "$fg_color" "$bg_color" "$font_style" " ${TRUELINE_SYMBOLS[venv]} $conda_env")"
         PS1+="$segment"
-        _last_color=$bg_color
+        _trueline_record_colors "$fg_color" "$bg_color" "$font_style"
     fi
 }
 
@@ -147,12 +159,18 @@ _trueline_aws_profile_segment() {
         local segment="$(_trueline_separator)"
         segment+="$(_trueline_content "$fg_color" "$bg_color" "$font_style" " ${TRUELINE_SYMBOLS[aws_profile]} $profile_aws ")"
         PS1+="$segment"
-        _last_color=$bg_color
+        _trueline_record_colors "$fg_color" "$bg_color" "$font_style"
     fi
 }
 
 _trueline_has_git_branch() {
-    printf "%s" "$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
+    branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+
+    if [[ "$?" -ne "128" ]]; then
+        printf "%s" "$branch"
+    else
+        printf "%s" ""
+    fi
 }
 _trueline_git_mod_files() {
     nr_mod_files="$(git diff --name-only --diff-filter=M 2> /dev/null | wc -l | sed 's/^ *//')"
@@ -199,6 +217,8 @@ _trueline_git_remote_icon() {
         remote_icon="${TRUELINE_SYMBOLS[git_bitbucket]} "
     elif [[ "$remote" =~ "gitlab" ]]; then
         remote_icon="${TRUELINE_SYMBOLS[git_gitlab]} "
+    elif [[ "$remote" =~ "codeberg" ]]; then
+        remote_icon="${TRUELINE_SYMBOLS[git_codeberg]} "
     fi
     if [[ -n "${remote_icon// /}" ]]; then
         remote_icon=" $remote_icon "
@@ -224,7 +244,7 @@ _trueline_git_segment() {
             segment+="$(_trueline_content "$TRUELINE_GIT_BEHIND_AHEAD_COLOR" "$bg_color" "$font_style" "$behind_ahead")"
         fi
         PS1+="$segment"
-        _last_color=$bg_color
+        _trueline_record_colors "$fg_color" "$bg_color" "$font_style"
     fi
 }
 
@@ -238,7 +258,7 @@ _trueline_working_dir_segment() {
         wd_separator=" $wd_separator "
     fi
 
-    local p="${PWD/$HOME/${TRUELINE_SYMBOLS[working_dir_home]}}"
+    local p="${PWD/#$HOME/${TRUELINE_SYMBOLS[working_dir_home]}}"
     local arr=
     IFS='/' read -r -a arr <<< "$p"
     local path_size="${#arr[@]}"
@@ -251,7 +271,7 @@ _trueline_working_dir_segment() {
             if [[ "$TRUELINE_WORKING_DIR_ABBREVIATE_PARENT_DIRS" = true ]]; then
                 p=$(echo "$p" | sed -r "s:([^/]{,$TRUELINE_WORKING_DIR_ABBREVIATE_PARENT_DIRS_LENGTH})[^/]*/:\1/:g")
             else
-                p="${TRUELINE_SYMBOLS[working_dir_folder]}/"$(echo "$p" | rev | cut -d '/' -f-3 | rev)
+                p="${TRUELINE_SYMBOLS[working_dir_folder]}/"$(echo "$p" | awk -F'/' '{n=NF; print $(n-2)"/"$(n-1)"/"$n}')
             fi
         fi
         local curr=$(basename "$p")
@@ -263,11 +283,17 @@ _trueline_working_dir_segment() {
     fi
     segment+="$(_trueline_content "$fg_color" "$bg_color" "$font_style" " $path_ ")"
     PS1+="$segment"
-    _last_color=$bg_color
+    _trueline_record_colors "$fg_color" "$bg_color" "$font_style"
 }
 
 _trueline_bg_jobs_segment() {
-    local bg_jobs=$(jobs -p | wc -l | sed 's/^ *//')
+    # Note: We clear terminated foreground job information by first calling
+    # `jobs &>/dev/null' and then obtain the information of the currently running
+    # jobs by `jobs -p'.
+    local bg_jobs=$(
+        jobs &> /dev/null
+        jobs -p | wc -l | sed 's/^ *//'
+    )
     if [[ ! "$bg_jobs" -eq 0 ]]; then
         local fg_color="$1"
         local bg_color="$2"
@@ -275,7 +301,7 @@ _trueline_bg_jobs_segment() {
         local segment="$(_trueline_separator)"
         segment+="$(_trueline_content "$fg_color" "$bg_color" "$font_style" " ${TRUELINE_SYMBOLS[bg_jobs]} $bg_jobs ")"
         PS1+="$segment"
-        _last_color=$bg_color
+        _trueline_record_colors "$fg_color" "$bg_color" "$font_style"
     fi
 }
 
@@ -293,7 +319,7 @@ _trueline_read_only_segment() {
         local segment="$(_trueline_separator)"
         segment+="$(_trueline_content "$fg_color" "$bg_color" "$font_style" " ${TRUELINE_SYMBOLS[read_only]} ")"
         PS1+="$segment"
-        _last_color=$bg_color
+        _trueline_record_colors "$fg_color" "$bg_color" "$font_style"
     fi
 }
 
@@ -305,7 +331,7 @@ _trueline_exit_status_segment() {
         local segment="$(_trueline_separator)"
         segment+="$(_trueline_content "$fg_color" "$bg_color" "$font_style" "${TRUELINE_SYMBOLS[exit_status]} $_exit_status ")"
         PS1+="$segment"
-        _last_color=$bg_color
+        _trueline_record_colors "$fg_color" "$bg_color" "$font_style"
     fi
 }
 
@@ -322,7 +348,7 @@ _trueline_newline_segment() {
     segment+="\n"
     segment+="$(_trueline_content "$fg_color" "$bg_color" "$font_style" "$newline_symbol")"
     PS1+="$segment"
-    _last_color=$bg_color
+    _trueline_record_colors "$fg_color" "$bg_color" "$font_style" true
 }
 
 _trueline_vimode_cursor_shape() {
@@ -338,6 +364,7 @@ _trueline_vimode_cursor_shape() {
             cursor_parameter=2
             ;;
     esac
+    # shellcheck disable=SC2028
     echo "\1\e[$cursor_parameter q\2"
 }
 _trueline_vimode_segment() {
@@ -416,8 +443,26 @@ _trueline_cmd_duration_segment() {
         local elapsed="$(_trueline_format_time duration)"
         segment+="$(_trueline_content "$fg_color" "$bg_color" "$font_style" " ${TRUELINE_SYMBOLS[timer]}$elapsed ")"
         PS1+="$segment"
-        _last_color=$bg_color
+        _trueline_record_colors "$fg_color" "$bg_color" "$font_style"
     fi
+}
+
+_trueline_distro_icon_segment() {
+    case "$(grep ^ID= /etc/os-release)" in
+        *ubuntu*) distro_icon=" " ;;
+        *fedora*) distro_icon=" " ;;
+        *debian*) distro_icon=" " ;;
+        *arch*) distro_icon=" " ;;
+        *) distro_icon="${TRUELINE_SYMBOLS[distro_icon]} " ;;
+    esac
+
+    local fg_color="$1"
+    local bg_color="$2"
+    local font_style="$3"
+    local segment="$(_trueline_separator)"
+    segment+="$(_trueline_content "$fg_color" "$bg_color" "$font_style" " $distro_icon ")"
+    PS1+="$segment"
+    _trueline_record_colors "$fg_color" "$bg_color" "$font_style"
 }
 
 #-------------+
@@ -429,7 +474,7 @@ _trueline_continuation_prompt() {
 }
 
 _trueline_prompt_command() {
-    _exit_status="$?"
+    local _exit_status="$?"
     PS1=""
 
     local segment_def=
@@ -438,11 +483,6 @@ _trueline_prompt_command() {
         local segment_fg=$(echo "$segment_def" | cut -d ',' -f2)
         local segment_bg=$(echo "$segment_def" | cut -d ',' -f3)
         local font_style=$(echo "$segment_def" | cut -d ',' -f4)
-        if [[ -z "$_first_color_fg" ]] || [[ "$segment_name" = 'newline' ]]; then
-            _first_color_fg="$segment_fg"
-            _first_color_bg="$segment_bg"
-            _first_font_style="$font_style"
-        fi
         # Note: we cannot call within a subshell because global variables
         # (such as _last_color) won't be passed along
         '_trueline_'"$segment_name"'_segment' "$segment_fg" "$segment_bg" "$font_style"
@@ -457,7 +497,10 @@ _trueline_prompt_command() {
     unset _first_color_bg
     unset _first_font_style
     unset _last_color
-    unset _exit_status
+
+    # Note: we reset the exit status to the original value for the subsequent
+    # commands in PROMPT_COMMAND.
+    return "$_exit_status"
 }
 
 #---------------+
@@ -491,25 +534,28 @@ if [[ "${#TRUELINE_SEGMENTS[@]}" -eq 0 ]]; then
         'user,black,white,bold'
         'aws_profile,black,orange,bold'
         'venv,black,purple,bold'
-        # 'conda_env,black,purple,bold'
+        'conda_env,black,purple,bold'
         'git,grey,special_grey,normal'
         'working_dir,mono,cursor_grey,normal'
         'read_only,black,orange,bold'
         'bg_jobs,black,orange,bold'
         'exit_status,black,red,bold'
-        # 'newline,black,orange,bold'
         # 'cmd_duration,black,grey,normal'
+        # 'newline,black,orange,bold'
+        # 'distro_icon,black,green,normal'
     )
 fi
 
 declare -A TRUELINE_SYMBOLS_DEFAULT=(
-    [aws_profile]=''
+    [aws_profile]=''
     [bg_jobs]=''
-    [exit_status]=''
-    [git_ahead]=''
-    [git_behind]=''
+    [distro_icon]=' '
+    [exit_status]=' '
+    [git_ahead]=''
+    [git_behind]=''
     [git_bitbucket]=''
     [git_branch]=''
+    [git_codeberg]=''
     [git_github]=''
     [git_gitlab]=''
     [git_modified]=''
@@ -518,8 +564,8 @@ declare -A TRUELINE_SYMBOLS_DEFAULT=(
     [ps2]='...'
     [read_only]=''
     [segment_separator]=''
-    [ssh]=''
-    [timer]='羽'
+    [ssh]='󰌘'
+    [timer]='󰔟'
     [venv]=''
     [vimode_cmd]='N'
     [vimode_ins]='I'
@@ -575,6 +621,9 @@ fi
 if [[ -z "$TRUELINE_USER_ALWAYS_SHOW_HOSTNAME" ]]; then
     TRUELINE_USER_ALWAYS_SHOW_HOSTNAME=false
 fi
+if [[ -z "$TRUELINE_USER_SHORTEN_HOSTNAME" ]]; then
+    TRUELINE_USER_SHORTEN_HOSTNAME=false
+fi
 
 # Working dir
 if [[ -z "$TRUELINE_WORKING_DIR_SPACE_BETWEEN_PATH_SEPARATOR" ]]; then
@@ -591,9 +640,11 @@ fi
 #----------------+
 # PROMPT_COMMAND |
 #----------------+
-# Backup old prompt command first
-if [ -z "$_PROMPT_COMMAND_OLD" ]; then
-    _PROMPT_COMMAND_OLD="$PROMPT_COMMAND"
+if ((BASH_VERSINFO[0] > 5 || BASH_VERSINFO[0] == 5 && BASH_VERSINFO[1] >= 1)); then
+    # Bash 5.1 and above supports the PROMPT_COMMAND array
+    PROMPT_COMMAND=${PROMPT_COMMAND-}
+    PROMPT_COMMAND+=(_trueline_prompt_command)
+else
+    # shellcheck disable=SC2128,SC2178
+    PROMPT_COMMAND="_trueline_prompt_command${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 fi
-unset PROMPT_COMMAND
-PROMPT_COMMAND=_trueline_prompt_command
