@@ -1,7 +1,9 @@
 hm() {
 	local XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
-	if [ "$1" == 'u' ] || [ "$1" == 'update' ]; then
-		if [ ! -f "${XDG_CONFIG_HOME}/home-manager/flake.nix" ]; then
+    local hm_dir="${XDG_CONFIG_HOME}/home-manager"
+
+	if [ "$1" = 'u' ] || [ "$1" = 'update' ]; then
+		if [ ! -f "${hm_dir}/flake.nix" ]; then
 			echo "No flake.nix found in \"${XDG_CONFIG_HOME}/home-manager/\""
 			return
 		fi
@@ -10,10 +12,16 @@ hm() {
 		return
 	fi
 
-	if [ "$1" == "e" ]; then
+	if [ "$1" = "e" ] || [ "$1" = "edit" ]; then
 		shift
+        pushd "$hm_dir" >/dev/null
 		set -- edit "$@"
-	elif [ "$1" == "s" ]; then
+        home-manager "$@"
+        popd >/dev/null
+        return
+    fi
+	
+    if [ "$1" = "s" ]; then
 		shift
 		set -- switch "$@"
 	fi
