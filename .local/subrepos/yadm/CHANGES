@@ -1,3 +1,65 @@
+3.5.0
+  * Silence warnings when collecting alt files (#521)
+  * Adjust handling of encrypt patterns to match 3.3.0 and older
+  * Make encrypt exclude patterns only match encrypted files
+  * Automatically exclude alt and template files (#234)
+  * Support negative alt conditions (#365)
+  * Handle filenames with space in bash completion (#341)
+  * Add new yadm.filename template variable (#520)
+
+3.4.0
+  * Improve and harden alt file regeneration (#466)
+  * Fix "yadm config" in fish completion (#491)
+  * Fix "yadm clone" when not run in "$YADM_WORK" (#513)
+  * Output the actual paths in help message (#376)
+  * Verify all alt conditions for templates (#478)
+  * Ignore case in alt and default template conditions (#455, #456)
+  * Fall back to ID for distro family if ID_LIKE is not available (#494)
+  * Support overriding distro and distro family (#430)
+  * Improve support for Bash 3 (the default version on macOS)
+  * Make "yadm clone --recursive" work as expected (#517)
+  * Don't include files multiple times in archive (#125)
+  * Document YADM_HOOK_DATA and YADM_HOOK_DIR env variables (#343)
+  * Support alt dirs with deeply nested tracked files (#495)
+
+3.3.0
+  * Support nested ifs in default template (#436)
+  * Support include and ifs in default template includes (#406)
+  * Support environment variables in ifs in default template (#488)
+  * Support != in default template (#358, #477)
+  * Fix multiple classes in default template on macOS (#437)
+
+3.2.2
+  * Support spaces in distro/distro-family (#432)
+  * Fix zsh hanging when tab completing add/checkout (#417)
+  * Add yadm-untracked script to contributed files (#418)
+  * Fix documentation typos (#425)
+  * Support docker-like OCI engines for dev testing (#431)
+
+3.2.1
+  * Fix Bash 3 bad array subscript bug (#411)
+
+3.2.0
+  * Support architecture for alternates/templates (#202, #203, #393)
+  * Support distro_family for alternates/templates (#213)
+  * Support setting multiple classes (#185, #304)
+  * Support environment variables in default template processor (#347)
+  * Update version command to include Bash & Git versions (#377)
+
+3.1.1
+  * Fix clone support for older versions of Git (#348)
+  * Fix support for multiple GPG recipients (#342)
+  * Find symlinks in bootstrap-in-dir (#340)
+
+3.1.0
+  * Use `git clone` directly during clone (#289, #323)
+  * Fix compatibility bug with Git completions (#318, #321)
+  * Support relative paths for --yadm-* and -w (#301)
+  * Improve parsing of if-statement in default template (#303)
+  * Read files without running cat in subshells (#317)
+  * Improve portability of updating read-only files (#320)
+  * Various code improvements (#306, #307, #311)
+
 3.0.2
   * Fix parsing by sh (#299)
 

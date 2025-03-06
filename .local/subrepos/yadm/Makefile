@@ -1,5 +1,6 @@
 PYTESTS = $(wildcard test/test_*.py)
-IMAGE = yadm/testbed:2020-12-29
+IMAGE = docker.io/yadm/testbed:2024-11-11
+OCI = docker
 
 .PHONY: all
 all:
@@ -94,7 +95,7 @@ test:
 		py.test -v $(testargs); \
 	else \
 		$(MAKE) -s require-docker && \
-		docker run \
+		$(OCI) run \
 			--rm -t$(shell test -t 0 && echo i) \
 			-v "$(CURDIR):/yadm:ro" \
 			$(IMAGE) \
@@ -117,11 +118,12 @@ test:
 .PHONY: testhost
 testhost: require-docker .testyadm
 	@echo "Starting testhost"
-	@docker run \
+	@$(OCI) run \
 		-w /root \
 		--hostname testhost \
 		--rm -it \
 		-v "$(CURDIR)/.testyadm:/bin/yadm:ro" \
+		-v "$(CURDIR)/completion/bash/yadm:/usr/share/bash-completion/completions/yadm:ro" \
 		$(IMAGE) \
 		bash -l
 
@@ -129,7 +131,7 @@ testhost: require-docker .testyadm
 scripthost: require-docker .testyadm
 	@echo "Starting scripthost \(recording script\)"
 	@printf '' > script.gz
-	@docker run \
+	@$(OCI) run \
 		-w /root \
 		--hostname scripthost \
 		--rm -it \
@@ -159,7 +161,7 @@ testenv:
 
 .PHONY: image
 image:
-	@docker build -f test/Dockerfile . -t "$(IMAGE)"
+	@$(OCI) build -f test/Dockerfile . -t "$(IMAGE)"
 
 
 .PHONY: man
@@ -175,7 +177,7 @@ man-ps:
 	@groff -man -Tps ./yadm.1 > yadm.ps
 
 yadm.md: yadm.1
-	@groff -man -Tascii ./yadm.1 | col -bx | sed 's/^[A-Z]/## &/g' | sed '/yadm(1)/d' > yadm.md
+	@groff -man -Tutf8 -Z ./yadm.1 | grotty -c | col -bx | sed 's/^[A-Z]/## &/g' | sed '/YADM(1)/d' > yadm.md
 
 .PHONY: contrib
 contrib: SHELL = /bin/bash
@@ -192,9 +194,9 @@ install:
 	@[ -n "$(PREFIX)" ] || { echo "PREFIX is not set"; exit 1; }
 	@{\
 		set -e                                               ;\
-		bin="$(PREFIX)/bin"                                  ;\
-		doc="$(PREFIX)/share/doc/yadm"                       ;\
-		man="$(PREFIX)/share/man/man1"                       ;\
+		bin="$(DESTDIR)$(PREFIX)/bin"                        ;\
+		doc="$(DESTDIR)$(PREFIX)/share/doc/yadm"             ;\
+		man="$(DESTDIR)$(PREFIX)/share/man/man1"             ;\
 		install -d "$$bin" "$$doc" "$$man"                   ;\
 		install -m 0755 yadm "$$bin"                         ;\
 		install -m 0644 yadm.1 "$$man"                       ;\
@@ -204,11 +206,11 @@ install:
 
 .PHONY: sync-clock
 sync-clock:
-	docker run --rm --privileged alpine hwclock -s
+	$(OCI) run --rm --privileged alpine hwclock -s
 
 .PHONY: require-docker
 require-docker:
-	@if ! command -v "docker" > /dev/null 2>&1; then \
-		echo "Sorry, this make target requires docker to be installed."; \
+	@if ! command -v $(OCI) > /dev/null 2>&1; then \
+		echo "Sorry, this make target requires docker to be installed, to use another docker-compatible engine, like podman, re-run the make command adding OCI=podman"; \
 		false; \
 	fi

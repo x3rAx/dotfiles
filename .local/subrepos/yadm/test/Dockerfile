@@ -1,9 +1,8 @@
-FROM ubuntu:18.04
-MAINTAINER Tim Byrne <sultan@locehilios.com>
+FROM ubuntu:24.10
 
 # Shellcheck and esh versions
-ARG SC_VER=0.7.1
-ARG ESH_VER=0.3.0
+ARG SC_VER=0.10.0
+ARG ESH_VER=0.3.2
 
 # Install prerequisites and configure UTF-8 locale
 RUN \
@@ -14,6 +13,7 @@ RUN \
     expect \
     git \
     gnupg \
+    j2cli \
     locales \
     lsb-release \
     make \
@@ -39,10 +39,9 @@ RUN cd /opt \
   && rm -f shellcheck-v$SC_VER.linux.x86_64.tar.xz \
   && ln -s /opt/shellcheck-v$SC_VER/shellcheck /usr/local/bin
 
-# Upgrade pip3 and install requirements
+# Install requirements
 COPY test/requirements.txt /tmp/requirements.txt
-RUN python3 -m pip install --upgrade pip setuptools \
-  && python3 -m pip install --upgrade -r /tmp/requirements.txt \
+RUN python3 -m pip install --break-system-packages -r /tmp/requirements.txt \
   && rm -f /tmp/requirements
 
 # Install esh
@@ -57,8 +56,8 @@ RUN mkdir /yadm \
   && echo "\t@false" >> /yadm/Makefile
 
 # Include released versions of yadm to test upgrades
-ADD https://raw.githubusercontent.com/TheLocehiliosan/yadm/1.12.0/yadm /usr/local/bin/yadm-1.12.0
-ADD https://raw.githubusercontent.com/TheLocehiliosan/yadm/2.5.0/yadm /usr/local/bin/yadm-2.5.0
+ADD https://raw.githubusercontent.com/yadm-dev/yadm/1.12.0/yadm /usr/local/bin/yadm-1.12.0
+ADD https://raw.githubusercontent.com/yadm-dev/yadm/2.5.0/yadm /usr/local/bin/yadm-2.5.0
 RUN chmod +x /usr/local/bin/yadm-*
 
 # Configure git to make it easier to test yadm manually

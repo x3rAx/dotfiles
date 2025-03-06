@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/TheLocehiliosan/yadm.git
 	branch = master
-	commit = a5b1067e02abc10c183c3411ee8b40c53e306722
-	parent = 37aa994419f4df37d4fff193455e3ca919944ba4
+	commit = 7eabaee84c8bd9521e56966e5c88e7a435fdd9c7
+	parent = c3811bd8bed8495c67b53d5a9e215913550bb6b7
 	method = merge
 	cmdver = 0.4.3
