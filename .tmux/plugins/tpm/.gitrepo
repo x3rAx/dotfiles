@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/tmux-plugins/tpm
 	branch = master
-	commit = 29c871e8105dee0c4994ac97682d26bf9f9a4371
-	parent = 5334cdb5ed579d12580680f0ba084d9347bd3e25
+	commit = 99469c4a9b1ccf77fade25842dc7bafbc8ce9946
+	parent = 06b1f0c33be01ff8c99040c9dded3661e288d47b
 	method = merge
 	cmdver = 0.4.3
