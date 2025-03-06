@@ -22,7 +22,7 @@ $ yay -S pulseaudio-control
 
 ### Other Linux
 
-Download the [bash script](https://github.com/marioortizmanero/polybar-pulseaudio-control/blob/master/pulseaudio-control.bash) from this repository, or extract it from [the latest release](https://github.com/marioortizmanero/polybar-pulseaudio-control/releases/latest), and put it somewhere in your `$PATH`.
+Download the [bash script](https://github.com/marioortizmanero/polybar-pulseaudio-control/blob/master/pulseaudio-control) from this repository, or extract it from [the latest release](https://github.com/marioortizmanero/polybar-pulseaudio-control/releases/latest), and put it somewhere in your `$PATH`.
 
 #### Dependencies
 
@@ -30,7 +30,7 @@ Download the [bash script](https://github.com/marioortizmanero/polybar-pulseaudi
 
 This script works with PipeWire as well, as long as your system has something like [`pipewire-pulse`](https://archlinux.org/packages/extra/x86_64/pipewire-pulse/).
 
-To be able to switch the default sinks from this script you might need to disable stream target device restore by editing the corresponing line in `/etc/pulse/default.pa` to:
+To be able to switch the default sinks from this script you might need to disable stream target device restore by editing the corresponding line in `/etc/pulse/default.pa` to:
 
 ```
 load-module module-stream-restore restore_device=false
@@ -51,7 +51,7 @@ exec = pulseaudio-control [option...] <action>
 where `action`, and (optionally) `option`s are as specified in `pulseaudio-control help`:
 
 ```
-Usage: ./pulseaudio-control.bash [OPTION...] ACTION
+Usage: ./pulseaudio-control [OPTION...] ACTION
 
 Terminology: A node represents either a sink (output) or source (input).
 
@@ -61,6 +61,7 @@ Options:
         Default: "no"
   --color-muted <rrggbb>
         Color in which to format when muted.
+        Pass empty string to disable.
         Default: "6b6b6b"
   --notifications | --no-notifications
         Whether to show notifications when changing nodes.
@@ -107,7 +108,7 @@ Options:
         extension.
         Default: none
   --node-nicknames-from <prop>
-        pactl property to use for node names, unless overriden by
+        pactl property to use for node names, unless overridden by
         --node-nickname. Its possible values are listed under the 'Properties'
         key in the output of `pactl list sinks` and `pactl list sources`.
         Default: none
@@ -273,4 +274,4 @@ Part of the script and of this README's info was taken from [customlinux.blogspo
 
 ## Development
 
-Any PRs and issues are welcome! The tests can be ran with `bats tests.bats`, preferrably with the Dockerfile in this repository.
+Any PRs and issues are welcome! The tests can be ran with `bats tests.bats`, preferably with the Dockerfile in this repository.
