@@ -7,6 +7,10 @@ source "${ZINIT_HOME}/zinit.zsh"
 # "If you do not plan on having Home Manager manage your shell configuration then you must source the [following] file in your shell configuration."
 source $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
 
+# Selective shellrc.d imports
+source $HOME/.shellrc.d/home-manager-alias.sh
+source $HOME/.shellrc.d/git-subrepo.sh
+
 
 # Add zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
