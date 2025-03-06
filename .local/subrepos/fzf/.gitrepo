@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/junegunn/fzf.git
 	branch = master
-	commit = a4bc08f5a35da6e374a2ce0da4c931d7fd32fdf1
-	parent = 26f45383fa46830693d314befb016e1146f92185
+	commit = 26bcd0c90d4c77938d2011f994d943e531322504
+	parent = 91cc043ca5ecc56e4c67e2fea9a2bafea84275b4
 	method = merge
 	cmdver = 0.4.3
