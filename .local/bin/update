@@ -3,6 +3,10 @@
 set -eu
 
 main() {
+    # Pull dotfiles
+    run-if yadm \
+        yadm pull --rebase --autostash
+
 	# Update channels (legacy)
 	run-if /etc/nixos/flake.nix \
 	       sudo nix-channel --update
