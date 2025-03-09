@@ -4,6 +4,7 @@ return {
     opts = {
       formatters_by_ft = {
         nix = { "alejandra" },
+        typescript = { "deno_fmt", "prettier", lsp_format = "fallback" },
       },
       formatters = {
         alejandra = {
