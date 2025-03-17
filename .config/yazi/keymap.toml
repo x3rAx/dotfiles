@@ -15,4 +15,7 @@ append_keymap = [
 
     # Create directory
     { on = "A", run = "create --dir", desc = "Create directory" },
+
+    # Bashmount
+    { on = "M", run = "plugin bashmount", desc = "Run bashmount" },
 ]
