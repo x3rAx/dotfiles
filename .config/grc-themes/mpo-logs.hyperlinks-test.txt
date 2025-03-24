@@ -1,0 +1,43 @@
+/app/test.php
+/app/test.php on line 10
+/app/test.php:11
+/app/test.php(12)
+
+foo /app/test.php
+foo /app/test.php on line 20
+foo /app/test.php:21
+foo /app/test.php(22)
+
+foo /app/test.php bar
+foo /app/test.php on line 30 bar
+foo /app/test.php:31 bar
+foo /app/test.php(32) bar
+
+/app/test.php bar
+/app/test.php on line 40 bar
+/app/test.php:41 bar
+/app/test.php(42) bar
+
+
+/app/public/index.php
+/app/public/index.php on line 10
+/app/public/index.php:11
+/app/public/index.php(12)
+
+foo /app/public/index.php
+foo /app/public/index.php on line 20
+foo /app/public/index.php:21
+foo /app/public/index.php(22)
+
+foo /app/public/index.php bar
+foo /app/public/index.php on line 30 bar
+foo /app/public/index.php:31 bar
+foo /app/public/index.php(32) bar
+
+/app/public/index.php bar
+/app/public/index.php on line 40 bar
+/app/public/index.php:41 bar
+/app/public/index.php(42) bar
+
+
+in /app/application/libraries/utils/StringUtils.php on line 188
