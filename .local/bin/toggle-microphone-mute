@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+pactl list short sources \
+    | awk '/input.*(RUNNING|SUSPENDED)/ {system("pactl set-source-mute " $1 " toggle")}'
