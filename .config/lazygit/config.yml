@@ -1,3 +1,8 @@
+keybinding:
+  files:
+    # `toggleStagedAll` has been replaced by a custom command menu below.
+    toggleStagedAll: <disabled>
+
 customCommands:
   - description: "Commit with Emoji-Log"
     key: "C"
@@ -94,3 +99,19 @@ customCommands:
     key: "U"
     context: "files"
     command: "git restore --staged ."
+
+  - description: "Stage all?"
+    key: "a"
+    commandMenu:
+      - description: Stage all files
+        context: "files"
+        key: 'A'
+        command: 'git add -A'
+      - description: Stage only modified
+        context: "files"
+        key: 'm'
+        command: 'git add -u'
+      - description: Unstage all
+        context: "files"
+        key: 'u'
+        command: 'git restore --staged .'
